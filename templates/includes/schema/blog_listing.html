@@ -1,0 +1,32 @@
+{% load static %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "{{ request.build_absolute_uri }}#blog",
+  "name": "{{ meta_title|default:page_title|escapejs }}",
+  "description": "{{ meta_description|escapejs }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "publisher": {
+    "@type": "MedicalBusiness",
+    "name": "{{ site_name|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'website:home' %}"
+  },
+  "blogPost": [
+    {% for post in blog_posts %}
+    {
+      "@type": "BlogPosting",
+      "headline": "{{ post.title|escapejs }}",
+      "description": "{{ post.summary|escapejs }}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'website:blog-detail' post.slug %}",
+      "datePublished": "{{ post.published_date }}",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static post.image %}",
+      "author": {
+        "@type": "Organization",
+        "name": "{{ post.author|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>

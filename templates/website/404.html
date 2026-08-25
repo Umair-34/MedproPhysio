@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body_class %}mp-page-missing{% endblock %}
+{% block title %}Page Not Found | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex, follow">
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-missing" aria-labelledby="missing-heading">
+  <div class="mp-container mp-missing__inner">
+    <div class="mp-missing__code" aria-hidden="true">404</div>
+    <div class="mp-missing__copy">
+      <span class="mp-missing__eyebrow">Page not found</span>
+      <h2 id="missing-heading">Let’s get you back on track</h2>
+      <p>The page you requested is not on this site. It may have been moved, renamed, or the link may be out of date. Use a link below, or call the clinic and we will point you in the right direction.</p>
+      <div class="mp-missing__actions">
+        <a href="{% url 'website:home' %}" class="mp-btn mp-btn--primary">Back to home</a>
+        <a href="{% url 'website:book' %}" class="mp-btn mp-btn--outline">Book appointment</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mp-container">
+    <ul class="mp-missing__links">
+      <li>
+        <a href="{% url 'website:services' %}">
+          <span class="mp-missing__icon" aria-hidden="true"><i class="fa-solid fa-spa"></i></span>
+          <strong>Our services</strong>
+          <span>Physiotherapy, massage, and other clinic care</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'website:visit-us' %}">
+          <span class="mp-missing__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+          <strong>Visit us</strong>
+          <span>{{ site_address_short }} · hours and parking</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'website:contact' %}">
+          <span class="mp-missing__icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+          <strong>Contact</strong>
+          <span>{{ site_phone }} · {{ site_address_short }}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'website:faqs' %}">
+          <span class="mp-missing__icon" aria-hidden="true"><i class="fa-solid fa-circle-question"></i></span>
+          <strong>FAQs</strong>
+          <span>Insurance, first visits, and common questions</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

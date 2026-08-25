@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block title %}{{ meta_title|default:page_title }} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ meta_title|default:page_title }} | {{ site_name }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% if blog_posts %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static blog_posts.0.image %}">
+{% endif %}
+<meta property="og:locale" content="en_CA">
+{% include 'includes/schema/blog_listing.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-blog-listing" aria-labelledby="blog-listing-heading">
+  <div class="mp-container">
+    <div class="mp-blog-listing__head">
+      <div class="mp-blog-listing__intro">
+        <span class="mp-eyebrow">Wellness Blog</span>
+        <h2 id="blog-listing-heading">Calgary wellness articles</h2>
+        <p class="mp-lead">Practical guidance on physiotherapy, massage therapy, workplace injuries, and getting the most from your care at {{ site_name }}.</p>
+      </div>
+      <div class="mp-blog-listing__stat" role="status">
+        <strong>{{ blog_posts|length }}</strong>
+        <span>{% if blog_posts|length == 1 %}Article{% else %}Articles{% endif %}</span>
+      </div>
+    </div>
+
+    {% with featured=blog_posts.0 %}
+    {% if featured %}
+    <article class="mp-blog-featured">
+      <a href="{% url 'website:blog-detail' featured.slug %}" class="mp-blog-featured__media" aria-label="Read featured article: {{ featured.title }}">
+        {% optimized_img src=featured.image alt=featured.image_alt loading='eager' width='960' height='540' %}
+      </a>
+      <div class="mp-blog-featured__body">
+        <span class="mp-blog-featured__label">Featured article</span>
+        <span class="mp-blog-card__tag">{{ featured.tag }}</span>
+        <div class="mp-blog-card__meta">
+          <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ featured.published_display }}</span>
+          <span><i class="fa-regular fa-clock" aria-hidden="true"></i> {{ featured.reading_time }}</span>
+        </div>
+        <h3><a href="{% url 'website:blog-detail' featured.slug %}">{{ featured.title }}</a></h3>
+        <p>{{ featured.summary }}</p>
+        <a href="{% url 'website:blog-detail' featured.slug %}" class="mp-blog-card__link">
+ Read article <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </article>
+    {% endif %}
+    {% endwith %}
+
+    {% if blog_posts|length > 1 %}
+    <div class="mp-blog-listing__grid">
+      <div class="mp-grid mp-grid--{% if blog_posts|length == 2 %}2{% else %}3{% endif %}">
+        {% for post in blog_posts %}
+        {% if not forloop.first %}
+        {% include 'includes/blog_card.html' with post=post %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt mp-blog-topics" aria-labelledby="blog-topics-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Topics we cover</span>
+      <h2 id="blog-topics-heading">Learn before your next appointment</h2>
+      <p class="mp-lead">From WCB claims and chronic pain to post surgery rehab, dry needling, and first visit tips, written by our Calgary clinic team.</p>
+    </div>
+    <div class="mp-blog-topics__grid">
+      <article class="mp-blog-topic">
+        <span class="mp-blog-topic__icon" aria-hidden="true"><i class="fa-solid fa-hard-hat"></i></span>
+        <h3>WCB &amp; workplace</h3>
+        <p>Understanding claims, paperwork, and return to work recovery.</p>
+      </article>
+      <article class="mp-blog-topic">
+        <span class="mp-blog-topic__icon" aria-hidden="true"><i class="fa-solid fa-spa"></i></span>
+        <h3>Massage &amp; wellness</h3>
+        <p>How massage therapy supports pain relief and everyday movement.</p>
+      </article>
+      <article class="mp-blog-topic">
+        <span class="mp-blog-topic__icon" aria-hidden="true"><i class="fa-solid fa-user-doctor"></i></span>
+        <h3>First visits</h3>
+        <p>What to expect, what to bring, and how to prepare.</p>
+      </article>
+      <article class="mp-blog-topic">
+        <span class="mp-blog-topic__icon" aria-hidden="true"><i class="fa-solid fa-heart-pulse"></i></span>
+        <h3>Chronic pain &amp; rehab</h3>
+        <p>Movement strategies, post surgery recovery, and when to seek help.</p>
+      </article>
+      <article class="mp-blog-topic">
+        <span class="mp-blog-topic__icon" aria-hidden="true"><i class="fa-solid fa-syringe"></i></span>
+        <h3>Dry needling</h3>
+        <p>How trigger point needling works and who may benefit.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='blog-cta-heading' cta_title='Ready to put advice into action?' cta_text='Book physiotherapy, massage, chiropractic, or kinesiology at our northwest Calgary clinic.' cta_secondary_url='/services/' cta_secondary_label='View Our Services' %}
+{% endblock %}

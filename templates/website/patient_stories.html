@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' %}
+
+<div class="page-patient-hub bg-radius-section">
+  <div class="container">
+    <div class="row patient-hub-layout g-4 g-lg-5">
+      <div class="col-lg-4">
+        {% include 'includes/patient_hub_sidebar.html' %}
+      </div>
+
+      <div class="col-lg-8">
+        <article class="patient-hub-main wow fadeInUp">
+          <header class="patient-hub-header">
+            <p class="patient-hub-intro">Real Google reviews from patients who have visited {{ site_name }} in northeast Calgary.</p>
+          </header>
+
+          <section class="patient-hub-section patient-stories-section" aria-labelledby="patient-stories-cta-heading" style="margin-top: 0; padding-top: 0; border-top: none;">
+            {% include 'includes/google_review_cta.html' with variant='banner' title='Enjoyed your visit? Tell others on Google' show_view_link=True %}
+          </section>
+
+          <section class="patient-hub-section" aria-labelledby="patient-stories-reviews-heading">
+            <h2 id="patient-stories-reviews-heading">What patients are saying</h2>
+            <div class="row g-4">
+              {% for testimonial in site_testimonials %}
+              <div class="col-md-12">
+                <blockquote class="testimonial-item p-4 h-100 patient-story-card">
+                  <div class="testimonial-rating mb-3" aria-label="5 out of 5 stars">
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                  </div>
+                  <p>&ldquo;{{ testimonial.quote }}&rdquo;</p>
+                  <footer class="testimonial-body mt-4 pt-0">
+                    <div class="author-image">
+                      {% if testimonial.initial %}
+                      <div class="author-initial" style="--author-avatar-color: {{ testimonial.avatar_color|default:'#033E5B' }};" aria-hidden="true">
+                        <span>{{ testimonial.initial }}</span>
+                      </div>
+                      {% endif %}
+                    </div>
+                    <div class="author-content">
+                      <cite>{{ testimonial.name }}</cite>
+                      <p>{{ testimonial.role }}</p>
+                    </div>
+                  </footer>
+                </blockquote>
+              </div>
+              {% endfor %}
+            </div>
+          </section>
+
+          <section class="patient-hub-section">
+            {% include 'includes/google_review_cta.html' with variant='compact' title='Help others choose with confidence' text='Your review makes a real difference for patients searching for physiotherapy and massage in northeast Calgary.' %}
+          </section>
+
+          <footer class="patient-hub-footer">
+            <a href="{% url 'website:book' %}" class="btn-default btn-highlighted"><span>Book Appointment</span></a>
+            {% if site_google_review_url %}
+            <a href="{{ site_google_review_url }}" class="btn-default btn-outline" target="_blank" rel="noopener noreferrer"><span>Leave a Google Review</span></a>
+            {% endif %}
+          </footer>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

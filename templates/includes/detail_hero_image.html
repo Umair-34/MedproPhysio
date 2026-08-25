@@ -1,0 +1,8 @@
+{% load optimized_images %}
+{% if page.image_url %}
+<div class="{{ wrapper_class|default:'detail-hero-image' }}">
+  <figure>
+    {% optimized_img src=page.image_url alt=page.image_alt|default:item.title loading='lazy' %}
+  </figure>
+</div>
+{% endif %}

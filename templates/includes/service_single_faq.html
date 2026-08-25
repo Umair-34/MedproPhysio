@@ -1,0 +1,26 @@
+<section class="mp-service-faq" aria-labelledby="service-faq-heading">
+  <header class="mp-service-faq__header">
+    <h2 id="service-faq-heading">Frequently asked questions</h2>
+    {% if faq_intro %}
+    <p class="mp-service-faq__intro">{{ faq_intro }}</p>
+    {% endif %}
+  </header>
+
+  <div class="mp-faq">
+    {% for question, answer in faqs %}
+    <details class="mp-faq-item"{% if forloop.first %} open{% endif %}>
+      <summary>
+        <span class="mp-faq-item__icon" aria-hidden="true"><i class="fa-solid fa-circle-question"></i></span>
+        <span class="mp-faq-item__question">{{ question }}</span>
+        <span class="mp-faq-item__toggle" aria-hidden="true">
+          <i class="fa-solid fa-plus"></i>
+          <i class="fa-solid fa-minus"></i>
+        </span>
+      </summary>
+      <div class="mp-faq-item__answer">
+        <p>{{ answer }}</p>
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+</section>

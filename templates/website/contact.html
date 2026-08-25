@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+{% if turnstile_site_key %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}Contact {{ site_name }} in Calgary. Call, email, or send a message about physiotherapy, massage therapy, and wellness care.{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-content-block">
+  <div class="mp-container">
+    <div class="mp-contact-layout">
+      <div>
+        <span class="mp-eyebrow">Contact Us</span>
+        <h2>Get in touch</h2>
+        <p class="mp-lead">Reach out about appointments, services, or insurance. You can also book online anytime.</p>
+        <ul class="mp-info-list">
+          <li>
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <strong>Address</strong><br>
+              {{ site_address }}
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>Phone</strong><br>
+              <a href="{{ site_phone_link }}">{{ site_phone }}</a>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <strong>Email</strong><br>
+              <a href="mailto:{{ site_email }}">{{ site_email }}</a>
+            </div>
+          </li>
+          <li>
+            <i class="fa-regular fa-clock"></i>
+            <div>
+              <strong>Hours</strong><br>
+              {% for hours in working_hours %}
+              {{ hours }}<br>
+              {% endfor %}
+            </div>
+          </li>
+        </ul>
+        <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary" style="margin-top:1rem;">Book Appointment</a>
+      </div>
+
+      <div class="mp-booking-shell">
+        <h2 style="margin-bottom:1rem;">Send a message</h2>
+        <form action="{% url 'website:contact-submit' %}" method="post" class="contact-form" style="position:relative;">
+          {% csrf_token %}
+          {% if messages %}
+          <div class="mp-form-messages" style="margin-bottom:1rem;">
+            {% for message in messages %}
+            <p class="{% if message.tags %}mp-alert mp-alert--{{ message.tags }}{% endif %}">{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="mp-form-grid">
+            <div class="form-group">
+              <label for="contact_name">Full Name</label>
+              <input type="text" id="contact_name" name="name" class="form-control" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="contact_email">Email</label>
+              <input type="email" id="contact_email" name="email" class="form-control" required placeholder="you@example.com">
+            </div>
+            <div class="form-group mp-form-grid--full">
+              <label for="contact_phone">Phone</label>
+              <input type="tel" id="contact_phone" name="phone" class="form-control" placeholder="(403) 555-0100">
+            </div>
+            <div class="form-group mp-form-grid--full">
+              <label for="contact_message">Message</label>
+              <textarea id="contact_message" name="message" class="form-control" rows="5" required placeholder="How can we help you?"></textarea>
+            </div>
+          </div>
+          {% include 'includes/form_guard.html' with hp_id='contact_company_website' turnstile_action='contact' %}
+          <button type="submit" class="mp-btn mp-btn--primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

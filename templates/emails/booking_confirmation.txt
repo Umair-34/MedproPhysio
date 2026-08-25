@@ -1,0 +1,27 @@
+{% if audience == 'clinic' %}NEW APPOINTMENT BOOKED
+{{ clinic_name }}
+
+A new appointment has been booked online.{% else %}APPOINTMENT CONFIRMED
+{{ clinic_name }}
+
+Hi {{ customer_first_name }}, thank you for booking with {{ clinic_name }}.
+We look forward to seeing you.{% endif %}
+
+Service:    {{ service_name }}
+Date:       {{ appointment_date }}
+Time:       {{ appointment_time }} ({{ duration_minutes }} min)
+Location:   {{ clinic_address }}
+{% if show_patient %}Patient:    {{ customer_name }}
+Email:      {{ customer_email }}
+Phone:      {{ customer_phone }}
+{% endif %}{% if customer_notes %}Notes:      {{ customer_notes }}
+{% endif %}Reference:  {{ confirmation_token }}
+
+Directions: {{ directions_url }}
+{% if audience != 'clinic' %}
+Need to reschedule or cancel? Reply to this email or call {{ clinic_phone }}.
+Please arrive 10 minutes early for your first visit.
+{% endif %}
+{{ clinic_name }}
+{{ clinic_address }}
+{{ clinic_phone }} | {{ clinic_email }}

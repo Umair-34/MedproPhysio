@@ -1,0 +1,77 @@
+{% load static %}
+<div class="mp-topbar">
+  <div class="mp-container mp-topbar__inner">
+    <div class="mp-topbar__links">
+      <a href="{{ site_phone_link }}">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+        {{ site_phone }}
+      </a>
+      <a href="mailto:{{ site_email }}">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+        {{ site_email }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<header class="mp-header">
+  <div class="mp-container mp-header__inner">
+    <a class="mp-logo" href="{% url 'website:home' %}" aria-label="{{ site_name }}">
+      <picture class="mp-logo__full">
+        <source srcset="{% static 'images/medpro-logo.webp' %}" type="image/webp">
+        <img src="{% static 'images/medpro-logo.png' %}" alt="" width="387" height="266">
+      </picture>
+      <img
+        class="mp-logo__icon"
+        src="{% static 'images/medpro-logo-icon.png' %}"
+        alt=""
+        width="160"
+        height="191"
+        aria-hidden="true">
+    </a>
+
+    <nav class="mp-header__nav" id="mp-main-nav" aria-label="Main navigation">
+      <ul class="mp-nav">
+        <li class="{% if request.resolver_match.url_name == 'home' %}is-active{% endif %}">
+          <a href="{% url 'website:home' %}">Home</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'about' %}is-active{% endif %}">
+          <a href="{% url 'website:about' %}">About</a>
+        </li>
+        <li class="mp-nav__has-dropdown {% if 'services' in request.path or request.resolver_match.url_name == 'services' or request.resolver_match.url_name == 'service-detail' %}is-active{% endif %}">
+          <a href="{% url 'website:services' %}">
+            Services
+            <i class="fa-solid fa-chevron-down mp-nav__caret" aria-hidden="true"></i>
+          </a>
+          <ul class="mp-nav__dropdown">
+            <li class="mp-nav__dropdown-head">
+              <a href="{% url 'website:services' %}">View all services</a>
+            </li>
+            {% for item in all_services %}
+            <li><a href="{% url 'website:service-detail' item.slug %}">{{ item.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'visit-us' %}is-active{% endif %}">
+          <a href="{% url 'website:visit-us' %}">Visit Us</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'contact' %}is-active{% endif %}">
+          <a href="{% url 'website:contact' %}">Contact</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'blog' or request.resolver_match.url_name == 'blog-detail' %}is-active{% endif %}">
+          <a href="{% url 'website:blog' %}">Blog</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="mp-header__actions">
+      <a href="{% url 'website:book' %}" class="mp-header__book">
+        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+        <span>Book appointment</span>
+      </a>
+      <button class="mp-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mp-main-nav" data-mp-nav-toggle>
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>

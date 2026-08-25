@@ -1,0 +1,22 @@
+<section class="mp-page-hero">
+  <div class="mp-page-hero__bg" aria-hidden="true"></div>
+  <div class="mp-container mp-page-hero__inner">
+    <nav class="mp-page-hero__breadcrumb" aria-label="Breadcrumb">
+      <ol class="mp-breadcrumb">
+        <li>
+          <a href="{% url 'website:home' %}">
+            <i class="fa-solid fa-house" aria-hidden="true"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li aria-current="page">
+          <span>{{ breadcrumb|default:page_title }}</span>
+        </li>
+      </ol>
+    </nav>
+    <h1 class="mp-page-hero__title">{{ page_title }}</h1>
+    {% if page_hero_lead %}
+    <p class="mp-page-hero__lead">{{ page_hero_lead }}</p>
+    {% endif %}
+  </div>
+</section>

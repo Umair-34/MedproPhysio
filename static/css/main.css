@@ -1,0 +1,194 @@
+/* Medpro Physiotherapy — design tokens & foundation */
+
+:root {
+  --mp-navy: #1b367e;
+  --mp-navy-dark: #122654;
+  --mp-teal: #009989;
+  --mp-teal-dark: #007a6d;
+  --mp-teal-soft: #e6f7f4;
+  --mp-white: #ffffff;
+  --mp-bg: #f6f9fb;
+  --mp-surface: #ffffff;
+  --mp-text: #1e293b;
+  --mp-muted: #64748b;
+  --mp-border: #e2e8f0;
+  --mp-success: #059669;
+  --mp-danger: #dc2626;
+  --mp-warning: #d97706;
+  --mp-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mp-heading: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mp-radius: 14px;
+  --mp-radius-sm: 10px;
+  --mp-radius-lg: 22px;
+  --mp-shadow: 0 10px 40px rgba(27, 54, 126, 0.08);
+  --mp-shadow-lg: 0 20px 50px rgba(27, 54, 126, 0.12);
+  --mp-container: 1140px;
+  --mp-nav-bar-h: 76px;
+  --mp-nav-bar-h-expanded: 148px;
+  --mp-logo-aspect: 387 / 266;
+  --mp-logo-slot-w: 12rem;
+  --mp-logo-transition: 0.32s ease;
+  --mp-header-h: var(--mp-nav-bar-h-expanded);
+  --mp-transition: 0.22s ease;
+}
+
+html.is-header-scrolled {
+  --mp-header-h: var(--mp-nav-bar-h);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--mp-font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--mp-text);
+  background: var(--mp-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img, picture, video, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a { color: var(--mp-teal); text-decoration: none; }
+a:hover { color: var(--mp-navy); }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--mp-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--mp-navy);
+  margin: 0 0 0.75rem;
+}
+
+p { margin: 0 0 1rem; }
+ul, ol { margin: 0; padding: 0; }
+button, input, select, textarea { font: inherit; }
+
+.mp-container {
+  width: min(100% - 2rem, var(--mp-container));
+  margin-inline: auto;
+}
+
+.mp-section {
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+}
+
+.mp-section--alt { background: var(--mp-bg); }
+.mp-section--navy {
+  background: linear-gradient(135deg, var(--mp-navy) 0%, #234595 100%);
+  color: var(--mp-white);
+}
+.mp-section--navy h1,
+.mp-section--navy h2,
+.mp-section--navy h3 { color: var(--mp-white); }
+
+.mp-section-head {
+  max-width: 680px;
+  margin-bottom: 2.5rem;
+}
+
+.mp-section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.mp-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mp-teal);
+}
+
+.mp-section--navy .mp-eyebrow { color: #7dffe8; }
+
+.mp-lead {
+  font-size: 1.0625rem;
+  color: var(--mp-muted);
+  margin-bottom: 0;
+}
+
+.mp-section--navy .mp-lead { color: rgba(255, 255, 255, 0.82); }
+
+/* Grid */
+.mp-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.mp-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.mp-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.mp-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.mp-grid--2-1 { grid-template-columns: 1.2fr 0.8fr; }
+.mp-grid--1-2 { grid-template-columns: 0.85fr 1.15fr; }
+
+@media (max-width: 900px) {
+  .mp-grid--2,
+  .mp-grid--3,
+  .mp-grid--4,
+  .mp-grid--2-1,
+  .mp-grid--1-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1100px) {
+  .mp-grid--3,
+  .mp-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .mp-container {
+    width: min(100% - 1.5rem, var(--mp-container));
+  }
+
+  .mp-section {
+    padding: clamp(2.5rem, 8vw, 3.5rem) 0;
+  }
+
+  .mp-btn-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mp-btn-group .mp-btn {
+    width: 100%;
+  }
+}
+
+/* Utilities */
+.d-none { display: none !important; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

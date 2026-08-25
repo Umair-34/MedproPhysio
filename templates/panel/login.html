@@ -1,0 +1,29 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block auth_content %}
+<div class="panel-login-page">
+  <div class="panel-login-card">
+    <div class="panel-login-brand">
+      <img src="{% static 'images/medpro-logo-icon.png' %}" alt="" width="48" height="48">
+      <h1>Medpro Panel</h1>
+      <p>Sign in to manage appointments, blogs, and schedules.</p>
+    </div>
+    <form method="post" class="panel-form">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="panel-alert panel-alert-error">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="panel-field">
+        <label for="id_username">Username</label>
+        {{ form.username }}
+      </div>
+      <div class="panel-field">
+        <label for="id_password">Password</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="panel-btn panel-btn-primary">Sign in</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static %}
+<footer class="mp-footer">
+  <div class="mp-container">
+    <div class="mp-footer__grid">
+      <div class="mp-footer__brand">
+        <a class="mp-footer__logo" href="{% url 'website:home' %}">
+          <picture>
+            <source srcset="{% static 'images/medpro-logo-light.webp' %}" type="image/webp">
+            <img src="{% static 'images/medpro-logo-light.png' %}" alt="{{ site_name }}" width="387" height="266" loading="lazy">
+          </picture>
+        </a>
+        <p class="mp-footer__tagline">{{ site_tagline }}</p>
+        <ul class="mp-footer__brand-links">
+          <li>
+            <a href="{{ site_phone_link }}" class="mp-footer__brand-link">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i>
+              <span>{{ site_phone }}</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'website:visit-us' %}" class="mp-footer__brand-link">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              <span>Directions &amp; parking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <nav class="mp-footer__col" aria-label="Quick links">
+        <h2 class="mp-footer__heading">Explore</h2>
+        <ul class="mp-footer__links">
+          <li><a href="{% url 'website:about' %}">About Us</a></li>
+          <li><a href="{% url 'website:services' %}">Our Services</a></li>
+          <li><a href="{% url 'website:blog' %}">Blog</a></li>
+          <li><a href="{% url 'website:visit-us' %}">Visit Us</a></li>
+          <li><a href="{% url 'website:faqs' %}">FAQs</a></li>
+          <li><a href="{% url 'website:contact' %}">Contact</a></li>
+        </ul>
+      </nav>
+
+      <nav class="mp-footer__col" aria-label="Popular services">
+        <h2 class="mp-footer__heading">Services</h2>
+        <ul class="mp-footer__links">
+          <li><a href="{% url 'website:service-detail' 'physiotherapy' %}">Physiotherapy</a></li>
+          <li><a href="{% url 'website:service-detail' 'massage-therapy' %}">Massage Therapy</a></li>
+          <li><a href="{% url 'website:service-detail' 'chiropractic' %}">Chiropractic</a></li>
+          <li><a href="{% url 'website:service-detail' 'acupuncture' %}">Acupuncture</a></li>
+          <li><a href="{% url 'website:patient-page' 'new-patient' %}">New Patient Guide</a></li>
+        </ul>
+      </nav>
+
+      <div class="mp-footer__col mp-footer__visit">
+        <h2 class="mp-footer__heading">Visit the clinic</h2>
+        <address class="mp-footer__address">
+          <a href="{% url 'website:visit-us' %}">
+            {{ site_street_address }}<br>
+            {{ site_city }}, {{ site_region }} {{ site_postal_code }}
+          </a>
+        </address>
+
+        <div class="mp-footer__hours">
+          <h3 class="mp-footer__hours-title">
+            <i class="fa-regular fa-clock" aria-hidden="true"></i>
+            Hours
+          </h3>
+          <dl class="mp-footer__hours-list">
+            <div>
+              <dt>Mon – Fri</dt>
+              <dd>8 AM – 8 PM</dd>
+            </div>
+            <div>
+              <dt>Saturday</dt>
+              <dd>8 AM – 4 PM</dd>
+            </div>
+            <div>
+              <dt>Sunday</dt>
+              <dd>9 AM – 2 PM</dd>
+            </div>
+          </dl>
+        </div>
+
+        <ul class="mp-footer__meta-links">
+          <li>
+            <a href="mailto:{{ site_email }}">
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+              {{ site_email }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ site_google_business_url }}" rel="noopener noreferrer" target="_blank">
+              <i class="fa-brands fa-google" aria-hidden="true"></i>
+ Google profile
+ </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mp-footer__bottom">
+      <p class="mp-footer__copy">Copyright {% now "Y" %} {{ site_name }}. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>

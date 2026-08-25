@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page_title %}{{ page_title }} · {% endif %}Medpro Panel</title>
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-32.png' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="{% static 'panel/panel.css' %}" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="panel-body">
+  {% if user.is_authenticated and user.is_staff %}
+  <div class="panel-layout">
+    <aside class="panel-sidebar">
+      <div class="panel-brand">
+        <img src="{% static 'images/medpro-logo-icon.png' %}" alt="" width="36" height="36">
+        <span>Medpro Panel</span>
+      </div>
+      <nav class="panel-nav">
+        <a href="{% url 'panel:dashboard' %}" class="panel-nav-link{% if request.resolver_match.url_name == 'dashboard' %} is-active{% endif %}">Calendar</a>
+        <a href="{% url 'panel:schedules' %}" class="panel-nav-link{% if request.resolver_match.url_name == 'schedules' %} is-active{% endif %}">Service Schedules</a>
+        <a href="{% url 'panel:blog-list' %}" class="panel-nav-link{% if 'blog' in request.resolver_match.url_name %} is-active{% endif %}">Blog</a>
+        <a href="{% url 'panel:contacts' %}" class="panel-nav-link{% if 'contact' in request.resolver_match.url_name %} is-active{% endif %}">
+          Contact Messages
+          {% if unread_contacts %}<span class="panel-badge">{{ unread_contacts }}</span>{% endif %}
+        </a>
+        <a href="{% url 'panel:users' %}" class="panel-nav-link{% if 'user' in request.resolver_match.url_name %} is-active{% endif %}">Users</a>
+      </nav>
+      <div class="panel-sidebar-footer">
+        <p class="panel-user">{{ user.get_full_name|default:user.username }}</p>
+        <a href="{% url 'website:home' %}" class="panel-link" target="_blank" rel="noopener">View website</a>
+        <form method="post" action="{% url 'panel:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="panel-link-btn">Sign out</button>
+        </form>
+      </div>
+    </aside>
+    <main class="panel-main">
+      <header class="panel-header">
+        <h1>{% block page_heading %}{{ page_title }}{% endblock %}</h1>
+        <div class="panel-header-actions">{% block header_actions %}{% endblock %}</div>
+      </header>
+      <div class="panel-content">
+        {% if messages %}
+        <div class="panel-messages">
+          {% for message in messages %}
+          <div class="panel-alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% block panel_content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+  {% else %}
+  {% block auth_content %}{% endblock %}
+  {% endif %}
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

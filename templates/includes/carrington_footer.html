@@ -1,0 +1,44 @@
+{% load static %}
+<footer class="cp-footer">
+  <div class="cp-container">
+    <div class="cp-footer-grid">
+      <div class="cp-footer-logo">
+        <picture>
+          <source srcset="{% static 'images/medpro-logo-light.webp' %}" type="image/webp">
+          <img src="{% static 'images/medpro-logo-light.png' %}" alt="{{ site_name }}" width="387" height="266">
+        </picture>
+        <p>{{ site_tagline }}</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="{% url 'website:home' %}">Home</a></li>
+          <li><a href="{% url 'website:about' %}">About</a></li>
+          <li><a href="{% url 'website:services' %}">Our Services</a></li>
+          <li><a href="{% url 'website:blog' %}">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="{% url 'website:service-detail' 'physiotherapy' %}">Physiotherapy</a></li>
+          <li><a href="{% url 'website:service-detail' 'massage-therapy' %}">Massage Therapy</a></li>
+          <li><a href="{% url 'website:service-detail' 'chiropractic' %}">Chiropractic</a></li>
+          <li><a href="{% url 'website:service-detail' 'acupuncture' %}">Acupuncture</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="{{ site_phone_link }}">{{ site_phone }}</a></li>
+          <li><a href="mailto:{{ site_email }}">{{ site_email }}</a></li>
+          <li><a href="{% url 'website:visit-us' %}">{{ site_address_short }}</a></li>
+          <li><a href="{% url 'website:book' %}">Book Appointment</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cp-footer-bottom">
+      <p>Copyright {% now "Y" %} {{ site_name }}. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>

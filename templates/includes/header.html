@@ -1,0 +1,60 @@
+{% load static %}
+<div class="topbar">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-9 col-md-12">
+        <div class="topbar-contact-info">
+          <ul>
+            <li><a href="{{ site_phone_link }}"><img src="{% static 'images/icon-phone.svg' %}" alt=""> {{ site_phone }}</a></li>
+            <li><a href="mailto:{{ site_email }}"><img src="{% static 'images/icon-mail.svg' %}" alt=""> {{ site_email }}</a></li>
+            <li class="hide-mobile"><a href="{% url 'website:visit-us' %}"><img src="{% static 'images/icon-location.svg' %}" alt=""> {{ site_address_short }}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="main-header">
+  <div class="header-sticky">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'website:home' %}">
+          <picture>
+            <source srcset="{% static 'images/medpro-logo.webp' %}" type="image/webp">
+            <img src="{% static 'images/medpro-logo.png' %}" alt="{{ site_name }}" width="387" height="266">
+          </picture>
+        </a>
+
+        <div class="collapse navbar-collapse main-menu show">
+          <div class="nav-menu-wrapper">
+            <ul class="navbar-nav mr-auto" id="menu">
+              <li class="nav-item"><a class="nav-link" href="{% url 'website:home' %}">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'website:about' %}">About</a></li>
+
+              <li class="nav-item submenu">
+                <a class="nav-link" href="{% url 'website:services' %}">Our Services</a>
+                <ul class="sub-menu mega-menu mega-menu-2col">
+                  {% for item in treatments_col1 %}
+                  <li><a class="nav-link" href="{% url 'website:service-detail' item.slug %}">{{ item.title }}</a></li>
+                  {% endfor %}
+                  {% for item in treatments_col2 %}
+                  <li><a class="nav-link" href="{% url 'website:service-detail' item.slug %}">{{ item.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+
+              <li class="nav-item"><a class="nav-link" href="{% url 'website:blog' %}">Blog</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'website:contact' %}">Contact</a></li>
+            </ul>
+          </div>
+          <div class="header-btn d-inline-flex">
+            <a href="{% url 'website:book' %}" class="btn-default btn-highlighted"><span>Book Appointment</span></a>
+          </div>
+        </div>
+        <div class="navbar-toggle"></div>
+      </div>
+    </nav>
+    <div class="responsive-menu"></div>
+  </div>
+</header>

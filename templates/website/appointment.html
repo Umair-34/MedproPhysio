@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-content-block">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Online Booking</span>
+      <h2>Book your appointment</h2>
+      <p class="mp-lead">Choose your service, pick a time, and get instant confirmation, no account required.</p>
+    </div>
+
+    <div class="mp-booking-layout">
+      {% include 'includes/booking_sidebar.html' %}
+
+      <div class="mp-booking-shell">
+        <div class="booking-stepper" aria-label="Booking progress">
+          <div class="booking-stepper-item is-active" data-step="1">
+            <span class="booking-stepper-number">1</span>
+            <span class="booking-stepper-label">Service</span>
+          </div>
+          <div class="booking-stepper-item" data-step="2">
+            <span class="booking-stepper-number">2</span>
+            <span class="booking-stepper-label">Date &amp; time</span>
+          </div>
+          <div class="booking-stepper-item" data-step="3">
+            <span class="booking-stepper-number">3</span>
+            <span class="booking-stepper-label">Your details</span>
+          </div>
+          <div class="booking-stepper-item" data-step="4">
+            <span class="booking-stepper-number">4</span>
+            <span class="booking-stepper-label">Confirm</span>
+          </div>
+        </div>
+
+        <form id="bookingForm" novalidate style="position:relative;">
+          {% csrf_token %}
+          {% include 'includes/form_guard.html' with hp_id='booking_company_website' turnstile_action='booking' turnstile_explicit=True turnstile_widget_id='cf-turnstile-booking' %}
+          <div id="bookingAlert" class="alert d-none" role="alert"></div>
+
+          <section class="booking-form-section" data-booking-step="1">
+            <header class="booking-form-section-header">
+              <span class="booking-form-section-number">01</span>
+              <div>
+                <h2>Choose your visit</h2>
+                <p>Select the service you need for your appointment.</p>
+              </div>
+            </header>
+            <div class="form-group">
+              <label for="service_id">Service</label>
+              <select name="service_id" class="form-control form-select" id="service_id" required>
+                <option value="" disabled selected>Select a service</option>
+              </select>
+              <p class="booking-field-hint">Physiotherapy, massage, chiropractic, and more.</p>
+            </div>
+          </section>
+
+          <section class="booking-form-section" data-booking-step="2">
+            <header class="booking-form-section-header">
+              <span class="booking-form-section-number">02</span>
+              <div>
+                <h2>Select date and time</h2>
+                <p>Pick a day that works for you, then choose an open slot.</p>
+              </div>
+            </header>
+            <div class="mp-form-grid">
+              <div class="form-group">
+                <label for="date">Preferred date</label>
+                <input type="date" name="date" class="form-control" id="date" required>
+              </div>
+              <div class="form-group">
+                <label for="slot">Available time</label>
+                <select name="slot" class="form-control form-select" id="slot" required disabled>
+                  <option value="" disabled selected>Select a date first</option>
+                </select>
+                <p class="booking-field-hint" id="slotHint">Times update after you choose a service and date.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="booking-form-section" data-booking-step="3">
+            <header class="booking-form-section-header">
+              <span class="booking-form-section-number">03</span>
+              <div>
+                <h2>Your contact details</h2>
+                <p>We will use this information to confirm your appointment.</p>
+              </div>
+            </header>
+            <div class="mp-form-grid">
+              <div class="form-group">
+                <label for="first_name">First name</label>
+                <input type="text" name="first_name" class="form-control" id="first_name" autocomplete="given-name" required>
+              </div>
+              <div class="form-group">
+                <label for="last_name">Last name</label>
+                <input type="text" name="last_name" class="form-control" id="last_name" autocomplete="family-name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" class="form-control" id="email" autocomplete="email" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" name="phone" class="form-control" id="phone" autocomplete="tel" required>
+              </div>
+              <div class="form-group mp-form-grid--full">
+                <label for="customer_notes">Notes <span style="font-weight:400;color:var(--mp-muted);">(optional)</span></label>
+                <textarea name="customer_notes" class="form-control" id="customer_notes" rows="3"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+            <p style="margin:0;font-size:0.8125rem;color:var(--mp-muted);"><i class="fa-solid fa-shield-halved"></i> Your information is used only to manage your appointment.</p>
+            <button type="submit" class="mp-btn mp-btn--primary" id="bookingSubmit" disabled>Confirm Booking</button>
+          </div>
+        </form>
+
+        <div id="bookingConfirmation" class="booking-confirmation d-none" role="status" aria-live="polite">
+          <div class="booking-confirmation-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <h2>Booking confirmed</h2>
+          <p id="confirmationDetails"></p>
+          <div class="booking-confirmation-actions">
+            <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--secondary">Visit Us</a>
+            <a href="{% url 'website:patient-page' 'new-patient' %}" class="mp-btn mp-btn--outline">New Patient Guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">How it works</span>
+      <h2>Simple steps to book care</h2>
+    </div>
+    <div class="mp-steps">
+      {% for step in booking_steps %}
+      <article class="mp-step">
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+{% if turnstile_site_key %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/booking.js' %}" defer></script>
+{% endblock %}

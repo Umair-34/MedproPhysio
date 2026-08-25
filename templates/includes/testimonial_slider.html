@@ -1,0 +1,33 @@
+<div class="swiper mp-testimonials-slider" data-mp-swiper="testimonials">
+  <div class="swiper-wrapper">
+    {% for testimonial in site_testimonials %}
+    <div class="swiper-slide">
+      <blockquote class="mp-quote">
+        <div class="mp-quote__header">
+          <i class="fa-solid fa-quote-left mp-quote__mark" aria-hidden="true"></i>
+          <div class="mp-quote__stars" aria-label="5 out of 5 stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+        </div>
+        <p class="mp-quote__text">&ldquo;{{ testimonial.quote }}&rdquo;</p>
+        <footer class="mp-quote__footer">
+          <div class="mp-quote__avatar" style="--avatar-color: {{ testimonial.avatar_color|default:'#1B367E' }};" aria-hidden="true">
+            <span>{% firstof testimonial.initial testimonial.name|slice:":1" %}</span>
+          </div>
+          <div class="mp-quote__meta">
+            <cite>{{ testimonial.name }}</cite>
+            <span><i class="fa-brands fa-google"></i> {{ testimonial.role }}</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="swiper-button-prev" aria-label="Previous testimonial"></div>
+  <div class="swiper-button-next" aria-label="Next testimonial"></div>
+  <div class="swiper-pagination"></div>
+</div>

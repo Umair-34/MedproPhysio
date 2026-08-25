@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block meta_description %}{{ page.meta_description|default:site_meta_description }}{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' %}
+
+<div class="page-service-single bg-radius-section treatment-page">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-4">
+        {% include 'includes/service_sidebar.html' %}
+      </div>
+
+      <div class="col-lg-8">
+        <div class="treatment-main">
+          {% include 'includes/detail_hero_image.html' with wrapper_class='treatment-hero-image' %}
+
+          <article class="treatment-content">
+            <header class="treatment-header">
+              <p class="treatment-eyebrow">{{ section_title }}</p>
+              <h1 class="treatment-title">{{ item.title }}</h1>
+              {% if page.description %}
+              <div class="treatment-description">{{ page.description|safe }}</div>
+              {% endif %}
+            </header>
+
+            {% if page.typical_sessions or page.first_improvement or page.recovery_timeline %}
+            <div class="treatment-stats" role="list">
+              {% if page.typical_sessions %}
+              <div class="treatment-stat" role="listitem">
+                <span class="treatment-stat-label">Typical visits</span>
+                <strong class="treatment-stat-value">{{ page.typical_sessions }}</strong>
+              </div>
+              {% endif %}
+              {% if page.first_improvement %}
+              <div class="treatment-stat" role="listitem">
+                <span class="treatment-stat-label">Often feel better by</span>
+                <strong class="treatment-stat-value">{{ page.first_improvement }}</strong>
+              </div>
+              {% endif %}
+              {% if page.recovery_timeline %}
+              <div class="treatment-stat" role="listitem">
+                <span class="treatment-stat-label">Full recovery</span>
+                <strong class="treatment-stat-value">{{ page.recovery_timeline }}</strong>
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            <nav class="treatment-tabs" aria-label="Treatment information">
+              <button type="button" class="treatment-tab active" data-tab="overview" aria-selected="true">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i> Overview
+              </button>
+              {% if page.assessment_steps %}
+              <button type="button" class="treatment-tab" data-tab="assessment" aria-selected="false">
+                <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Assessment
+              </button>
+              {% endif %}
+              {% if page.treatment_methods %}
+              <button type="button" class="treatment-tab" data-tab="treatment" aria-selected="false">
+                <i class="fa-solid fa-hand-holding-medical" aria-hidden="true"></i> How we treat
+              </button>
+              {% endif %}
+              {% if page.recovery_phases %}
+              <button type="button" class="treatment-tab" data-tab="recovery" aria-selected="false">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i> Recovery
+              </button>
+              {% endif %}
+              {% if page.case_studies %}
+              <button type="button" class="treatment-tab" data-tab="cases" aria-selected="false">
+                <i class="fa-solid fa-user-check" aria-hidden="true"></i> Case studies
+              </button>
+              {% endif %}
+            </nav>
+
+            <div class="treatment-panels">
+              <section class="treatment-panel active" id="panel-overview" data-panel="overview">
+                {% if page.benefits %}
+                <h2 class="treatment-panel-title">{{ page.benefits_heading|default:"What this treatment helps with" }}</h2>
+                <ul class="treatment-benefit-grid">
+                  {% for benefit in page.benefits %}
+                  <li class="treatment-benefit-card">
+                    <span>{{ benefit }}</span>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="treatment-cta-inline">
+                  <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book this treatment</a>
+                  <a href="{% url 'website:contact' %}" class="mp-btn mp-btn--outline">Ask a question</a>
+                </div>
+              </section>
+
+              {% if page.assessment_steps %}
+              <section class="treatment-panel" id="panel-assessment" data-panel="assessment" hidden>
+                <h2 class="treatment-panel-title">How we assess you</h2>
+                <p class="treatment-panel-intro">Every plan starts with a clear picture of your symptoms, movement, and goals.</p>
+                <ol class="treatment-stepper">
+                  {% for title, body in page.assessment_steps %}
+                  <li class="treatment-step">
+                    <div class="treatment-step-marker">{{ forloop.counter }}</div>
+                    <div class="treatment-step-body">
+                      <h3>{{ title }}</h3>
+                      <p>{{ body }}</p>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ol>
+              </section>
+              {% endif %}
+
+              {% if page.treatment_methods %}
+              <section class="treatment-panel" id="panel-treatment" data-panel="treatment" hidden>
+                <h2 class="treatment-panel-title">How we treat your condition</h2>
+                <p class="treatment-panel-intro">Techniques are chosen from your assessment, not a one size fits all menu.</p>
+                <div class="treatment-method-grid">
+                  {% for title, body in page.treatment_methods %}
+                  <article class="treatment-method-card">
+                    <span class="treatment-method-card__icon" aria-hidden="true">
+                      {% cycle 'fa-hand-holding-medical' 'fa-person-walking' 'fa-book-medical' 'fa-calendar-check' 'fa-heart-pulse' 'fa-dumbbell' as method_icon silent %}
+                      <i class="fa-solid {{ method_icon }}"></i>
+                    </span>
+                    <div class="treatment-method-card__content">
+                      <h3>{{ title }}</h3>
+                      <p>{{ body }}</p>
+                    </div>
+                  </article>
+                  {% endfor %}
+                </div>
+              </section>
+              {% endif %}
+
+              {% if page.recovery_phases %}
+              <section class="treatment-panel" id="panel-recovery" data-panel="recovery" hidden>
+                <h2 class="treatment-panel-title">Typical recovery timeline</h2>
+                <p class="treatment-panel-intro">Timelines vary by person. These phases show what many patients experience.</p>
+                <div class="treatment-timeline">
+                  {% for phase, timeframe, body in page.recovery_phases %}
+                  <div class="treatment-timeline-item">
+                    <div class="treatment-timeline-marker"></div>
+                    <div class="treatment-timeline-content">
+                      <div class="treatment-timeline-head">
+                        <h3>{{ phase }}</h3>
+                        <span class="treatment-timeline-badge">{{ timeframe }}</span>
+                      </div>
+                      <p>{{ body }}</p>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </section>
+              {% endif %}
+
+              {% if page.case_studies %}
+              <section class="treatment-panel" id="panel-cases" data-panel="cases" hidden>
+                <h2 class="treatment-panel-title">Patient case studies</h2>
+                <p class="treatment-panel-intro">Real recovery paths from our Calgary clinic. Names and details are changed for privacy.</p>
+                <div class="treatment-cases">
+                  {% for case in page.case_studies %}
+                  <details class="treatment-case"{% if forloop.first %} open{% endif %}>
+                    <summary class="treatment-case__summary">
+                      <span class="treatment-case__profile">{{ case.patient_label }}</span>
+                      <span class="treatment-case__issue">{{ case.issue }}</span>
+                      <span class="treatment-case__badge">{{ case.timeline }}</span>
+                      <span class="treatment-case__toggle" aria-hidden="true">
+                        <i class="fa-solid fa-plus"></i>
+                        <i class="fa-solid fa-minus"></i>
+                      </span>
+                    </summary>
+                    <div class="treatment-case__body">
+                      <div class="treatment-case__row">
+                        <span class="treatment-case__label"><i class="fa-solid fa-route"></i> Approach</span>
+                        <p>{{ case.approach }}</p>
+                      </div>
+                      <div class="treatment-case__row">
+                        <span class="treatment-case__label"><i class="fa-solid fa-circle-check"></i> Outcome</span>
+                        <p>{{ case.outcome }}</p>
+                      </div>
+                    </div>
+                  </details>
+                  {% endfor %}
+                </div>
+              </section>
+              {% endif %}
+            </div>
+          </article>
+
+          {% if page.faqs %}
+          {% include 'includes/service_single_faq.html' with faqs=page.faqs faq_intro=page.faq_intro %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/treatment-detail.js' %}" defer></script>
+{% endblock %}

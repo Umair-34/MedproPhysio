@@ -1,0 +1,38 @@
+{% extends 'panel/base.html' %}
+
+{% block panel_content %}
+<div class="panel-card">
+  {% if submissions %}
+  <table class="panel-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Received</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in submissions %}
+      <tr class="{% if not item.is_read %}is-unread{% endif %}">
+        <td><strong>{{ item.full_name }}</strong></td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.created_at|date:"M j, Y g:i A" }}</td>
+        <td>
+          {% if item.is_read %}
+          <span class="panel-pill">Read</span>
+          {% else %}
+          <span class="panel-pill panel-pill-warning">New</span>
+          {% endif %}
+        </td>
+        <td><a href="{% url 'panel:contact-detail' item.pk %}">Open</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="panel-empty">No contact messages yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

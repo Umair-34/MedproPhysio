@@ -1,0 +1,65 @@
+{% load static %}
+<aside class="mp-service-sidebar" aria-label="Service navigation">
+  <div class="mp-service-sidebar__panel">
+    <div class="mp-service-sidebar__head">
+      <span class="mp-eyebrow">Browse</span>
+      <h2 class="mp-service-sidebar__title">{{ section_title }}</h2>
+      <a href="{% url 'website:services' %}" class="mp-service-sidebar__view-all">
+        View all services <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+    <nav class="mp-service-sidebar__nav" aria-label="{{ section_title }}">
+      <ul>
+        {% for nav_item in sidebar_items %}
+        <li>
+          <a href="{% url sidebar_url_name nav_item.slug %}"
+            class="mp-service-sidebar__link{% if nav_item.slug == item.slug %} is-active{% endif %}"
+            {% if nav_item.slug == item.slug %}aria-current="page"{% endif %}>
+            <span>{{ nav_item.title }}</span>
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="mp-service-sidebar__panel mp-service-sidebar__hours">
+    <div class="mp-service-sidebar__hours-top">
+      <div class="mp-service-sidebar__panel-head">
+        <span class="mp-service-sidebar__panel-icon" aria-hidden="true"><i class="fa-regular fa-clock"></i></span>
+        <h3>Opening Hours</h3>
+      </div>
+      <div class="mp-service-sidebar__status mp-service-sidebar__status--{{ clinic_open_state }}" role="status" aria-live="polite">
+        <span class="mp-service-sidebar__status-dot" aria-hidden="true"></span>
+        <span>{{ clinic_open_message }}</span>
+      </div>
+    </div>
+    <ul class="mp-service-sidebar__schedule">
+      {% for row in clinic_hours %}
+      <li class="mp-service-sidebar__schedule-row{% if row.is_today %} is-today{% endif %}">
+        <span class="mp-service-sidebar__day">
+          <strong>{{ row.label|slice:":3" }}</strong>
+          {% if row.is_today %}<em>Today</em>{% endif %}
+        </span>
+        <span class="mp-service-sidebar__time">{{ row.hours }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="mp-service-sidebar__hours-actions">
+      <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book Appointment</a>
+      <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--outline">Hours &amp; Directions</a>
+    </div>
+  </div>
+
+  <div class="mp-service-sidebar__panel mp-service-sidebar__help">
+    <div class="mp-service-sidebar__help-icon" aria-hidden="true">
+      <i class="fa-solid fa-phone"></i>
+    </div>
+    <div>
+      <h3>Need help?</h3>
+      <p>Speak with our front desk team about booking or your visit.</p>
+      <a href="{{ site_phone_link }}" class="mp-service-sidebar__phone">{{ site_phone }}</a>
+    </div>
+  </div>
+</aside>

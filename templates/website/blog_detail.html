@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block title %}{{ post.meta_title }}{% endblock %}
+
+{% block meta_description %}{{ post.meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ post.meta_title }}">
+<meta property="og:description" content="{{ post.meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% optimized_static post.image %}">
+<meta property="og:locale" content="en_CA">
+<meta property="article:published_time" content="{{ post.published_date }}">
+<meta property="article:author" content="{{ post.author }}">
+<meta property="article:section" content="{{ post.tag }}">
+{% include 'includes/schema/blog_post.html' %}
+{% endblock %}
+
+{% block content %}
+<article class="mp-blog-article">
+  <header class="mp-blog-article-hero">
+    <div class="mp-container">
+      <nav aria-label="Breadcrumb">
+        <ol class="mp-breadcrumb">
+          <li><a href="{% url 'website:home' %}">Home</a></li>
+          <li><a href="{% url 'website:blog' %}">Wellness Blog</a></li>
+          <li aria-current="page">{{ post.title }}</li>
+        </ol>
+      </nav>
+      <a href="{% url 'website:blog' %}" class="mp-blog-article-hero__back">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to all articles
+ </a>
+      <span class="mp-blog-card__tag">{{ post.tag }}</span>
+      <h1>{{ post.title }}</h1>
+      <p class="mp-blog-article-hero__summary">{{ post.summary }}</p>
+      <ul class="mp-blog-article-meta" aria-label="Article details">
+        <li><i class="fa-regular fa-user" aria-hidden="true"></i> {{ post.author }}</li>
+        <li><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ post.published_display }}</li>
+        <li><i class="fa-regular fa-clock" aria-hidden="true"></i> {{ post.reading_time }}</li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="mp-container">
+    <figure class="mp-blog-article__figure">
+      {% optimized_img src=post.image alt=post.image_alt loading='eager' width='1200' height='600' fetchpriority='high' %}
+    </figure>
+  </div>
+
+  <div class="mp-section mp-blog-article-body">
+    <div class="mp-container">
+      <div class="mp-blog-article__layout">
+        <div class="mp-blog-article__content">
+          <div class="mp-blog-article__entry">
+            {% if post.content and not post.sections %}
+            {{ post.content|safe }}
+            {% else %}
+            {% for section in post.sections %}
+            {% if section.heading %}
+            <h2>{{ section.heading }}</h2>
+            {% endif %}
+            {% for paragraph in section.paragraphs %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+            {% if section.list %}
+            <ul>
+              {% for item in section.list %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% if section.blockquote %}
+            <blockquote class="mp-blog-quote">
+              <p>{{ section.blockquote }}</p>
+            </blockquote>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+
+          {% if post.faqs %}
+          <section class="mp-blog-article-faq" aria-labelledby="blog-faq-heading">
+            <h2 id="blog-faq-heading">Frequently asked questions</h2>
+            <div class="mp-faq">
+              {% for question, answer in post.faqs %}
+              <details class="mp-faq-item"{% if forloop.first %} open{% endif %}>
+                <summary>
+                  <span class="mp-faq-item__icon" aria-hidden="true"><i class="fa-solid fa-circle-question"></i></span>
+                  <span class="mp-faq-item__question">{{ question }}</span>
+                  <span class="mp-faq-item__toggle" aria-hidden="true">
+                    <i class="fa-solid fa-plus"></i>
+                    <i class="fa-solid fa-minus"></i>
+                  </span>
+                </summary>
+                <div class="mp-faq-item__answer">
+                  <p>{{ answer }}</p>
+                </div>
+              </details>
+              {% endfor %}
+            </div>
+          </section>
+          {% endif %}
+
+          <div class="mp-blog-article__topic">
+            <span>Topic:</span>
+            <a href="{% url 'website:blog' %}">{{ post.tag }}</a>
+          </div>
+        </div>
+
+        <aside class="mp-blog-article-sidebar" aria-label="Article sidebar">
+          {% if post.key_takeaways %}
+          <div class="mp-blog-sidebar-panel">
+            <h2>Key takeaways</h2>
+            <ul class="mp-blog-takeaways">
+              {% for item in post.key_takeaways %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          {% if post.related_services %}
+          <div class="mp-blog-sidebar-panel">
+            <h2>Related services</h2>
+            <ul class="mp-blog-related-services">
+              {% for service in post.related_services %}
+              <li>
+                <a href="{% url 'website:service-detail' service.slug %}">
+                  {{ service.title }}
+                  <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <div class="mp-blog-sidebar-panel mp-blog-sidebar-panel--cta">
+            <h2>Book care in Calgary</h2>
+            <p>Same week appointments are often available at our northwest Calgary clinic.</p>
+            <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book Appointment</a>
+            <a href="{% url 'website:patient-page' 'new-patient' %}" class="mp-btn mp-btn--outline">New Patient Guide</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  {% if related_posts %}
+  <section class="mp-section mp-section--alt mp-blog-related" aria-labelledby="related-posts-heading">
+    <div class="mp-container">
+      <div class="mp-section-head">
+        <span class="mp-eyebrow">Keep reading</span>
+        <h2 id="related-posts-heading">More articles</h2>
+      </div>
+      <div class="mp-grid mp-grid--2">
+        {% for related in related_posts %}
+        {% include 'includes/blog_card.html' with post=related %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</article>
+
+{% include 'includes/site_cta.html' with cta_heading_id='blog-article-cta-heading' cta_title='Ready to book care in Calgary?' cta_text="Put what you've learned into action. Book physiotherapy, massage, or wellness care online in minutes." %}
+{% endblock %}

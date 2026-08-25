@@ -1,0 +1,54 @@
+{% load static %}
+<aside class="mp-patient-sidebar" aria-label="Patient hub navigation">
+  <div class="mp-patient-sidebar__panel">
+    <div class="mp-patient-sidebar__head">
+      <span class="mp-eyebrow">Resources</span>
+      <h2 class="mp-patient-sidebar__title">Patient Hub</h2>
+    </div>
+    <nav class="mp-patient-sidebar__nav" aria-label="Patient resources">
+      <ul>
+        {% for item in patient_hub_nav %}
+        <li>
+          {% if item.slug %}
+          <a href="{% url item.url_name item.slug %}"
+            class="mp-patient-sidebar__link{% if patient_slug == item.slug %} is-active{% endif %}"
+            {% if patient_slug == item.slug %}aria-current="page"{% endif %}>
+            <span>{{ item.title }}</span>
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </a>
+          {% else %}
+          <a href="{% url item.url_name %}" class="mp-patient-sidebar__link">
+            <span>{{ item.title }}</span>
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="mp-patient-sidebar__panel mp-patient-sidebar__help">
+    <h3>Need help?</h3>
+    <ul class="mp-patient-sidebar__help-list">
+      <li>
+        <a href="{{ site_phone_link }}">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          <span><strong>Call us</strong>{{ site_phone }}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'website:book' %}">
+          <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+          <span><strong>Book online</strong>Same week slots often available</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'website:visit-us' %}">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+          <span><strong>Visit us</strong>{{ site_address_short }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>

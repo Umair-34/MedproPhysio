@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-section--alt">
+  <div class="mp-container">
+    <div class="mp-about">
+      <div class="mp-about__visual">
+        <div class="mp-about__photo">
+          {% optimized_img src=about_page_image alt='Physiotherapy treatment at '|add:site_name loading='lazy' width='640' height='800' %}
+        </div>
+        <aside class="mp-about__badge" aria-label="{{ about_counter_value }} percent {{ about_counter_label }}">
+          <strong>{{ about_counter_value }}%</strong>
+          <span>{{ about_counter_label }}</span>
+        </aside>
+        <div class="mp-about__accent" aria-hidden="true"></div>
+      </div>
+      <div class="mp-about__content">
+        <span class="mp-eyebrow">About Us</span>
+        <h2>{{ about_page_title }}</h2>
+        <p class="mp-about__intro">{{ about_page_lead }}</p>
+        {% for paragraph in about_intro %}
+        <p class="mp-lead">{{ paragraph }}</p>
+        {% endfor %}
+        <div class="mp-about__highlights">
+          {% for item in about_highlights %}
+          <article class="mp-about-highlight">
+            <div class="mp-about-highlight__icon" aria-hidden="true">
+              <i class="{{ item.icon }}"></i>
+            </div>
+            <div>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.text }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="mp-about__stats" role="list">
+          {% for stat in about_stats %}
+          <div class="mp-about-stat" role="listitem">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="mp-btn-group">
+          <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book Appointment</a>
+          <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--outline">Visit Our Clinic</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Purpose</span>
+      <h2>Our mission and vision</h2>
+    </div>
+    <div class="mp-grid mp-grid--2 mp-about-mv">
+      <article class="mp-about-mv-card">
+        <div class="mp-about-mv-card__icon"><i class="{{ about_mission.icon }}"></i></div>
+        <h3>{{ about_mission.title }}</h3>
+        <p>{{ about_mission.summary }}</p>
+      </article>
+      <article class="mp-about-mv-card">
+        <div class="mp-about-mv-card__icon"><i class="{{ about_vision.icon }}"></i></div>
+        <h3>{{ about_vision.title }}</h3>
+        <p>{{ about_vision.summary }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Our Values</span>
+      <h2>Care built on quality, compassion, and expertise</h2>
+    </div>
+    <div class="mp-value-grid">
+      {% for value in about_values %}
+      <article class="mp-value-card">
+        <i class="{{ value.icon }}"></i>
+        <h3>{{ value.title }}</h3>
+        <p>{{ value.summary }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mp-section">
+  <div class="mp-container">
+    <div class="mp-about-contact">
+      <div>
+        <span class="mp-eyebrow">Visit Us</span>
+        <h2>Our Nolanridge Court clinic</h2>
+        <p class="mp-lead">Book online or call our team to schedule physiotherapy, massage therapy, and wellness care in northwest Calgary.</p>
+      </div>
+      <div class="mp-about-contact__details">
+        <a href="{{ site_phone_link }}" class="mp-about-contact__item">
+          <i class="fa-solid fa-phone"></i>
+          <span><strong>Phone</strong>{{ site_phone }}</span>
+        </a>
+        <a href="{{ site_google_directions_url }}" class="mp-about-contact__item" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-location-dot"></i>
+          <span><strong>Address</strong>{{ site_street_address }}, {{ site_city }}, {{ site_region }} {{ site_postal_code }}</span>
+        </a>
+        <a href="{% url 'website:visit-us' %}" class="mp-about-contact__item">
+          <i class="fa-solid fa-map"></i>
+          <span><strong>Directions</strong>Parking, hours, and clinic map</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='about-cta-heading' cta_title='Start your recovery with us' cta_text=about_closing cta_secondary_url=site_google_business_url cta_secondary_label='View on Google' cta_secondary_external=True %}
+{% endblock %}

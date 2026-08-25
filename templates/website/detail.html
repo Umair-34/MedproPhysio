@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block meta_description %}{{ page.meta_description|default:site_meta_description }}{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' %}
+
+<div class="page-service-single bg-radius-section detail-page">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-4">
+        {% include 'includes/service_sidebar.html' %}
+      </div>
+
+      <div class="col-lg-8">
+        <div class="service-single-content detail-main">
+          {% include 'includes/detail_hero_image.html' %}
+
+          <article class="service-entry detail-content">
+            <header class="detail-header">
+              <p class="detail-eyebrow">{{ section_title }}</p>
+              <h1 class="detail-title">{{ item.title }} in Calgary</h1>
+              {% if page.description %}
+              <div class="detail-description">{{ page.description|safe }}</div>
+              {% endif %}
+              <div class="detail-actions">
+                <a href="{% url 'website:book' %}" class="btn-default btn-highlighted"><span>Book Appointment</span></a>
+                <a href="{% url 'website:contact' %}" class="btn-default"><span>Contact Us</span></a>
+              </div>
+            </header>
+
+            {% for heading, body in page.sections %}
+            <section class="detail-section">
+              <h2 class="detail-section-title">{{ heading }}</h2>
+              <p class="detail-text">{{ body }}</p>
+            </section>
+            {% endfor %}
+
+            {% if page.benefits %}
+            <section class="detail-section detail-benefits">
+              <h2 class="detail-section-title">{{ page.benefits_heading|default:"Why choose our Calgary clinic" }}</h2>
+              <ul class="detail-benefit-list">
+                {% for benefit in page.benefits %}
+                <li class="detail-benefit-item">
+                  <span class="detail-benefit-text">{{ benefit }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </section>
+            {% endif %}
+          </article>
+
+          {% if page.faqs %}
+          {% include 'includes/service_single_faq.html' with faqs=page.faqs faq_intro=page.faq_intro %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load optimized_images %}
+<div class="mp-services-grid-item"
+  data-title="{{ item.title|lower }}"
+  data-summary="{{ item.summary|default:''|lower }}">
+  <article class="mp-service-hub-card">
+    {% if item.image_url %}
+    <a href="{% url detail_url_name item.slug %}" class="mp-service-hub-card__media" aria-label="Learn more about {{ item.title }} in Calgary">
+      {% optimized_img src=item.image_url alt=item.image_alt|default:item.title loading='lazy' %}
+    </a>
+    {% endif %}
+    <div class="mp-service-hub-card__body">
+      <h3><a href="{% url detail_url_name item.slug %}">{{ item.title }}</a></h3>
+      {% if item.typical_sessions or item.recovery_timeline %}
+      <div class="mp-service-hub-card__meta">
+        {% if item.typical_sessions %}<span class="mp-service-hub-card__tag">{{ item.typical_sessions }}</span>{% endif %}
+        {% if item.recovery_timeline %}<span class="mp-service-hub-card__tag">{{ item.recovery_timeline }} recovery</span>{% endif %}
+      </div>
+      {% endif %}
+      {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+      <a href="{% url detail_url_name item.slug %}" class="mp-service-hub-card__link">
+        Learn more <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+  </article>
+</div>

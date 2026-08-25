@@ -1,0 +1,49 @@
+{% load static %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": "{{ request.build_absolute_uri }}#article",
+  "headline": "{{ post.title|escapejs }}",
+  "description": "{{ post.meta_description|escapejs }}",
+  "image": "{{ request.scheme }}://{{ request.get_host }}{% static post.image %}",
+  "datePublished": "{{ post.published_date }}",
+  "dateModified": "{{ post.published_date }}",
+  "author": {
+    "@type": "Organization",
+    "name": "{{ post.author|escapejs }}"
+  },
+  "publisher": {
+    "@type": "MedicalBusiness",
+    "name": "{{ site_name|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'website:home' %}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.build_absolute_uri }}"
+  },
+  "articleSection": "{{ post.tag|escapejs }}",
+  "inLanguage": "en-CA",
+  "keywords": "{{ post.tag|escapejs }}, Calgary physiotherapy, Calgary wellness"
+}
+</script>
+{% if post.faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for question, answer in post.faqs %}
+    {
+      "@type": "Question",
+      "name": "{{ question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ answer|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}

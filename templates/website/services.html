@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block title %}{{ hub_meta_title }} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ hub_meta_title }} | {{ site_name }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:locale" content="en_CA">
+<meta name="geo.region" content="CA-AB">
+<meta name="geo.placename" content="Calgary">
+{% include 'includes/schema/services_hub.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-services-hub-intro" aria-labelledby="services-intro-heading">
+  <div class="mp-container">
+    <div class="mp-services-hub-intro__layout">
+      <div class="mp-services-hub-intro__content">
+        <span class="mp-eyebrow">Our Services</span>
+        <h2 id="services-intro-heading">Physiotherapy, massage &amp; wellness care in Calgary</h2>
+        <p class="mp-lead">{{ hub_intro }}</p>
+        <div class="mp-services-hub-stats" role="list">
+          <div class="mp-services-hub-stat" role="listitem">
+            <strong>{{ service_count }}</strong>
+            <span>All services</span>
+          </div>
+          <div class="mp-services-hub-stat" role="listitem">
+            <strong>Same week</strong>
+            <span>Often available</span>
+          </div>
+        </div>
+      </div>
+      <aside class="mp-services-hub-booking" aria-label="Book an appointment">
+        <div class="mp-services-hub-booking__status visit-status-{{ clinic_open_state }}" role="status" aria-live="polite">
+          <span class="visit-status-dot" aria-hidden="true"></span>
+          <span>{{ clinic_open_message }}</span>
+        </div>
+        <p>Book physiotherapy, massage, chiropractic, acupuncture, or kinesiology at our northwest Calgary clinic.</p>
+        <div class="mp-btn-group">
+          <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book Online</a>
+          <a href="{{ site_phone_link }}" class="mp-btn mp-btn--outline">Call {{ site_phone }}</a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="mp-services-hub-pillars" aria-label="What each service page includes">
+      <article class="mp-services-hub-pillar">
+        <span class="mp-services-hub-pillar__icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
+        <h3>Assessment</h3>
+        <p>How we find the cause of your symptoms</p>
+      </article>
+      <article class="mp-services-hub-pillar">
+        <span class="mp-services-hub-pillar__icon" aria-hidden="true"><i class="fa-solid fa-hand-holding-medical"></i></span>
+        <h3>Service approach</h3>
+        <p>Techniques matched to your goals</p>
+      </article>
+      <article class="mp-services-hub-pillar">
+        <span class="mp-services-hub-pillar__icon" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span>
+        <h3>Recovery</h3>
+        <p>Typical phases and timeframes</p>
+      </article>
+      <article class="mp-services-hub-pillar">
+        <span class="mp-services-hub-pillar__icon" aria-hidden="true"><i class="fa-solid fa-user-check"></i></span>
+        <h3>Case studies</h3>
+        <p>Examples from our Calgary patients</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt mp-services-hub-grid" aria-labelledby="services-grid-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">All Services</span>
+      <h2 id="services-grid-heading">Find the right care for you</h2>
+    </div>
+
+    <div class="mp-services-hub-toolbar" role="search">
+      <label class="mp-services-hub-search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="serviceSearch" class="mp-services-hub-search__input" placeholder="Search services..." autocomplete="off" aria-controls="servicesGrid" aria-label="Search services">
+      </label>
+    </div>
+
+    <p class="mp-services-hub-results" id="serviceResults" data-results-label="service" data-results-label-plural="services" aria-live="polite">Showing {{ service_count }} services</p>
+
+    <div class="mp-grid mp-grid--3" id="servicesGrid">
+      {% for item in items %}
+      {% include 'includes/service_hub_card.html' with item=item detail_url_name=detail_url_name %}
+      {% endfor %}
+    </div>
+
+    <div class="mp-services-hub-empty" id="servicesEmpty" hidden>
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <h3>No services match your search</h3>
+      <p>Try a different keyword or clear the filter to see all Calgary services.</p>
+      <button type="button" class="mp-btn mp-btn--outline" id="serviceReset">Clear search</button>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-faq-section" aria-labelledby="services-faq-heading">
+  <div class="mp-container">
+    <div class="mp-faq-layout">
+      <aside class="mp-faq-panel">
+        <span class="mp-eyebrow">FAQs</span>
+        <h2 id="services-faq-heading">Questions about our services</h2>
+        <p class="mp-lead">Quick answers before you book at {{ site_name }}.</p>
+        <div class="mp-faq-help">
+          <a href="{% url 'website:book' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Book online</strong>
+              <span>Same week appointments often available</span>
+            </span>
+          </a>
+          <a href="{{ site_phone_link }}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Call the clinic</strong>
+              <span>{{ site_phone }}</span>
+            </span>
+          </a>
+        </div>
+        <a href="{% url 'website:faqs' %}" class="mp-btn mp-btn--outline">View all FAQs</a>
+      </aside>
+      <div class="mp-faq">
+        {% for question, answer in services_faqs %}
+        <details class="mp-faq-item"{% if forloop.first %} open{% endif %}>
+          <summary>
+            <span class="mp-faq-item__icon" aria-hidden="true"><i class="fa-solid fa-circle-question"></i></span>
+            <span class="mp-faq-item__question">{{ question }}</span>
+            <span class="mp-faq-item__toggle" aria-hidden="true">
+              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-minus"></i>
+            </span>
+          </summary>
+          <div class="mp-faq-item__answer">
+            <p>{{ answer }}</p>
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='services-cta-heading' cta_title='Ready to book your Calgary appointment?' cta_text='Choose your service online or call us. Our clinic serves northwest Calgary and surrounding communities.' cta_secondary_url='/visit-us/' cta_secondary_label='Visit Our Clinic' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/services-hub.js' %}" defer></script>
+{% endblock %}

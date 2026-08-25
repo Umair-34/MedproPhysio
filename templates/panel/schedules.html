@@ -1,0 +1,97 @@
+{% extends 'panel/base.html' %}
+
+{% block panel_content %}
+<div class="panel-schedules-layout">
+  <aside class="panel-card panel-service-list">
+    <h2>Services</h2>
+    <ul>
+      {% for service in services %}
+      <li>
+        <a href="{% url 'panel:schedules' %}?service={{ service.pk }}" class="{% if selected_service.pk == service.pk %}is-active{% endif %}">
+          {{ service.name }}
+        </a>
+      </li>
+      {% empty %}
+      <li class="panel-empty">No active services.</li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  {% if selected_service %}
+  <div class="panel-card">
+    <h2>{{ selected_service.name }} schedule</h2>
+    <p class="panel-help">Set hours for each weekday within clinic opening hours. Check <strong>Unavailable</strong> to block online booking for that day.</p>
+
+    <form method="post" class="panel-form">
+      {% csrf_token %}
+      <input type="hidden" name="service" value="{{ selected_service.pk }}">
+
+      <div class="panel-weekly-schedule">
+        <div class="panel-weekly-schedule-head">
+          <span>Day</span>
+          <span>Start</span>
+          <span></span>
+          <span>End</span>
+          <span>Unavailable</span>
+        </div>
+        {% for row in weekday_rows %}
+        <div class="panel-weekly-schedule-row{% if row.is_unavailable %} is-unavailable{% endif %}" data-day-row="{{ row.day_value }}">
+          <div class="panel-weekday-cell">
+            <span class="panel-weekday-label">{{ row.day_label }}</span>
+            <span class="panel-weekday-hours">{{ row.clinic_hours_label }}</span>
+          </div>
+          <input
+            type="time"
+            name="day_{{ row.day_value }}_start"
+            value="{{ row.start_time }}"
+            class="panel-input panel-time-input"
+            {% if row.clinic_opens %}min="{{ row.clinic_opens }}"{% endif %}
+            {% if row.clinic_closes %}max="{{ row.clinic_closes }}"{% endif %}
+            {% if row.is_unavailable %}disabled{% endif %}
+          >
+          <span class="panel-weekday-to">to</span>
+          <input
+            type="time"
+            name="day_{{ row.day_value }}_end"
+            value="{{ row.end_time }}"
+            class="panel-input panel-time-input"
+            {% if row.clinic_opens %}min="{{ row.clinic_opens }}"{% endif %}
+            {% if row.clinic_closes %}max="{{ row.clinic_closes }}"{% endif %}
+            {% if row.is_unavailable %}disabled{% endif %}
+          >
+          <label class="panel-checkbox-label panel-unavailable-label">
+            <input
+              type="checkbox"
+              name="day_{{ row.day_value }}_unavailable"
+              class="panel-unavailable-toggle"
+              {% if row.is_unavailable %}checked{% endif %}
+            >
+            Unavailable
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="panel-form-actions">
+        <button type="submit" class="panel-btn panel-btn-primary">Save schedule</button>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('.panel-unavailable-toggle').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      var row = checkbox.closest('.panel-weekly-schedule-row');
+      var inputs = row.querySelectorAll('.panel-time-input');
+      row.classList.toggle('is-unavailable', checkbox.checked);
+      inputs.forEach(function (input) {
+        input.disabled = checkbox.checked;
+      });
+    });
+  });
+</script>
+{% endblock %}

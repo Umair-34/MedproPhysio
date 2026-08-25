@@ -1,0 +1,25 @@
+{% if audience == 'clinic' %}APPOINTMENT CANCELLED
+{{ clinic_name }}
+
+The following appointment has been cancelled and the slot is open again.{% else %}APPOINTMENT CANCELLED
+{{ clinic_name }}
+
+Hi {{ customer_first_name }}, your appointment has been cancelled.
+If this was a mistake, you can rebook any time.{% endif %}
+
+Service:    {{ service_name }}
+Date:       {{ appointment_date }}
+Time:       {{ appointment_time }} ({{ duration_minutes }} min)
+Location:   {{ clinic_address }}
+{% if show_patient %}Patient:    {{ customer_name }}
+Email:      {{ customer_email }}
+Phone:      {{ customer_phone }}
+{% endif %}Reference:  {{ confirmation_token }}
+{% if cancellation_reason %}Reason:     {{ cancellation_reason }}
+{% endif %}{% if audience != 'clinic' %}
+Book again: {{ book_url }}
+Questions? Call {{ clinic_phone }}.
+{% endif %}
+{{ clinic_name }}
+{{ clinic_address }}
+{{ clinic_phone }} | {{ clinic_email }}

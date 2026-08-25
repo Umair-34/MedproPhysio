@@ -1,0 +1,68 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block panel_content %}
+<form method="post" class="panel-form panel-card" id="blogPostForm">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+  <div class="panel-alert panel-alert-error">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <div class="panel-form-grid">
+    {% for field in form %}
+    <div class="panel-field{% if field.name == 'content' or field.name == 'summary' or field.name == 'meta_description' or field.name == 'key_takeaways_text' %} panel-field-full{% endif %}">
+      {% if field.name == 'content' %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% if field.help_text %}<p class="panel-help">{{ field.help_text }}</p>{% endif %}
+      <div class="panel-summernote-wrap">{{ field }}</div>
+      {% elif field.field.widget.input_type == 'checkbox' %}
+      <label class="panel-checkbox-label">{{ field }} {{ field.label }}</label>
+      {% if field.help_text %}<p class="panel-help">{{ field.help_text }}</p>{% endif %}
+      {% else %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}<p class="panel-help">{{ field.help_text }}</p>{% endif %}
+      {% endif %}
+      {% for error in field.errors %}<p class="panel-error">{{ error }}</p>{% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="panel-form-actions">
+    <button type="submit" class="panel-btn panel-btn-primary">{% if is_create %}Publish post{% else %}Save changes{% endif %}</button>
+    <a href="{% url 'panel:blog-list' %}" class="panel-btn panel-btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'summernote/summernote-lite.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'summernote/summernote-lite.min.js' %}"></script>
+<script>
+(function ($) {
+  var $editor = $('#id_content');
+  if (!$editor.length || typeof $.fn.summernote !== 'function') {
+    return;
+  }
+
+  $editor.summernote({
+    height: 320,
+    placeholder: 'Write the article body…',
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['link']],
+      ['view', ['fullscreen', 'codeview']]
+    ]
+  });
+
+  $('#blogPostForm').on('submit', function () {
+    $editor.val($editor.summernote('code'));
+  });
+})(jQuery);
+</script>
+{% endblock %}

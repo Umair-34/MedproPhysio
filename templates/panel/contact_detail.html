@@ -1,0 +1,23 @@
+{% extends 'panel/base.html' %}
+
+{% block panel_content %}
+<div class="panel-card">
+  <dl class="panel-detail-list">
+    <div><dt>Name</dt><dd>{{ submission.full_name }}</dd></div>
+    <div><dt>Email</dt><dd><a href="mailto:{{ submission.email }}">{{ submission.email }}</a></dd></div>
+    <div><dt>Phone</dt><dd>{% if submission.phone %}<a href="tel:{{ submission.phone }}">{{ submission.phone }}</a>{% else %}—{% endif %}</dd></div>
+    <div><dt>Received</dt><dd>{{ submission.created_at|date:"F j, Y g:i A" }}</dd></div>
+    <div><dt>Message</dt><dd class="panel-message-body">{{ submission.message|linebreaksbr }}</dd></div>
+  </dl>
+
+  <form method="post" class="panel-form-inline">
+    {% csrf_token %}
+    <label class="panel-checkbox-label">
+      <input type="checkbox" name="is_read"{% if submission.is_read %} checked{% endif %}>
+      Mark as read
+    </label>
+    <button type="submit" class="panel-btn panel-btn-secondary">Update</button>
+    <a href="{% url 'panel:contacts' %}" class="panel-btn panel-btn-secondary">Back</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,437 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block body_class %}mp-page-home{% endblock %}
+{% block title %}{{ home_meta_title }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ home_meta_title }} | {{ site_name }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% include 'includes/schema/home_page.html' %}
+{% endblock %}
+
+{% block content %}
+<section class="mp-home-hero" aria-labelledby="home-hero-heading">
+  <div class="mp-container mp-home-hero__inner">
+    <div class="mp-home-hero__layout">
+      <div class="mp-home-hero__content">
+        <span class="mp-home-hero__eyebrow">
+          <span class="mp-home-hero__eyebrow-line" aria-hidden="true"></span>
+          {{ home_hero.eyebrow }}
+        </span>
+
+        <h1 id="home-hero-heading" class="mp-home-hero__title">
+          {{ home_hero.title_before }}
+          <span class="mp-home-hero__accent">{{ home_hero.title_accent }}</span>
+          {% if home_hero.title_after %} {{ home_hero.title_after }}{% endif %}
+        </h1>
+
+        <p class="mp-home-hero__intro">{{ home_hero.intro }}</p>
+
+        <div class="mp-home-hero__actions">
+          <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary mp-home-hero__cta">
+            {{ home_hero.primary_cta }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+          <a href="{% url 'website:services' %}" class="mp-btn mp-btn--outline mp-home-hero__cta-secondary">
+            {{ home_hero.secondary_cta }}
+          </a>
+        </div>
+
+        <div class="mp-home-hero__proof">
+          <div class="mp-home-hero__avatars" aria-hidden="true">
+            {% for avatar in home_hero.avatars %}
+            <span class="mp-home-hero__avatar" style="background: {{ avatar.color }}">{{ avatar.initial }}</span>
+            {% endfor %}
+          </div>
+          <div class="mp-home-hero__rating">
+            <div class="mp-home-hero__stars" aria-label="{{ home_hero.rating_value }} out of 5 stars">
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+            </div>
+            <p>
+              <strong>{{ home_hero.rating_value }} {{ home_hero.rating_label }}</strong>
+              <span>{{ home_hero.rating_detail }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mp-home-hero__visual">
+        <div class="mp-home-hero__photo">
+          {% optimized_img src=home_hero.image alt='Physiotherapy care at '|add:site_name loading='eager' width='800' height='1000' %}
+        </div>
+        <span class="mp-home-hero__chip">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          {{ home_hero.badge }}
+        </span>
+        <aside class="mp-home-hero__stat" aria-label="{{ home_hero.experience_value }} {{ home_hero.experience_label }}">
+          <strong>{{ home_hero.experience_value }}</strong>
+          <span>{{ home_hero.experience_label }}</span>
+        </aside>
+      </div>
+    </div>
+
+    <ul class="mp-home-hero__features">
+      {% for item in home_hero.features %}
+      <li class="mp-home-hero__feature">
+        <span class="mp-home-hero__feature-icon" aria-hidden="true">
+          <i class="{{ item.icon }}"></i>
+        </span>
+        <span class="mp-home-hero__feature-copy">
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.text }}</span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="mp-section mp-about-story" aria-labelledby="about-heading">
+  <div class="mp-container">
+    <div class="mp-about" data-mp-about>
+      <div class="mp-about__visual">
+        <div class="mp-about__photo">
+          {% optimized_img src=home_about_story.image alt='Care at '|add:site_name loading='lazy' width='640' height='800' %}
+        </div>
+        <a href="{% url 'website:about' %}" class="mp-about__know-more">
+          <span>{{ home_about_story.cta }}</span>
+          <span class="mp-about__know-more-icon" aria-hidden="true">
+            <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </a>
+      </div>
+
+      <div class="mp-about__content">
+        <span class="mp-about__eyebrow">
+          <span class="mp-about__eyebrow-line" aria-hidden="true"></span>
+          {{ home_about_story.eyebrow }}
+        </span>
+        <h2 id="about-heading" class="mp-about__title">
+          {{ home_about_story.title_before }}
+          <span class="mp-about__title-accent">{{ home_about_story.title_accent }}</span>
+          {{ home_about_story.title_after }}
+        </h2>
+        <p class="mp-about__intro">{{ home_about_story.intro }}</p>
+
+        <div class="mp-about__tabs" role="tablist" aria-label="About Medpro">
+          {% for tab in home_about_story.tabs %}
+          <button
+            type="button"
+            class="mp-about__tab{% if forloop.first %} is-active{% endif %}"
+            role="tab"
+            id="about-tab-{{ tab.id }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="about-panel-{{ tab.id }}"
+            data-mp-about-tab
+          >
+            <i class="{{ tab.icon }}" aria-hidden="true"></i>
+            <span>{{ tab.label }}</span>
+          </button>
+          {% endfor %}
+        </div>
+
+        {% for tab in home_about_story.tabs %}
+        <div
+          class="mp-about__panel{% if forloop.first %} is-active{% endif %}"
+          role="tabpanel"
+          id="about-panel-{{ tab.id }}"
+          aria-labelledby="about-tab-{{ tab.id }}"
+          data-mp-about-panel
+          {% if not forloop.first %}hidden{% endif %}
+        >
+          <div class="mp-about__panel-media">
+            {% optimized_img src=home_about_story.panel_image alt='Medpro Physiotherapy practitioner' loading='lazy' width='240' height='240' %}
+          </div>
+          <div class="mp-about__panel-body">
+            <p>{{ tab.summary }}</p>
+            <ul class="mp-about__checks">
+              {% for point in tab.points %}
+              <li>
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span>{{ point }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-first-visit" aria-labelledby="first-visit-heading">
+  <div class="mp-container">
+    <div class="mp-split">
+      <div>
+        <h2 id="first-visit-heading" class="mp-first-visit__title">{{ home_first_visit_title }}</h2>
+        <p class="mp-first-visit__lead"><strong>{{ home_first_visit_lead }}</strong></p>
+        <p class="mp-lead">{{ home_first_visit_intro }}</p>
+        <ul class="mp-first-visit__list">
+          {% for tip in home_first_visit_tips %}
+          <li>{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="mp-split__media mp-split__media--rounded">
+        {% optimized_img src=home_first_visit_image alt='Physiotherapy session before your first visit' loading='lazy' %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-services-grid" aria-labelledby="services-grid-heading">
+  <div class="mp-container">
+    <div class="mp-grid mp-grid--3 mp-services-grid__items">
+      {% for promo in home_service_promos %}
+      <a href="{% url 'website:service-detail' promo.slug %}"
+         class="mp-service-card"
+         aria-label="{{ promo.title }}">
+        <div class="mp-service-card__media">
+          {% optimized_img src=promo.image alt=promo.title loading='lazy' %}
+        </div>
+        <span class="mp-service-card__label">{{ promo.title }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt" aria-labelledby="services-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Our Services</span>
+      <h2 id="services-heading">Comprehensive care under one roof</h2>
+      <p class="mp-lead">From injury recovery to ongoing wellness, our Calgary team offers specialized treatments tailored to your goals.</p>
+    </div>
+    <div class="mp-grid mp-grid--3">
+      {% for benefit in home_benefits %}
+      <article class="mp-card">
+        <div class="mp-card__icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.summary }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-process" aria-labelledby="process-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">How It Works</span>
+      <h2 id="process-heading">Your path to recovery in four steps</h2>
+      <p class="mp-lead">From booking to getting back to what you love. Tap a step to see what happens at each stage.</p>
+    </div>
+
+    <div class="mp-process__shell" data-mp-process>
+      <div class="mp-process__progress" aria-hidden="true">
+        <span class="mp-process__progress-fill" data-mp-process-progress></span>
+      </div>
+
+      <div class="mp-process__layout">
+        <div class="mp-process__nav" role="tablist" aria-label="Recovery steps">
+          {% for step in home_how_it_works %}
+          <button
+            type="button"
+            class="mp-process-step{% if forloop.first %} is-active{% endif %}"
+            role="tab"
+            id="process-tab-{{ forloop.counter }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="process-panel-{{ forloop.counter }}"
+            data-mp-process-step="{{ forloop.counter0 }}"
+          >
+            <span class="mp-process-step__marker" aria-hidden="true">
+              <span class="mp-process-step__dot"></span>
+            </span>
+            <span class="mp-process-step__icon">
+              <img src="{% static step.icon %}" alt="" width="40" height="40" loading="lazy">
+            </span>
+            <span class="mp-process-step__text">
+              <span class="mp-process-step__num">Step {{ forloop.counter|stringformat:"02d" }}</span>
+              <span class="mp-process-step__title">{{ step.title }}</span>
+            </span>
+            <i class="fa-solid fa-chevron-right mp-process-step__arrow" aria-hidden="true"></i>
+          </button>
+          {% endfor %}
+        </div>
+
+        <div class="mp-process__panels">
+          {% for step in home_how_it_works %}
+          <article
+            class="mp-process-panel{% if forloop.first %} is-active{% endif %}"
+            id="process-panel-{{ forloop.counter }}"
+            role="tabpanel"
+            aria-labelledby="process-tab-{{ forloop.counter }}"
+            {% if not forloop.first %}hidden{% endif %}
+            data-mp-process-panel="{{ forloop.counter0 }}"
+          >
+            <div class="mp-process-panel__visual" aria-hidden="true">
+              <div class="mp-process-panel__icon-ring">
+                <img src="{% static step.icon %}" alt="" width="96" height="96" loading="lazy">
+              </div>
+              <span class="mp-process-panel__badge">{{ forloop.counter|stringformat:"02d" }}</span>
+            </div>
+            <div class="mp-process-panel__body">
+              <p class="mp-process-panel__eyebrow">Step {{ forloop.counter }} of {{ home_how_it_works|length }}</p>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.summary }}</p>
+              <div class="mp-process-panel__actions">
+                {% if forloop.first %}
+                <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book your visit</a>
+                {% elif forloop.counter == 2 %}
+                <a href="{% url 'website:services' %}" class="mp-btn mp-btn--outline">Explore services</a>
+                {% elif forloop.last %}
+                <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book follow-up care</a>
+                {% else %}
+                <a href="{% url 'website:about' %}" class="mp-btn mp-btn--outline">Meet our team</a>
+                {% endif %}
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-section--alt" aria-labelledby="testimonials-heading">
+  <div class="mp-container mp-testimonials">
+    <div class="mp-testimonials__head">
+      <div class="mp-testimonials__intro">
+        <span class="mp-eyebrow">Testimonials</span>
+        <h2 id="testimonials-heading">What our patients say</h2>
+        <p class="mp-lead">Real feedback from Calgary patients who have trusted us with their recovery and wellness.</p>
+      </div>
+      <aside class="mp-testimonials__rating" aria-label="Average Google rating">
+        <div class="mp-testimonials__rating-stars" aria-hidden="true">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <strong>4.9</strong>
+        <span><i class="fa-brands fa-google"></i> Google patient reviews</span>
+      </aside>
+    </div>
+    {% include 'includes/testimonial_slider.html' %}
+  </div>
+</section>
+
+<section class="mp-section mp-faq-section" aria-labelledby="faq-heading">
+  <div class="mp-container">
+    <div class="mp-faq-layout">
+      <aside class="mp-faq-panel">
+        <span class="mp-eyebrow">FAQs</span>
+        <h2 id="faq-heading">Common questions</h2>
+        <p class="mp-lead">Quick answers about booking, insurance, and our Calgary clinic, plus easy ways to reach us.</p>
+        <div class="mp-faq-help">
+          <a href="{% url 'website:book' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Book online</strong>
+              <span>Same week appointments often available</span>
+            </span>
+          </a>
+          <a href="{{ site_phone_link }}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Call the clinic</strong>
+              <span>{{ site_phone }}</span>
+            </span>
+          </a>
+          <a href="{% url 'website:visit-us' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Visit us</strong>
+              <span>{{ site_address_short }}</span>
+            </span>
+          </a>
+        </div>
+        <a href="{% url 'website:faqs' %}" class="mp-btn mp-btn--outline">View all FAQs</a>
+      </aside>
+      <div class="mp-faq">
+        {% for faq in home_faqs %}
+        <details class="mp-faq-item"{% if forloop.first %} open{% endif %}>
+          <summary>
+            <span class="mp-faq-item__icon" aria-hidden="true"><i class="{{ faq.icon }}"></i></span>
+            <span class="mp-faq-item__question">{{ faq.question }}</span>
+            <span class="mp-faq-item__toggle" aria-hidden="true">
+              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-minus"></i>
+            </span>
+          </summary>
+          <div class="mp-faq-item__answer">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if blog_posts %}
+<section class="mp-section mp-section--alt mp-blog-home" aria-labelledby="blog-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-blog-home-head">
+      <div>
+        <span class="mp-eyebrow">Blog</span>
+        <h2 id="blog-heading">Wellness tips &amp; guides</h2>
+      </div>
+      <a href="{% url 'website:blog' %}" class="mp-blog-home-head__all">
+ View all articles <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    {% with featured=blog_posts.0 %}
+    <div class="mp-blog-home__layout{% if blog_posts|length == 1 %} mp-blog-home__layout--solo{% endif %}">
+      <a href="{% url 'website:blog-detail' featured.slug %}" class="mp-blog-feature">
+        <span class="mp-blog-feature__media" aria-hidden="true">
+          {% optimized_img src=featured.image alt='' loading='lazy' width='960' height='720' %}
+        </span>
+        <span class="mp-blog-feature__copy">
+          {% if featured.tag %}<span class="mp-blog-overlay-tag">{{ featured.tag }}</span>{% endif %}
+          <h3>{{ featured.title }}</h3>
+          <span class="mp-blog-feature__cta">
+ Read article <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </span>
+        </span>
+      </a>
+
+      {% if blog_posts|length > 1 %}
+      <div class="mp-blog-home__stack">
+        {% for post in blog_posts %}
+        {% if not forloop.first %}
+        <a href="{% url 'website:blog-detail' post.slug %}" class="mp-blog-mini">
+          <span class="mp-blog-mini__media" aria-hidden="true">
+            {% optimized_img src=post.image alt='' loading='lazy' width='640' height='400' %}
+          </span>
+          <span class="mp-blog-mini__copy">
+            {% if post.tag %}<span class="mp-blog-overlay-tag">{{ post.tag }}</span>{% endif %}
+            <h3>{{ post.title }}</h3>
+          </span>
+        </a>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endwith %}
+  </div>
+</section>
+{% endif %}
+
+{% include 'includes/site_cta.html' %}
+{% endblock %}

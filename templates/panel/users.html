@@ -1,0 +1,37 @@
+{% extends 'panel/base.html' %}
+
+{% block header_actions %}
+<a href="{% url 'panel:user-create' %}" class="panel-btn panel-btn-primary">Add user</a>
+{% endblock %}
+
+{% block panel_content %}
+<div class="panel-card">
+  <p class="panel-help">Panel users can sign in at <code>/panel/login/</code>. There is no public signup — add staff here.</p>
+  {% if users %}
+  <table class="panel-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Active</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in users %}
+      <tr>
+        <td><strong>{{ item.username }}</strong></td>
+        <td>{{ item.get_full_name|default:"—" }}</td>
+        <td>{{ item.email|default:"—" }}</td>
+        <td>{% if item.is_active %}Yes{% else %}No{% endif %}</td>
+        <td><a href="{% url 'panel:user-edit' item.pk %}">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="panel-empty">No panel users yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

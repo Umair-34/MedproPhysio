@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% include 'includes/schema/faq_page.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-faq-section mp-faqs-page" aria-labelledby="faqs-page-heading" data-mp-faq-page>
+  <div class="mp-container">
+    <div class="mp-faqs-page__intro">
+      <span class="mp-eyebrow">Help centre</span>
+      <h2 id="faqs-page-heading">Find answers quickly</h2>
+      <p class="mp-lead">Filter by topic or search keywords to jump to the question you need.</p>
+    </div>
+
+    <div class="mp-faqs-page__toolbar">
+      <label class="mp-faqs-page__search" for="faq-search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input
+          type="search"
+          id="faq-search"
+          placeholder="Search questions…"
+          autocomplete="off"
+          data-mp-faq-search
+        >
+      </label>
+
+      <div class="mp-faqs-page__filters" role="tablist" aria-label="FAQ categories">
+        {% for category in faqs_page_categories %}
+        <button
+          type="button"
+          class="mp-faqs-page__filter{% if category.id == 'all' %} is-active{% endif %}"
+          role="tab"
+          aria-selected="{% if category.id == 'all' %}true{% else %}false{% endif %}"
+          data-mp-faq-filter="{{ category.id }}"
+        >
+          <i class="{{ category.icon }}" aria-hidden="true"></i>
+          {{ category.label }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="mp-faqs-page__toolbar-actions">
+        <p class="mp-faqs-page__count" data-mp-faq-count>{{ faqs_page_faqs|length }} questions</p>
+        <button type="button" class="mp-faqs-page__action" data-mp-faq-expand>Expand all</button>
+        <button type="button" class="mp-faqs-page__action" data-mp-faq-collapse>Collapse all</button>
+      </div>
+    </div>
+
+    <div class="mp-faq-layout mp-faqs-page__layout">
+      <aside class="mp-faq-panel mp-faqs-page__aside">
+        <div class="mp-faqs-page__photo">
+          {% optimized_img src='images/home/about-clinic.jpg' alt='Physiotherapy at '|add:site_name loading='lazy' width='640' height='800' %}
+        </div>
+        <div class="mp-faq-help">
+          <a href="{% url 'website:book' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Book online</strong>
+              <span>Same week appointments often available</span>
+            </span>
+          </a>
+          <a href="{{ site_phone_link }}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Call the clinic</strong>
+              <span>{{ site_phone }}</span>
+            </span>
+          </a>
+          <a href="{% url 'website:visit-us' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Directions &amp; parking</strong>
+              <span>{{ site_address_short }}</span>
+            </span>
+          </a>
+        </div>
+        <a href="{% url 'website:contact' %}" class="mp-btn mp-btn--outline">Still have a question?</a>
+      </aside>
+
+      <div class="mp-faq mp-faqs-page__list" data-mp-faq-list>
+        {% for faq in faqs_page_faqs %}
+        <details
+          class="mp-faq-item"
+          data-mp-faq-item
+          data-category="{{ faq.category }}"
+          {% if forloop.first %}open{% endif %}
+        >
+          <summary>
+            <span class="mp-faq-item__icon" aria-hidden="true"><i class="{{ faq.icon }}"></i></span>
+            <span class="mp-faq-item__question">{{ faq.question }}</span>
+            <span class="mp-faq-item__toggle" aria-hidden="true">
+              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-minus"></i>
+            </span>
+          </summary>
+          <div class="mp-faq-item__answer">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mp-faqs-page__empty" data-mp-faq-empty hidden>
+      <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+      <h3>No matching questions</h3>
+      <p>Try another keyword or category, or contact our team directly.</p>
+      <a href="{% url 'website:contact' %}" class="mp-btn mp-btn--primary">Contact us</a>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='faqs-cta-heading' cta_title='Ready to book your visit?' cta_text='Our Calgary team is here to help you move better and feel better.' cta_secondary_url='/services/' cta_secondary_label='View Services' %}
+{% endblock %}

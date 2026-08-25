@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}{{ site_meta_description }}{% endblock %}">
+  <title>{% block title %}{% if page_title %}{{ page_title }} | {% endif %}{{ site_name }}{% endblock %}</title>
+  <link rel="icon" href="{% static 'images/favicon-light.png' %}" type="image/png" sizes="64x64" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="{% static 'images/favicon-light-32.png' %}" type="image/png" sizes="32x32" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" sizes="64x64" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="{% static 'images/favicon-32.png' %}" type="image/png" sizes="32x32" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon-light.png' %}" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" media="(prefers-color-scheme: light)">
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
+  {% if use_r2 %}
+  {# R2 CSS loads fonts cross-origin; browsers block without bucket CORS. #}
+  <style>
+    @font-face {
+      font-family: "Font Awesome 6 Free";
+      font-style: normal;
+      font-weight: 900;
+      font-display: block;
+      src: url("/webfonts/fa-solid-900.woff2") format("woff2"),
+           url("/webfonts/fa-solid-900.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Font Awesome 6 Free";
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url("/webfonts/fa-regular-400.woff2") format("woff2"),
+           url("/webfonts/fa-regular-400.ttf") format("truetype");
+    }
+    @font-face {
+      font-family: "Font Awesome 6 Brands";
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url("/webfonts/fa-brands-400.woff2") format("woff2"),
+           url("/webfonts/fa-brands-400.ttf") format("truetype");
+    }
+  </style>
+  {% endif %}
+  <link href="{% static 'css/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'css/components.css' %}" rel="stylesheet">
+  <link href="{% static 'css/pages.css' %}" rel="stylesheet">
+  <link href="{% static 'css/content.css' %}" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% block site_header %}
+  {% include 'includes/site_header.html' %}
+  {% endblock %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  {% block site_footer %}
+  {% include 'includes/site_footer.html' %}
+  {% endblock %}
+
+  <script src="{% static 'js/swiper-bundle.min.js' %}" defer></script>
+  <script src="{% static 'js/site.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

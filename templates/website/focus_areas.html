@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block title %}{{ hub_meta_title }} | {{ site_name }}{% endblock %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ hub_meta_title }} | {{ site_name }}">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:locale" content="en_CA">
+<meta name="geo.region" content="CA-AB">
+<meta name="geo.placename" content="Calgary">
+{% include 'includes/schema/focus_areas_hub.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' %}
+
+<section class="treatments-hub-intro" aria-labelledby="focus-areas-intro-heading">
+  <div class="container">
+    <div class="row align-items-center g-4 treatments-hub-intro-row">
+      <div class="col-lg-7">
+        <div class="section-title">
+          <h3 class="wow fadeInUp">Focus Areas</h3>
+          <h2 id="focus-areas-intro-heading" class="text-anime-style-3" data-cursor="-opaque">Specialized Calgary physiotherapy programs</h2>
+          <p class="wow fadeInUp" data-wow-delay="0.2s">{{ hub_intro }}</p>
+        </div>
+        <div class="treatments-hub-stats wow fadeInUp" data-wow-delay="0.35s" role="list">
+          <div class="treatments-hub-stat" role="listitem">
+            <strong>{{ focus_area_count }}</strong>
+            <span>Focus programs</span>
+          </div>
+          <div class="treatments-hub-stat" role="listitem">
+            <strong>{{ injury_items|length }}</strong>
+            <span>Injury recovery</span>
+          </div>
+          <div class="treatments-hub-stat" role="listitem">
+            <strong>Same week</strong>
+            <span>Often available</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="treatments-hub-hero-card wow fadeInUp" data-wow-delay="0.25s">
+          <div class="visit-status-badge visit-status-{{ clinic_open_state }}" role="status" aria-live="polite">
+            <span class="visit-status-dot" aria-hidden="true"></span>
+            <span>{{ clinic_open_message }}</span>
+          </div>
+          <p>Book physiotherapy, massage, chiropractic, acupuncture, or kinesiology for your injury, recovery, or wellness goals.</p>
+          <div class="treatments-hub-hero-actions">
+            <a href="{% url 'website:book' %}" class="btn-default btn-highlighted"><span>Book Online</span></a>
+            <a href="{{ site_phone_link }}" class="btn-default btn-outline"><span>Call {{ site_phone }}</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="treatments-hub-pillars wow fadeInUp" data-wow-delay="0.15s" aria-label="What each focus area page includes">
+      <div class="treatments-hub-pillar" tabindex="0">
+        <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>
+        <h3>Assessment</h3>
+        <p>How we evaluate your injury or concern</p>
+      </div>
+      <div class="treatments-hub-pillar" tabindex="0">
+        <i class="fa-solid fa-hand-holding-medical" aria-hidden="true"></i>
+        <h3>Care plan</h3>
+        <p>Programs matched to your goals</p>
+      </div>
+      <div class="treatments-hub-pillar" tabindex="0">
+        <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+        <h3>Recovery</h3>
+        <p>Typical phases and milestones</p>
+      </div>
+      <div class="treatments-hub-pillar" tabindex="0">
+        <i class="fa-solid fa-file-shield" aria-hidden="true"></i>
+        <h3>Insurance</h3>
+        <p>WCB, MVA, and extended health support</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="treatments-hub-grid-section" aria-labelledby="focus-areas-grid-heading">
+  <div class="container">
+    <div class="section-title treatments-hub-grid-heading wow fadeInUp">
+      <h3>Browse focus areas</h3>
+      <h2 id="focus-areas-grid-heading" class="text-anime-style-3" data-cursor="-opaque">Find the right program for you</h2>
+    </div>
+
+    <div class="treatments-hub-toolbar-panel wow fadeInUp" data-wow-delay="0.1s" role="search">
+      <div class="treatments-hub-search">
+        <label class="visually-hidden" for="treatmentSearch">Search focus areas</label>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="treatmentSearch" class="treatments-hub-search-input" placeholder="Search focus areas..." autocomplete="off" aria-controls="treatmentsGrid">
+      </div>
+      <div class="treatments-hub-filters" role="group" aria-label="Filter focus areas">
+        <button type="button" class="treatments-filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="treatments-filter-btn" data-filter="injury" aria-pressed="false">Injury recovery</button>
+        <button type="button" class="treatments-filter-btn" data-filter="wellness" aria-pressed="false">Ongoing wellness</button>
+      </div>
+    </div>
+
+    <p class="treatments-hub-results" id="treatmentResults" data-results-label="focus area" data-results-label-plural="focus areas" aria-live="polite">Showing {{ focus_area_count }} focus areas</p>
+
+    <div class="row" id="treatmentsGrid">
+      {% for item in items %}
+      <div class="col-lg-4 col-md-6 treatments-grid-item"
+        data-hub-group="{{ item.hub_group }}"
+        data-title="{{ item.title|lower }}"
+        data-summary="{{ item.summary|default:''|lower }}">
+        <article class="service-item treatments-hub-card wow fadeInUp" data-wow-delay="{{ forloop.counter0|stringformat:'d' }}00ms">
+          {% if item.hub_group == 'injury' %}
+          <span class="treatments-hub-badge">Injury recovery</span>
+          {% else %}
+          <span class="treatments-hub-badge">Ongoing wellness</span>
+          {% endif %}
+          {% if item.image_url %}
+          <a href="{% url detail_url_name item.slug %}" class="service-item-image" aria-label="Learn more about {{ item.title }} in Calgary">
+            <figure>
+              {% optimized_img src=item.image_url alt=item.image_alt|default:item.title loading='lazy' %}
+            </figure>
+          </a>
+          {% endif %}
+          <div class="service-body">
+            <div class="service-content">
+              <h3><a href="{% url detail_url_name item.slug %}">{{ item.title }}</a></h3>
+              {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+            </div>
+            <div class="service-btn">
+              <a href="{% url detail_url_name item.slug %}" aria-label="Learn more about {{ item.title }}">
+                <img src="{% static 'images/arrow-readmore-btn.svg' %}" alt="" width="24" height="24">
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="treatments-hub-empty" id="treatmentsEmpty" hidden>
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <h3>No focus areas match your search</h3>
+      <p>Try a different keyword or clear the filter to see all Calgary programs.</p>
+      <button type="button" class="btn-default" id="treatmentReset"><span>Reset filters</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="treatments-hub-faq" aria-labelledby="focus-areas-faq-heading">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="section-title">
+          <h3 class="wow fadeInUp">FAQs</h3>
+          <h2 id="focus-areas-faq-heading" class="text-anime-style-3" data-cursor="-opaque">Questions about our Calgary focus areas</h2>
+          <p class="wow fadeInUp" data-wow-delay="0.2s">Quick answers before you book at {{ site_name }}.</p>
+          <div class="wow fadeInUp" data-wow-delay="0.35s">
+            <a href="{% url 'website:faqs' %}" class="btn-default btn-outline"><span>View all FAQs</span></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="accordion home-faq-accordion wow fadeInUp" id="focusAreasFaqAccordion">
+          {% for question, answer in focus_areas_faqs %}
+          <div class="accordion-item">
+            <h3 class="accordion-header" id="focusAreasFaqHeading{{ forloop.counter }}">
+              <button class="accordion-button{% if not forloop.first %} collapsed{% endif %}" type="button" data-bs-toggle="collapse"
+                data-bs-target="#focusAreasFaqCollapse{{ forloop.counter }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="focusAreasFaqCollapse{{ forloop.counter }}">
+                {{ question }}
+              </button>
+            </h3>
+            <div id="focusAreasFaqCollapse{{ forloop.counter }}" class="accordion-collapse collapse{% if forloop.first %} show{% endif %}" aria-labelledby="focusAreasFaqHeading{{ forloop.counter }}"
+              data-bs-parent="#focusAreasFaqAccordion">
+              <div class="accordion-body">
+                <p>{{ answer }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-bottom-cta treatments-hub-cta" aria-labelledby="focus-areas-cta-heading">
+  <div class="container">
+    <div class="home-bottom-cta-inner wow fadeInUp">
+      <h2 id="focus-areas-cta-heading">Ready to start your Calgary recovery plan?</h2>
+      <p>Choose your focus area online or call {{ site_phone }}. Our Calgary clinic serves northeast Calgary and surrounding communities.</p>
+      <div class="home-bottom-cta-actions">
+        <a href="{% url 'website:book' %}" class="btn-default btn-highlighted"><span>Book Appointment</span></a>
+        <a href="{% url 'website:visit-us' %}" class="btn-default btn-outline"><span>Visit Our Clinic</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/treatments-hub.js' %}" defer></script>
+{% endblock %}

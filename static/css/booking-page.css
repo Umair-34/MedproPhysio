@@ -1,0 +1,439 @@
+/* Book Appointment page enhancements */
+
+.page-book-appointment .booking-page-intro{
+	max-width: 720px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.booking-layout{
+	margin-top: 12px;
+}
+
+.booking-sidebar{
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	position: sticky;
+	top: 110px;
+}
+
+.booking-sidebar-card{
+	background: var(--white-color);
+	border: 1px solid rgba(var(--brand-rgb), 0.08);
+	border-radius: 16px;
+	padding: 24px;
+	box-shadow: 0 10px 28px rgba(var(--brand-rgb), 0.06);
+}
+
+.booking-sidebar-status{
+	background: linear-gradient(135deg, rgba(var(--brand-rgb), 0.04), rgba(61, 107, 79, 0.06));
+}
+
+.booking-sidebar-lead{
+	margin: 14px 0 0;
+	color: var(--text-color);
+	line-height: 1.6;
+	font-size: 15px;
+}
+
+.booking-sidebar-title{
+	font-size: 18px;
+	margin-bottom: 14px;
+	color: var(--primary-color);
+}
+
+.booking-contact-list,
+.booking-hours-list,
+.booking-trust-list{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.booking-contact-list li + li,
+.booking-hours-list li + li{
+	margin-top: 12px;
+}
+
+.booking-contact-list a{
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	color: var(--primary-color);
+	text-decoration: none;
+	font-weight: 500;
+	line-height: 1.5;
+	transition: color 0.25s ease;
+}
+
+.booking-contact-list a:hover,
+.booking-contact-list a:focus-visible{
+	color: var(--accent-color);
+}
+
+.booking-contact-list i{
+	color: var(--accent-color);
+	margin-top: 3px;
+	width: 16px;
+	flex-shrink: 0;
+}
+
+.booking-hours-list li{
+	font-size: 15px;
+	color: var(--text-color);
+	line-height: 1.5;
+	padding-left: 0;
+}
+
+.booking-trust-list li{
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	font-size: 15px;
+	color: var(--text-color);
+	line-height: 1.55;
+}
+
+.booking-trust-list li + li{
+	margin-top: 10px;
+}
+
+.booking-trust-list i{
+	color: var(--accent-color);
+	margin-top: 3px;
+	flex-shrink: 0;
+}
+
+.booking-sidebar-link{
+	display: inline-block;
+	margin-top: 16px;
+	font-weight: 600;
+	color: var(--accent-color);
+	text-decoration: none;
+}
+
+.booking-sidebar-link:hover,
+.booking-sidebar-link:focus-visible{
+	text-decoration: underline;
+}
+
+.booking-form-shell{
+	background: var(--white-color);
+	border: 1px solid rgba(var(--brand-rgb), 0.08);
+	border-radius: 20px;
+	box-shadow: 0 16px 40px rgba(var(--brand-rgb), 0.08);
+	overflow: hidden;
+}
+
+.booking-stepper{
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 0;
+	background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+	padding: 22px 18px;
+}
+
+.booking-stepper-item{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	text-align: center;
+	position: relative;
+	opacity: 0.65;
+	transition: opacity 0.25s ease;
+}
+
+.booking-stepper-item:not(:last-child)::after{
+	content: '';
+	position: absolute;
+	top: 18px;
+	left: calc(50% + 22px);
+	width: calc(100% - 44px);
+	height: 2px;
+	background: rgba(255, 255, 255, 0.28);
+}
+
+.booking-stepper-item.is-active,
+.booking-stepper-item.is-complete{
+	opacity: 1;
+}
+
+.booking-stepper-item.is-complete .booking-stepper-number{
+	background: var(--white-color);
+	color: var(--primary-color);
+}
+
+.booking-stepper-number{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.18);
+	color: var(--white-color);
+	font-size: 14px;
+	font-weight: 700;
+	position: relative;
+	z-index: 1;
+	transition: background 0.25s ease, color 0.25s ease;
+}
+
+.booking-stepper-item.is-active .booking-stepper-number{
+	background: var(--white-color);
+	color: var(--primary-color);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.booking-stepper-label{
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--white-color);
+	line-height: 1.3;
+}
+
+.contact-us-form.appointment-form.booking-form-card{
+	max-width: none;
+	margin: 0;
+	padding: 28px 28px 32px;
+	background: transparent;
+}
+
+.booking-form-section{
+	padding-bottom: 28px;
+	margin-bottom: 28px;
+	border-bottom: 1px solid var(--secondary-color);
+}
+
+.booking-form-section:last-of-type{
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 8px;
+}
+
+.booking-form-section-header{
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+
+.booking-form-section-number{
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: var(--secondary-color);
+	color: var(--primary-color);
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.booking-form-section-header h2{
+	font-size: 22px;
+	margin: 0 0 6px;
+	color: var(--primary-color);
+}
+
+.booking-form-section-header p{
+	margin: 0;
+	color: var(--text-color);
+	font-size: 15px;
+	line-height: 1.55;
+}
+
+.booking-form-card label{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--primary-color);
+	text-transform: none;
+}
+
+.booking-form-card label i{
+	color: var(--accent-color);
+	font-size: 14px;
+}
+
+.booking-optional{
+	font-weight: 500;
+	color: rgba(var(--brand-rgb), 0.55);
+}
+
+.booking-field-hint{
+	margin: 8px 0 0;
+	font-size: 13px;
+	color: rgba(var(--brand-rgb), 0.62);
+	line-height: 1.45;
+}
+
+.contact-us-form.appointment-form.booking-form-card .form-control{
+	background-color: var(--secondary-color);
+	border: 1px solid transparent;
+	padding: 16px 18px;
+	transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.contact-us-form.appointment-form.booking-form-card .form-control:hover{
+	background-color: #eef3f6;
+}
+
+.contact-us-form.appointment-form.booking-form-card .form-control:focus{
+	background-color: var(--white-color);
+	border-color: rgba(61, 107, 79, 0.35);
+	box-shadow: 0 0 0 4px rgba(61, 107, 79, 0.12);
+}
+
+.contact-us-form.appointment-form.booking-form-card .form-control:disabled{
+	opacity: 0.72;
+	cursor: not-allowed;
+}
+
+.contact-us-form.appointment-form.booking-form-card textarea.form-control{
+	min-height: 110px;
+	resize: vertical;
+}
+
+.booking-form-actions{
+	padding-top: 8px;
+}
+
+.booking-form-note{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-bottom: 18px;
+	font-size: 14px;
+	color: rgba(var(--brand-rgb), 0.68);
+	text-align: center;
+}
+
+.booking-form-note i{
+	color: var(--accent-color);
+}
+
+.contact-us-form.appointment-form.booking-form-card .contact-form-btn{
+	text-align: center;
+}
+
+.contact-us-form.appointment-form.booking-form-card .btn-default.btn-highlighted{
+	background: var(--primary-color);
+	min-width: 240px;
+}
+
+.contact-us-form.appointment-form.booking-form-card .btn-default.btn-highlighted:hover:not(:disabled){
+	background: var(--accent-color);
+}
+
+.contact-us-form.appointment-form.booking-form-card .btn-default.btn-highlighted:disabled{
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+.booking-confirmation{
+	text-align: center;
+	padding: 48px 24px;
+}
+
+.booking-confirmation-icon{
+	width: 72px;
+	height: 72px;
+	margin: 0 auto 18px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(61, 107, 79, 0.1);
+	color: var(--accent-color);
+	font-size: 36px;
+}
+
+.booking-confirmation h2{
+	font-size: 30px;
+	margin-bottom: 12px;
+	color: var(--primary-color);
+}
+
+.booking-confirmation p{
+	max-width: 560px;
+	margin: 0 auto 24px;
+	color: var(--text-color);
+	line-height: 1.65;
+	font-size: 16px;
+}
+
+.booking-confirmation-actions{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 14px;
+}
+
+.booking-confirmation-actions .btn-default.btn-outline span{
+	background: transparent;
+	color: var(--primary-color);
+}
+
+.booking-confirmation-actions .btn-default.btn-outline:hover span{
+	background: transparent;
+	color: var(--secondary-color);
+}
+
+.booking-confirmation-actions .btn-default.btn-outline:hover span::after{
+	width: 0;
+}
+
+#bookingAlert{
+	border-radius: 12px;
+	margin-bottom: 20px;
+}
+
+@media (max-width: 991px){
+	.booking-sidebar{
+		position: static;
+	}
+
+	.booking-stepper-label{
+		font-size: 11px;
+	}
+}
+
+@media (max-width: 767px){
+	.booking-stepper{
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px 12px;
+		padding: 18px 14px;
+	}
+
+	.booking-stepper-item:not(:last-child)::after{
+		display: none;
+	}
+
+	.contact-us-form.appointment-form.booking-form-card{
+		padding: 20px 18px 24px;
+	}
+
+	.booking-form-section-header{
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.booking-form-section-header h2{
+		font-size: 20px;
+	}
+
+	.contact-us-form.appointment-form.booking-form-card .btn-default.btn-highlighted{
+		width: 100%;
+		min-width: 0;
+	}
+}

@@ -1,0 +1,49 @@
+{% load static %}
+<aside class="mp-booking-sidebar" aria-label="Clinic booking information">
+  <div class="mp-booking-sidebar__panel mp-booking-sidebar__intro">
+    <span class="mp-eyebrow">Book online</span>
+    <h2 class="mp-booking-sidebar__title">Appointments at {{ site_name }}</h2>
+    <p>Northwest Calgary clinic with same week availability for physio, massage, chiropractic, and wellness care.</p>
+  </div>
+
+  <div class="mp-booking-sidebar__panel mp-booking-sidebar__hours">
+    <div class="mp-booking-sidebar__hours-top">
+      <div class="mp-booking-sidebar__panel-head">
+        <span class="mp-booking-sidebar__panel-icon" aria-hidden="true"><i class="fa-regular fa-clock"></i></span>
+        <h3>Clinic hours</h3>
+      </div>
+      <div class="mp-booking-sidebar__status mp-booking-sidebar__status--{{ clinic_open_state }}" role="status" aria-live="polite">
+        <span class="mp-booking-sidebar__status-dot" aria-hidden="true"></span>
+        <span>{{ clinic_open_message }}</span>
+      </div>
+    </div>
+    <ul class="mp-booking-sidebar__schedule">
+      {% for row in clinic_hours %}
+      <li class="mp-booking-sidebar__schedule-row{% if row.is_today %} is-today{% endif %}">
+        <span class="mp-booking-sidebar__day">
+          <strong>{{ row.label|slice:":3" }}</strong>
+          {% if row.is_today %}<em>Today</em>{% endif %}
+        </span>
+        <span class="mp-booking-sidebar__time">{{ row.hours }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="mp-booking-sidebar__hours-actions">
+      <a href="{{ site_phone_link }}" class="mp-btn mp-btn--primary">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i> Call {{ site_phone }}
+      </a>
+      <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--outline">Directions &amp; parking</a>
+    </div>
+  </div>
+
+  <div class="mp-booking-sidebar__panel mp-booking-sidebar__links">
+    <a href="{% url 'website:patient-page' 'new-patient' %}" class="mp-booking-sidebar__link">
+      <span><strong>New patient?</strong> Read our first visit guide</span>
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'website:services' %}" class="mp-booking-sidebar__link">
+      <span><strong>Browse services</strong> See what we offer before you book</span>
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </a>
+  </div>
+</aside>

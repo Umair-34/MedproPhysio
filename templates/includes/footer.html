@@ -1,0 +1,84 @@
+{% load static %}
+<footer class="main-footer bg-radius-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="about-footer">
+          <div class="row align-items-center">
+            <div class="col-lg-4">
+              <div class="footer-logo">
+                <picture>
+                  <source srcset="{% static 'images/medpro-logo-light.webp' %}" type="image/webp">
+                  <img src="{% static 'images/medpro-logo-light.png' %}" alt="{{ site_name }}" width="387" height="266">
+                </picture>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="about-footer-content">
+                <h3>{{ site_tagline }}</h3>
+                <p>{{ site_meta_description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-footer-list">
+          <div class="footer-links quick-links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="{% url 'website:home' %}">Home</a></li>
+              <li><a href="{% url 'website:about' %}">About Us</a></li>
+              <li><a href="{% url 'website:services' %}">Our Services</a></li>
+              <li><a href="{% url 'website:book' %}">Book Appointment</a></li>
+              <li><a href="{% url 'website:blog' %}">Blog</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links service-links">
+            <h3>Core Services</h3>
+            <ul>
+              <li><a href="{% url 'website:service-detail' 'physiotherapy' %}">Physiotherapy</a></li>
+              <li><a href="{% url 'website:service-detail' 'massage-therapy' %}">Massage Therapy</a></li>
+              <li><a href="{% url 'website:service-detail' 'chiropractic' %}">Chiropractic</a></li>
+              <li><a href="{% url 'website:service-detail' 'acupuncture' %}">Acupuncture</a></li>
+              <li><a href="{% url 'website:service-detail' 'kinesiology' %}">Kinesiology</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links working-links">
+            <h3>Opening Hours</h3>
+            <ul>
+              {% for hours in working_hours %}
+              <li>{{ hours }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="footer-links footer-contact-details">
+            <h3>Contact</h3>
+            <div class="footer-contact-box">
+              <div class="footer-info-box">
+                <div class="icon-box"><img src="{% static 'images/icon-phone.svg' %}" alt=""></div>
+                <div class="footer-info-box-content"><p><a href="{{ site_phone_link }}">{{ site_phone }}</a></p></div>
+              </div>
+              <div class="footer-info-box">
+                <div class="icon-box"><img src="{% static 'images/icon-mail.svg' %}" alt=""></div>
+                <div class="footer-info-box-content"><p><a href="mailto:{{ site_email }}">{{ site_email }}</a></p></div>
+              </div>
+              <div class="footer-info-box">
+                <div class="icon-box"><img src="{% static 'images/icon-location.svg' %}" alt=""></div>
+                <div class="footer-info-box-content"><p><a href="{% url 'website:visit-us' %}">{{ site_address_short }}</a></p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-links terms-condition-links">
+            <div class="footer-copyright-text">
+              <p>Copyright {% now "Y" %} {{ site_name }}. All Rights Reserved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

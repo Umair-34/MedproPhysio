@@ -1,0 +1,68 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block header_actions %}
+<span class="panel-live-badge" id="liveBadge">Live</span>
+{% endblock %}
+
+{% block panel_content %}
+<div class="panel-stats">
+  <div class="panel-stat-card">
+    <span class="panel-stat-label">Today</span>
+    <strong>{{ stats.today_count }}</strong>
+    <span>appointments</span>
+  </div>
+  <div class="panel-stat-card">
+    <span class="panel-stat-label">Unread</span>
+    <strong>{{ stats.unread_contacts }}</strong>
+    <span>contact messages</span>
+  </div>
+  <div class="panel-stat-card">
+    <span class="panel-stat-label">Published</span>
+    <strong>{{ stats.published_posts }}</strong>
+    <span>blog posts</span>
+  </div>
+  <div class="panel-stat-card">
+    <span class="panel-stat-label">Active</span>
+    <strong>{{ stats.active_services }}</strong>
+    <span>services</span>
+  </div>
+</div>
+
+<div class="panel-card panel-calendar-card">
+  <div id="panelCalendar"></div>
+  <p class="panel-help">Calendar refreshes automatically when new appointments are booked online.</p>
+</div>
+
+<div class="panel-grid-2">
+  <div class="panel-card">
+    <h2>Upcoming appointments</h2>
+    {% if upcoming %}
+    <ul class="panel-list">
+      {% for appt in upcoming %}
+      <li>
+        <strong>{{ appt.start_datetime|date:"M j, g:i A" }}</strong>
+        <span>{{ appt.service.name }} — {{ appt.customer.full_name }}</span>
+        <em class="panel-status panel-status-{{ appt.status }}">{{ appt.get_status_display }}</em>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="panel-empty">No upcoming appointments.</p>
+    {% endif %}
+  </div>
+  <div class="panel-card" id="appointmentDetail">
+    <h2>Appointment details</h2>
+    <p class="panel-empty">Select an event on the calendar to view details.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="{% static 'panel/panel-calendar.js' %}"></script>
+{% endblock %}

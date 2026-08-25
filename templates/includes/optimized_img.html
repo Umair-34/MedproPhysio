@@ -1,0 +1,8 @@
+{% if webp_url %}
+<picture>
+  <source srcset="{{ webp_url }}" type="image/webp">
+  <img src="{{ original_url }}" alt="{{ alt }}"{% if css_class %} class="{{ css_class }}"{% endif %}{% if width %} width="{{ width }}"{% endif %}{% if height %} height="{{ height }}"{% endif %} loading="{{ loading }}"{% if fetchpriority %} fetchpriority="{{ fetchpriority }}"{% endif %}>
+</picture>
+{% else %}
+<img src="{{ original_url }}" alt="{{ alt }}"{% if css_class %} class="{{ css_class }}"{% endif %}{% if width %} width="{{ width }}"{% endif %}{% if height %} height="{{ height }}"{% endif %} loading="{{ loading }}"{% if fetchpriority %} fetchpriority="{{ fetchpriority }}"{% endif %}>
+{% endif %}

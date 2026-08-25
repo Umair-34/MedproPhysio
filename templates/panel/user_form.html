@@ -1,0 +1,25 @@
+{% extends 'panel/base.html' %}
+
+{% block panel_content %}
+<form method="post" class="panel-form panel-card">
+  {% csrf_token %}
+  <div class="panel-form-grid">
+    {% for field in form %}
+    <div class="panel-field{% if field.name == 'password' %} panel-field-full{% endif %}">
+      {% if field.field.widget.input_type == 'checkbox' %}
+      <label class="panel-checkbox-label">{{ field }} {{ field.label }}</label>
+      {% else %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% endif %}
+      {% if field.help_text %}<p class="panel-help">{{ field.help_text }}</p>{% endif %}
+      {% for error in field.errors %}<p class="panel-error">{{ error }}</p>{% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="panel-form-actions">
+    <button type="submit" class="panel-btn panel-btn-primary">{% if is_create %}Create user{% else %}Save user{% endif %}</button>
+    <a href="{% url 'panel:users' %}" class="panel-btn panel-btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

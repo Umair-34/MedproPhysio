@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-patient-hub">
+  <div class="mp-container">
+    <div class="mp-patient-hub__layout">
+      {% include 'includes/patient_hub_sidebar.html' %}
+
+      <article class="mp-patient-main">
+        <header class="mp-patient-header">
+          {% if page.page_type == 'guide' %}
+          <span class="mp-eyebrow">First visit guide</span>
+          {% else %}
+          <span class="mp-eyebrow">Patient information</span>
+          {% endif %}
+          <p class="mp-lead">{{ page.intro }}</p>
+          {% if page.highlights %}
+          <ul class="mp-patient-highlights" aria-label="Quick tips">
+            {% for item in page.highlights %}
+            <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </header>
+
+        {% if page.page_type == 'guide' %}
+        <section class="mp-patient-section" aria-labelledby="expectations-heading">
+          <h2 id="expectations-heading">{{ page.expectations_title }}</h2>
+          <p class="mp-patient-section__intro">{{ page.expectations_intro }}</p>
+          <ol class="mp-patient-steps">
+            {% for step in page.expectations %}
+            <li>
+              <span class="mp-patient-steps__number" aria-hidden="true">{{ forloop.counter }}</span>
+              <p>{{ step }}</p>
+            </li>
+            {% endfor %}
+          </ol>
+        </section>
+
+        <section class="mp-patient-section" aria-labelledby="preparation-heading">
+          <h2 id="preparation-heading">{{ page.preparation_title }}</h2>
+          <ul class="mp-patient-checklist">
+            {% for item in page.preparation %}
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> {{ item }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="mp-patient-section" aria-labelledby="bring-heading">
+          <h2 id="bring-heading">{{ page.bring_title }}</h2>
+          <div class="mp-grid mp-grid--2 mp-patient-info-grid">
+            {% for item in page.bring_items %}
+            <article class="mp-patient-info-card">
+              <span class="mp-patient-info-card__icon" aria-hidden="true"><i class="fa-solid {{ item.icon }}"></i></span>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.text }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        {% elif page.page_type == 'info' %}
+        <section class="mp-patient-section" aria-labelledby="insurance-heading">
+          <div class="mp-patient-info-stack">
+            {% for card in page.info_cards %}
+            <article class="mp-patient-info-card mp-patient-info-card--wide">
+              <span class="mp-patient-info-card__icon" aria-hidden="true"><i class="fa-solid {{ card.icon }}"></i></span>
+              <div>
+                <h3>{{ card.title }}</h3>
+                <p>{{ card.text }}</p>
+                {% if card.link_name %}
+                <a href="{% url card.link_name %}" class="mp-patient-link">{{ card.link_label }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                {% elif card.link_slug %}
+                <a href="{% url 'website:patient-page' card.link_slug %}" class="mp-patient-link">{{ card.link_label }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                {% endif %}
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="mp-patient-section" aria-labelledby="insurance-tips-heading">
+          <h2 id="insurance-tips-heading">Helpful tips</h2>
+          <ul class="mp-patient-checklist">
+            {% for tip in page.tips %}
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> {{ tip }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+
+        <footer class="mp-patient-footer">
+          <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary">Book Appointment</a>
+          <a href="{{ site_phone_link }}" class="mp-btn mp-btn--outline">Call {{ site_phone }}</a>
+          <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--outline">Visit Our Clinic</a>
+        </footer>
+      </article>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='patient-cta-heading' cta_title='Questions before your first visit?' cta_text='Our front desk team is happy to help with booking, insurance, and what to expect at our northwest Calgary clinic.' cta_secondary_url='/faqs/' cta_secondary_label='View FAQs' %}
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Visit Our Calgary Clinic | {{ site_name }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta name="description" content="{{ meta_description }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Visit {{ site_name }} in Calgary">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:locale" content="en_CA">
+<meta name="geo.region" content="CA-AB">
+<meta name="geo.placename" content="Nolan Hill, Calgary">
+<meta name="geo.position" content="{{ site_latitude }};{{ site_longitude }}">
+<meta name="ICBM" content="{{ site_latitude }}, {{ site_longitude }}">
+{% include 'includes/schema/local_business.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'includes/page_hero.html' %}
+
+<section class="mp-section mp-visit-intro" aria-labelledby="visit-intro-heading">
+  <div class="mp-container">
+    <div class="mp-visit-intro__layout">
+      <div class="mp-visit-intro__content">
+        <span class="mp-eyebrow">Visit Us</span>
+        <h2 id="visit-intro-heading">{{ site_street_address }}</h2>
+        <p class="mp-lead">Find directions, parking, hours, and our Google Business Profile. Everything you need before your first physiotherapy or massage appointment at our northwest Calgary clinic.</p>
+
+        <div class="mp-visit-status mp-visit-status--{{ clinic_open_state }}" role="status" aria-live="polite">
+          <span class="mp-visit-status__dot" aria-hidden="true"></span>
+          <span>{{ clinic_open_message }}</span>
+        </div>
+
+        <div class="mp-visit-actions" role="group" aria-label="Quick actions">
+          <a href="{{ site_google_directions_url }}" class="mp-visit-action" target="_blank" rel="noopener noreferrer" data-visit-action="directions">
+            <span class="mp-visit-action__icon" aria-hidden="true"><i class="fa-solid fa-diamond-turn-right"></i></span>
+            <span class="mp-visit-action__label">Get Directions</span>
+          </a>
+          <a href="{{ site_phone_link }}" class="mp-visit-action" data-visit-action="call">
+            <span class="mp-visit-action__icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+            <span class="mp-visit-action__label">Call Clinic</span>
+          </a>
+          <a href="{% url 'website:book' %}" class="mp-visit-action mp-visit-action--primary" data-visit-action="book">
+            <span class="mp-visit-action__icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+            <span class="mp-visit-action__label">Book Online</span>
+          </a>
+          <a href="{{ site_google_business_url }}" class="mp-visit-action" target="_blank" rel="noopener noreferrer" data-visit-action="google-profile">
+            <span class="mp-visit-action__icon" aria-hidden="true"><i class="fa-brands fa-google"></i></span>
+            <span class="mp-visit-action__label">View on Google</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mp-visit-cards">
+        <div class="mp-visit-card">
+          <div class="mp-visit-card__head">
+            <span class="mp-visit-card__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+            <h3>Clinic Address</h3>
+          </div>
+          <address class="mp-visit-address">
+            <strong>{{ site_name }}</strong>
+            {{ site_street_address }}<br>
+            {{ site_city }}, {{ site_region }} {{ site_postal_code }}<br>
+ Canada
+ </address>
+          <div class="mp-visit-card__actions">
+            <button type="button" class="mp-btn mp-btn--outline mp-visit-copy-btn" data-copy-text="{{ site_street_address }}, {{ site_city }}, {{ site_region }} {{ site_postal_code }}" aria-label="Copy clinic address">
+              <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy Address
+ </button>
+            <a href="mailto:{{ site_email }}" class="mp-btn mp-btn--outline">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i> Email Us
+ </a>
+          </div>
+          <p class="mp-visit-copy-feedback" id="visitCopyFeedback" hidden role="status">Address copied to clipboard.</p>
+        </div>
+
+        <div class="mp-visit-card">
+          <div class="mp-visit-card__head">
+            <span class="mp-visit-card__icon" aria-hidden="true"><i class="fa-regular fa-clock"></i></span>
+            <h3>Opening Hours</h3>
+          </div>
+          <ul class="mp-visit-hours">
+            {% for row in clinic_hours %}
+            <li class="mp-visit-hours__row{% if row.is_today %} is-today{% endif %}">
+              <span class="mp-visit-hours__day">{{ row.label }}{% if row.is_today %} <em>(Today)</em>{% endif %}</span>
+              <span class="mp-visit-hours__time">{{ row.hours }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/google_business_map.html' %}
+
+<section class="mp-section mp-section--alt mp-visit-details" aria-labelledby="visit-details-heading">
+  <div class="mp-container">
+    <div class="mp-section-head mp-section-head--center">
+      <span class="mp-eyebrow">Getting Here</span>
+      <h2 id="visit-details-heading">Plan your visit</h2>
+    </div>
+    <div class="mp-grid mp-grid--3">
+      <article class="mp-visit-detail">
+        <span class="mp-visit-detail__icon" aria-hidden="true"><i class="fa-solid fa-square-parking"></i></span>
+        <h3>Parking</h3>
+        <p>{{ visit_parking }}</p>
+      </article>
+      <article class="mp-visit-detail">
+        <span class="mp-visit-detail__icon" aria-hidden="true"><i class="fa-solid fa-bus"></i></span>
+        <h3>Transit</h3>
+        <p>{{ visit_transit }}</p>
+      </article>
+      <article class="mp-visit-detail">
+        <span class="mp-visit-detail__icon" aria-hidden="true"><i class="fa-solid fa-map-location-dot"></i></span>
+        <h3>Nearby Areas</h3>
+        <p>{{ visit_landmarks }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="mp-section mp-visit-areas" aria-labelledby="visit-areas-heading">
+  <div class="mp-container">
+    <div class="mp-visit-areas__layout">
+      <div class="mp-visit-areas__intro">
+        <span class="mp-eyebrow">Service Area</span>
+        <h2 id="visit-areas-heading">Physiotherapy near you in northwest Calgary</h2>
+        <p class="mp-lead">We welcome patients from across northwest Calgary and surrounding communities.</p>
+      </div>
+      <ul class="mp-visit-chips">
+        {% for area in visit_service_areas %}
+        <li>{{ area }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/google_business_cta.html' with cta_id='visit-google-heading' cta_heading='Find us on Google' cta_description='View our Google Business Profile for directions, hours, photos, and patient reviews. Keeping your listing up to date helps neighbours find trusted physiotherapy and massage care in Calgary.' %}
+
+<section class="mp-section mp-faq-section mp-visit-faq" aria-labelledby="visit-faq-heading">
+  <div class="mp-container">
+    <div class="mp-faq-layout">
+      <aside class="mp-faq-panel">
+        <span class="mp-eyebrow">FAQs</span>
+        <h2 id="visit-faq-heading">Questions about visiting</h2>
+        <p class="mp-lead">New to our clinic? <a href="{% url 'website:patient-page' 'new-patient' %}">Read the new patient guide</a> or <a href="{% url 'website:contact' %}">contact us</a> anytime.</p>
+        <div class="mp-faq-help">
+          <a href="{{ site_google_directions_url }}" class="mp-faq-help__item" target="_blank" rel="noopener noreferrer">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-diamond-turn-right"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Get directions</strong>
+              <span>Open in Google Maps</span>
+            </span>
+          </a>
+          <a href="{% url 'website:book' %}" class="mp-faq-help__item">
+            <span class="mp-faq-help__icon" aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+            <span class="mp-faq-help__text">
+              <strong>Book online</strong>
+              <span>Same week appointments often available</span>
+            </span>
+          </a>
+        </div>
+      </aside>
+      <div class="mp-faq">
+        {% for question, answer in visit_faqs %}
+        <details class="mp-faq-item"{% if forloop.first %} open{% endif %}>
+          <summary>
+            <span class="mp-faq-item__icon" aria-hidden="true"><i class="fa-solid fa-circle-question"></i></span>
+            <span class="mp-faq-item__question">{{ question }}</span>
+            <span class="mp-faq-item__toggle" aria-hidden="true">
+              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-minus"></i>
+            </span>
+          </summary>
+          <div class="mp-faq-item__answer">
+            <p>{{ answer }}</p>
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include 'includes/site_cta.html' with cta_heading_id='visit-cta-heading' cta_title='Ready to visit our Calgary clinic?' cta_text='Book physiotherapy, massage, chiropractic, acupuncture, or kinesiology online in minutes.' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/visit-us.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,386 @@
+[
+{
+  "model": "bookings.service",
+  "pk": 1,
+  "fields": {
+    "name": "Massage",
+    "slug": "massage",
+    "description": "Therapeutic and relaxation massage treatments.",
+    "duration_minutes": 60,
+    "buffer_minutes": 10,
+    "price": null,
+    "is_active": true,
+    "sort_order": 1,
+    "created_at": "2026-07-23T04:52:00.974Z",
+    "updated_at": "2026-07-23T04:52:00.974Z"
+  }
+},
+{
+  "model": "bookings.service",
+  "pk": 2,
+  "fields": {
+    "name": "Physiotherapy",
+    "slug": "physiotherapy",
+    "description": "Assessment and treatment for injury, pain, and mobility.",
+    "duration_minutes": 45,
+    "buffer_minutes": 10,
+    "price": null,
+    "is_active": true,
+    "sort_order": 2,
+    "created_at": "2026-07-23T04:52:00.975Z",
+    "updated_at": "2026-07-23T04:52:00.975Z"
+  }
+},
+{
+  "model": "bookings.service",
+  "pk": 3,
+  "fields": {
+    "name": "Chiropractic",
+    "slug": "chiropractic",
+    "description": "Spinal and musculoskeletal alignment care.",
+    "duration_minutes": 30,
+    "buffer_minutes": 10,
+    "price": null,
+    "is_active": true,
+    "sort_order": 3,
+    "created_at": "2026-07-23T04:52:00.975Z",
+    "updated_at": "2026-07-23T04:52:00.975Z"
+  }
+},
+{
+  "model": "bookings.service",
+  "pk": 4,
+  "fields": {
+    "name": "Acupuncture",
+    "slug": "acupuncture",
+    "description": "Traditional acupuncture for pain relief and wellness.",
+    "duration_minutes": 45,
+    "buffer_minutes": 10,
+    "price": null,
+    "is_active": true,
+    "sort_order": 4,
+    "created_at": "2026-07-23T04:52:00.975Z",
+    "updated_at": "2026-07-23T04:52:00.975Z"
+  }
+},
+{
+  "model": "bookings.service",
+  "pk": 5,
+  "fields": {
+    "name": "Kinesiology",
+    "slug": "kinesiology",
+    "description": "Movement based therapy and exercise rehabilitation.",
+    "duration_minutes": 45,
+    "buffer_minutes": 10,
+    "price": null,
+    "is_active": true,
+    "sort_order": 5,
+    "created_at": "2026-07-23T04:52:00.975Z",
+    "updated_at": "2026-07-23T04:52:00.975Z"
+  }
+},
+{
+  "model": "bookings.practitioner",
+  "pk": 1,
+  "fields": {
+    "first_name": "Sarah",
+    "last_name": "Mitchell",
+    "bio": "Registered physiotherapist with a focus on sports injury recovery.",
+    "photo": "",
+    "email": "sarah.mitchell@medprophysio.example",
+    "is_active": true
+  }
+},
+{
+  "model": "bookings.practitioner",
+  "pk": 2,
+  "fields": {
+    "first_name": "James",
+    "last_name": "Chen",
+    "bio": "Chiropractor experienced in spinal and postural care.",
+    "photo": "",
+    "email": "james.chen@medprophysio.example",
+    "is_active": true
+  }
+},
+{
+  "model": "bookings.practitioner",
+  "pk": 3,
+  "fields": {
+    "first_name": "Emma",
+    "last_name": "Wilson",
+    "bio": "Remedial massage therapist and acupuncture practitioner.",
+    "photo": "",
+    "email": "emma.wilson@medprophysio.example",
+    "is_active": true
+  }
+},
+{
+  "model": "bookings.practitioner",
+  "pk": 4,
+  "fields": {
+    "first_name": "Liam",
+    "last_name": "Patel",
+    "bio": "Kinesiologist supporting strength and mobility programmes.",
+    "photo": "",
+    "email": "liam.patel@medprophysio.example",
+    "is_active": true
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 1,
+  "fields": {
+    "practitioner": 1,
+    "service": 2
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 2,
+  "fields": {
+    "practitioner": 1,
+    "service": 5
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 3,
+  "fields": {
+    "practitioner": 2,
+    "service": 3
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 4,
+  "fields": {
+    "practitioner": 3,
+    "service": 1
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 5,
+  "fields": {
+    "practitioner": 3,
+    "service": 4
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 6,
+  "fields": {
+    "practitioner": 4,
+    "service": 5
+  }
+},
+{
+  "model": "bookings.practitionerservice",
+  "pk": 7,
+  "fields": {
+    "practitioner": 4,
+    "service": 2
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 1,
+  "fields": {
+    "practitioner": 1,
+    "day_of_week": 0,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 2,
+  "fields": {
+    "practitioner": 1,
+    "day_of_week": 1,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 3,
+  "fields": {
+    "practitioner": 1,
+    "day_of_week": 2,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 4,
+  "fields": {
+    "practitioner": 1,
+    "day_of_week": 3,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 5,
+  "fields": {
+    "practitioner": 1,
+    "day_of_week": 4,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 6,
+  "fields": {
+    "practitioner": 2,
+    "day_of_week": 0,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 7,
+  "fields": {
+    "practitioner": 2,
+    "day_of_week": 1,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 8,
+  "fields": {
+    "practitioner": 2,
+    "day_of_week": 2,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 9,
+  "fields": {
+    "practitioner": 2,
+    "day_of_week": 3,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 10,
+  "fields": {
+    "practitioner": 2,
+    "day_of_week": 4,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 11,
+  "fields": {
+    "practitioner": 3,
+    "day_of_week": 0,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 12,
+  "fields": {
+    "practitioner": 3,
+    "day_of_week": 1,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 13,
+  "fields": {
+    "practitioner": 3,
+    "day_of_week": 2,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 14,
+  "fields": {
+    "practitioner": 3,
+    "day_of_week": 3,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 15,
+  "fields": {
+    "practitioner": 3,
+    "day_of_week": 4,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 16,
+  "fields": {
+    "practitioner": 4,
+    "day_of_week": 0,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 17,
+  "fields": {
+    "practitioner": 4,
+    "day_of_week": 1,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 18,
+  "fields": {
+    "practitioner": 4,
+    "day_of_week": 2,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 19,
+  "fields": {
+    "practitioner": 4,
+    "day_of_week": 3,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+},
+{
+  "model": "bookings.practitionerschedule",
+  "pk": 20,
+  "fields": {
+    "practitioner": 4,
+    "day_of_week": 4,
+    "start_time": "08:30:00",
+    "end_time": "17:30:00"
+  }
+}
+]

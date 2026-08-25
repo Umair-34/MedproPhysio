@@ -1,0 +1,375 @@
+/**
+ * Medpro home page — modern Carrington-inspired layout
+ */
+
+.medpro-hero {
+  position: relative;
+  padding: 110px 0 80px;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background:
+    linear-gradient(120deg, rgba(27, 54, 126, 0.94) 0%, rgba(27, 54, 126, 0.82) 45%, rgba(0, 153, 137, 0.88) 100%),
+    url('../images/hero-bg.jpg') center / cover no-repeat;
+}
+
+.medpro-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.12), transparent 45%);
+  pointer-events: none;
+}
+
+.medpro-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.medpro-hero-eyebrow {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.medpro-hero h1 {
+  max-width: 760px;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  line-height: 1.15;
+}
+
+.medpro-hero-lead {
+  max-width: 620px;
+  margin-bottom: 32px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.medpro-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.medpro-hero-actions .btn-default.btn-outline {
+  border-color: rgba(255, 255, 255, 0.65);
+  color: #fff;
+}
+
+.medpro-hero-actions .btn-default.btn-outline:hover {
+  background: #fff;
+  color: var(--primary-color);
+}
+
+/* Discipline quick cards (Carrington-style) */
+.medpro-disciplines {
+  padding: 80px 0 40px;
+}
+
+.medpro-disciplines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.medpro-discipline-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  padding: 24px 16px;
+  border-radius: var(--radius-md);
+  background: var(--surface-color);
+  border: 1px solid var(--divider-color);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.medpro-discipline-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-card);
+  color: inherit;
+}
+
+.medpro-discipline-card i {
+  margin-bottom: 12px;
+  font-size: 1.75rem;
+  color: var(--accent-color);
+}
+
+.medpro-discipline-card span {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* Why choose */
+.medpro-why {
+  padding: 70px 0;
+}
+
+.medpro-why-panel {
+  height: 100%;
+  padding: 36px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-color);
+  border: 1px solid var(--divider-color);
+  box-shadow: var(--shadow-soft);
+}
+
+.medpro-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.medpro-stat {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: var(--accent-light);
+  text-align: center;
+}
+
+.medpro-stat strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--primary-color);
+  font-family: var(--accent-font);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.medpro-stat span {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* First visit tips */
+.medpro-first-visit {
+  padding: 70px 0;
+  background: var(--surface-color);
+  border-radius: var(--radius-lg);
+  margin: 0 0 24px;
+}
+
+.medpro-tip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.medpro-tip-list li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  background: var(--secondary-color);
+  border: 1px solid var(--divider-color);
+}
+
+.medpro-tip-list li:last-child {
+  margin-bottom: 0;
+}
+
+.medpro-tip-icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.medpro-tip-list h3 {
+  margin-bottom: 6px;
+  font-size: 1.05rem;
+}
+
+.medpro-tip-list p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* Service cards modern */
+.medpro-services {
+  padding: 70px 0;
+}
+
+.medpro-services .service-item {
+  overflow: hidden;
+  background: var(--surface-color);
+}
+
+.medpro-services .service-item-image figure {
+  aspect-ratio: 4 / 3;
+}
+
+.medpro-services .service-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.medpro-services .service-content h3 a {
+  color: var(--primary-color);
+}
+
+.medpro-services .service-content h3 a:hover {
+  color: var(--accent-color);
+}
+
+/* Book + contact panel */
+.medpro-book-panel {
+  padding: 80px 0;
+}
+
+.medpro-book-panel-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--primary-color), #009989);
+  box-shadow: var(--shadow-card);
+}
+
+.medpro-book-panel-copy h2,
+.medpro-book-panel-copy p {
+  color: #fff;
+}
+
+.medpro-book-panel-copy h2 {
+  margin-bottom: 14px;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.medpro-book-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.medpro-book-panel-actions .btn-default.btn-outline {
+  border-color: rgba(255, 255, 255, 0.65);
+  color: #fff;
+}
+
+.medpro-book-panel-actions .btn-default.btn-outline:hover {
+  background: #fff;
+  color: var(--primary-color);
+}
+
+.medpro-contact-card {
+  padding: 28px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.medpro-contact-card h3 {
+  margin-bottom: 18px;
+  color: #fff;
+  font-family: var(--default-font);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.medpro-contact-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.medpro-contact-item i {
+  margin-top: 3px;
+  color: #fff;
+}
+
+.medpro-contact-item a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.medpro-contact-item a:hover {
+  color: var(--accent-light);
+}
+
+.medpro-hours-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.medpro-hours-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.92rem;
+}
+
+.medpro-hours-list li:last-child {
+  border-bottom: 0;
+}
+
+/* Benefits row compact */
+.medpro-benefits {
+  padding: 60px 0 20px;
+}
+
+.medpro-benefits .benefits-item {
+  height: 100%;
+  padding: 28px;
+  background: var(--surface-color);
+}
+
+/* Testimonials / FAQ spacing */
+.medpro-testimonials,
+.medpro-faq,
+.medpro-blog {
+  padding: 70px 0;
+}
+
+@media (max-width: 991px) {
+  .medpro-hero {
+    padding: 90px 0 60px;
+  }
+
+  .medpro-book-panel-inner {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+
+  .medpro-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}

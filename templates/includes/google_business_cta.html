@@ -1,0 +1,19 @@
+<section class="mp-section mp-visit-google{% if section_class %} {{ section_class }}{% endif %}" aria-labelledby="{{ cta_id|default:'google-business-heading' }}">
+  <div class="mp-container">
+    <div class="mp-visit-google__card">
+      <div class="mp-visit-google__content">
+        <span class="mp-eyebrow">Google Business</span>
+        <h2 id="{{ cta_id|default:'google-business-heading' }}">{{ cta_heading|default:'Our Google Business Profile' }}</h2>
+        <p class="mp-lead">{{ cta_description|default:'See clinic hours, photos, directions, and reviews on Google. Your feedback helps neighbours in northwest Calgary find trusted physiotherapy and massage care.' }}</p>
+      </div>
+      <div class="mp-visit-google__actions">
+        <a href="{{ site_google_business_url }}" class="mp-btn mp-btn--primary" target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-google" aria-hidden="true"></i> View on Google
+        </a>
+        <a href="{{ site_google_review_url }}" class="mp-btn mp-btn--outline" target="_blank" rel="noopener noreferrer">
+          <i class="fa-regular fa-star" aria-hidden="true"></i> Leave a Review
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

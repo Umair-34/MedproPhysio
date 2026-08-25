@@ -1,0 +1,12 @@
+{% load static optimized_images %}
+<article class="mp-blog-card">
+  <a href="{% url 'website:blog-detail' post.slug %}" class="mp-blog-card__hit">
+    <span class="mp-blog-card__image">
+      {% optimized_img src=post.image alt=post.image_alt loading='lazy' width='640' height='360' %}
+    </span>
+    <span class="mp-blog-card__body">
+      {% if post.tag %}<span class="mp-blog-card__tag">{{ post.tag }}</span>{% endif %}
+      <h3>{{ post.title }}</h3>
+    </span>
+  </a>
+</article>

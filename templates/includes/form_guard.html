@@ -1,0 +1,33 @@
+<div
+  class="mp-hp"
+  aria-hidden="true"
+  style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"
+>
+  <label for="{{ hp_id|default:'company_website' }}">Company website</label>
+  <input
+    type="text"
+    name="company_website"
+    id="{{ hp_id|default:'company_website' }}"
+    value=""
+    tabindex="-1"
+    autocomplete="off"
+  >
+</div>
+<input type="hidden" name="form_token" value="{{ form_token }}">
+{% if turnstile_site_key %}
+  {% if turnstile_explicit %}
+  <div
+    id="{{ turnstile_widget_id|default:'cf-turnstile-widget' }}"
+    class="mp-turnstile"
+    data-sitekey="{{ turnstile_site_key }}"
+    data-action="{{ turnstile_action }}"
+  ></div>
+  {% else %}
+  <div
+    class="cf-turnstile"
+    data-sitekey="{{ turnstile_site_key }}"
+    data-action="{{ turnstile_action }}"
+    data-theme="light"
+  ></div>
+  {% endif %}
+{% endif %}

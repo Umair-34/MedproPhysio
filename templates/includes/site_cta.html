@@ -1,0 +1,42 @@
+{% load optimized_images %}
+<section class="mp-section mp-cta" aria-labelledby="{{ cta_heading_id|default:'cta-heading' }}">
+  <div class="mp-container">
+    <div class="mp-cta__banner">
+      <div class="mp-cta__content">
+        <span class="mp-cta__eyebrow">
+          <span class="mp-cta__eyebrow-line" aria-hidden="true"></span>
+          {{ cta_eyebrow|default:site_cta.eyebrow }}
+        </span>
+        <h2 id="{{ cta_heading_id|default:'cta-heading' }}">
+          {{ cta_title|default:site_cta.title }}
+        </h2>
+        <p class="mp-cta__text">{{ cta_text|default:site_cta.text }}</p>
+        <div class="mp-cta__actions">
+          <a
+            href="{% if cta_primary_url %}{{ cta_primary_url }}{% else %}{% url 'website:book' %}{% endif %}"
+            class="mp-btn mp-btn--primary mp-cta__book"
+          >
+            {{ cta_primary|default:site_cta.primary_cta }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+          {% if cta_secondary_url %}
+          <a
+            href="{{ cta_secondary_url }}"
+            class="mp-btn mp-cta__secondary"
+            {% if cta_secondary_external %}target="_blank" rel="noopener noreferrer"{% endif %}
+          >
+            {{ cta_secondary_label }}
+          </a>
+          {% else %}
+          <a href="{{ site_phone_link }}" class="mp-btn mp-cta__secondary">
+            Call {{ site_phone }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mp-cta__media" aria-hidden="true">
+        {% optimized_img src=site_cta.image alt=site_cta.image_alt loading='lazy' width='960' height='640' %}
+      </div>
+    </div>
+  </div>
+</section>

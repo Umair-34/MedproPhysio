@@ -1,0 +1,35 @@
+{% if site_google_review_url %}
+<div class="google-review-cta{% if variant %} google-review-cta--{{ variant }}{% endif %}">
+  <div class="google-review-cta-inner">
+    <div class="google-review-cta-icon" aria-hidden="true">
+      <i class="fa-brands fa-google"></i>
+    </div>
+    <div class="google-review-cta-content">
+      <p class="google-review-cta-eyebrow">Your feedback matters</p>
+      <h2 class="google-review-cta-title">{% if title %}{{ title }}{% else %}Share your experience on Google{% endif %}</h2>
+      <p class="google-review-cta-text">
+        {% if text %}{{ text }}{% else %}Had a great visit at {{ site_name }}? A quick Google review helps neighbours in Calgary find trusted physiotherapy and massage care.{% endif %}
+      </p>
+      <div class="google-review-cta-stars" aria-hidden="true">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+    </div>
+    <div class="google-review-cta-action">
+      <a href="{{ site_google_review_url }}" class="google-review-btn" target="_blank" rel="noopener noreferrer">
+        <span class="google-review-btn-label">Leave a Google Review</span>
+        <span class="google-review-btn-hint">Opens Google in a new tab</span>
+        <span class="google-review-btn-icon" aria-hidden="true"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+      {% if site_google_business_url and show_view_link %}
+      <a href="{{ site_google_business_url }}" class="google-review-link" target="_blank" rel="noopener noreferrer">
+        View our Google profile
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,95 @@
+{% load static %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalBusiness",
+  "@id": "{{ request.build_absolute_uri }}#localbusiness",
+  "name": "{{ site_name|escapejs }}",
+  "description": "{{ meta_description|default:site_meta_description|escapejs }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'website:home' %}",
+  "telephone": "{{ site_phone }}",
+  "email": "{{ site_email }}",
+  "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/medpro-logo.png' %}",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ site_street_address }}",
+    "addressLocality": "{{ site_city }}",
+    "addressRegion": "{{ site_region }}",
+    "postalCode": "{{ site_postal_code }}",
+    "addressCountry": "{{ site_country }}"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": {{ site_latitude }},
+    "longitude": {{ site_longitude }}
+  },
+  "hasMap": "{{ site_google_business_url }}",
+  "sameAs": ["{{ site_google_business_url }}"],
+  "openingHoursSpecification": [
+    {% for block in opening_hours_schema %}
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [{% for day in block.days %}"{{ day }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+      "opens": "{{ block.opens }}",
+      "closes": "{{ block.closes }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "areaServed": [
+    {% for area in visit_service_areas %}
+    {
+      "@type": "City",
+      "name": "{{ area }}, {{ site_city }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "medicalSpecialty": [
+    "Physiotherapy",
+    "Massage Therapy",
+    "Chiropractic",
+    "Acupuncture",
+    "Kinesiology"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'website:home' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Visit Us",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+{% if visit_faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for question, answer in visit_faqs %}
+    {
+      "@type": "Question",
+      "name": "{{ question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ answer|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}

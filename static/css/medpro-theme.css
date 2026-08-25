@@ -1,0 +1,330 @@
+/**
+ * Medpro Physiotherapy brand theme
+ * Navy #1B367E · Teal #009989 · White
+ */
+
+:root {
+  --primary-color: #1B367E;
+  --primary-dark: #142858;
+  --secondary-color: #F4F8FA;
+  --secondary-dark: #E3EEF2;
+  --text-color: #1E293B;
+  --text-muted: #64748B;
+  --accent-color: #009989;
+  --accent-green: #009989;
+  --accent-light: #E6F7F4;
+  --surface-color: #FFFFFF;
+  --footer-bg: #1B367E;
+  --header-bg: #FFFFFF;
+  --on-dark-color: #FFFFFF;
+  --on-dark-muted: rgba(255, 255, 255, 0.82);
+  --divider-color: rgba(27, 54, 126, 0.1);
+  --brand-rgb: 27, 54, 126;
+  --accent-rgb: 0, 153, 137;
+  --shadow-rgb: 27, 54, 126;
+  --default-font: "Montserrat", sans-serif;
+  --accent-font: "Playfair Display", serif;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-soft: 0 8px 32px rgba(var(--shadow-rgb), 0.08);
+  --shadow-card: 0 12px 40px rgba(var(--shadow-rgb), 0.12);
+  --transition: 0.25s ease;
+}
+
+body {
+  background-color: var(--secondary-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--accent-color);
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+/* Top bar */
+.topbar {
+  background: var(--primary-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.topbar-contact-info ul li a,
+.topbar-social-links ul li a {
+  color: var(--on-dark-muted);
+}
+
+.topbar-contact-info ul li a:hover,
+.topbar-social-links ul li a:hover {
+  color: var(--on-dark-color);
+}
+
+/* Header */
+.main-header .header-sticky {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(var(--shadow-rgb), 0.06);
+}
+
+.main-header .navbar-brand img {
+  max-height: 72px;
+  width: auto;
+}
+
+.main-header .navbar-nav .nav-link {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.main-header .navbar-nav .nav-link:hover,
+.main-header .navbar-nav .nav-item.submenu:hover > a {
+  color: var(--accent-color);
+}
+
+.main-header .navbar-nav .sub-menu {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--divider-color);
+}
+
+/* Buttons */
+.btn-default {
+  background: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 999px;
+  color: var(--on-dark-color);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: var(--transition);
+}
+
+.btn-default:hover,
+.btn-default:focus {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--on-dark-color);
+}
+
+.btn-default.btn-highlighted {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-default.btn-highlighted:hover,
+.btn-default.btn-highlighted:focus {
+  background: #007a6d;
+  border-color: #007a6d;
+  color: var(--on-dark-color);
+}
+
+.btn-default.btn-outline {
+  background: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-default.btn-outline:hover {
+  background: var(--primary-color);
+  color: var(--on-dark-color);
+}
+
+/* Section titles */
+.section-title h3 {
+  color: var(--accent-color);
+  font-family: var(--default-font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.section-title h2 {
+  font-family: var(--accent-font);
+  font-weight: 600;
+}
+
+/* Cards shared */
+.bg-radius-section {
+  border-radius: var(--radius-lg);
+}
+
+.benefits-item,
+.service-item,
+.team-member-item,
+.rehab-benefits-item {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--divider-color);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.benefits-item:hover,
+.service-item:hover,
+.team-member-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+.benefits-item .icon-box,
+.service-item .icon-box {
+  background: var(--accent-light);
+}
+
+/* Hero (global overrides) */
+.hero {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #234595 55%, #009989 100%);
+}
+
+.hero::before {
+  opacity: 0.15;
+}
+
+.hero .section-title h1,
+.hero .section-title p {
+  color: var(--on-dark-color);
+}
+
+.hero-trust-bar {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+}
+
+.hero-trust-item,
+.hero-trust-link {
+  color: var(--on-dark-color);
+}
+
+.visit-status-open .visit-status-dot {
+  background: #34d399;
+}
+
+.visit-status-closed .visit-status-dot {
+  background: #f87171;
+}
+
+/* Services */
+.more-service-btn a {
+  background: var(--accent-color);
+  border-radius: 999px;
+}
+
+.home-service-card .service-body {
+  background: var(--surface-color);
+}
+
+/* Quality / CTA bands */
+.quality-treatment {
+  border-radius: var(--radius-lg);
+}
+
+.home-bottom-cta-inner {
+  background: linear-gradient(135deg, var(--primary-color), #009989);
+  border-radius: var(--radius-lg);
+}
+
+.home-location-band {
+  background: var(--surface-color);
+}
+
+.home-area-chip {
+  background: var(--accent-light);
+  color: var(--primary-color);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+/* Testimonials */
+.our-testimonial {
+  background: var(--surface-color);
+}
+
+.testimonial-item {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--divider-color);
+}
+
+/* Footer */
+.main-footer {
+  background: var(--footer-bg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.main-footer .about-footer-content h3,
+.main-footer .footer-links h3,
+.main-footer .footer-links ul li a,
+.main-footer .footer-info-box-content p,
+.main-footer .footer-info-box-content p a,
+.main-footer .footer-copyright-text p {
+  color: var(--on-dark-muted);
+}
+
+.main-footer .footer-links ul li a:hover,
+.main-footer .footer-info-box-content p a:hover {
+  color: var(--on-dark-color);
+}
+
+.main-footer .footer-links h3 {
+  color: var(--on-dark-color);
+  font-family: var(--default-font);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Accordion */
+.accordion-item {
+  border-radius: var(--radius-sm) !important;
+  border: 1px solid var(--divider-color) !important;
+  overflow: hidden;
+}
+
+.accordion-button:not(.collapsed) {
+  background: var(--accent-light);
+  color: var(--primary-color);
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.2);
+}
+
+/* Page header */
+.page-header {
+  background: linear-gradient(135deg, var(--primary-color), #234595);
+}
+
+.page-header .page-header-box h1,
+.page-header .page-header-box .breadcrumb,
+.page-header .page-header-box .breadcrumb a {
+  color: var(--on-dark-color);
+}
+
+/* Booking / patient hub accents */
+.booking-page-card,
+.treatments-hub-hero-card,
+.treatments-hub-pillar {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--divider-color);
+}
+
+.treatments-hub-pillar:hover {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  background: var(--accent-light);
+}
+
+.treatments-hub-stat strong {
+  color: var(--accent-color);
+}
+
+@media (max-width: 991px) {
+  .main-header .navbar-brand img {
+    max-height: 56px;
+  }
+}

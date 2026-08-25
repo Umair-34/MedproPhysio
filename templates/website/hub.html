@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static optimized_images %}
+
+{% block meta_description %}{{ page_title }} at our Calgary clinic in Calgary, Alberta. Physio, massage, chiropractic, acupuncture and kinesiology. Book online today.{% endblock %}
+
+{% block content %}
+{% include 'includes/page_header.html' %}
+
+<div class="container py-5 hub-page{% if section == 'treatments' %} treatments-hub{% endif %}">
+  <div class="row section-row">
+    <div class="col-lg-12">
+      {% if section == 'treatments' %}
+      <p class="treatments-hub-intro wow fadeInUp">
+        See how we assess, treat, and track recovery for each service. Every page includes
+        our assessment process, treatment approach, typical timelines, and real patient examples.
+      </p>
+      <div class="treatments-hub-pillars wow fadeInUp" data-wow-delay="0.1s">
+        <div class="treatments-hub-pillar">
+          <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i>
+          <h3>Assessment</h3>
+          <p>How we find the cause of your symptoms</p>
+        </div>
+        <div class="treatments-hub-pillar">
+          <i class="fa-solid fa-hand-holding-medical" aria-hidden="true"></i>
+          <h3>Treatment</h3>
+          <p>Techniques matched to your condition</p>
+        </div>
+        <div class="treatments-hub-pillar">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <h3>Recovery</h3>
+          <p>Typical phases and timeframes</p>
+        </div>
+        <div class="treatments-hub-pillar">
+          <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+          <h3>Case studies</h3>
+          <p>Examples from our Calgary patients</p>
+        </div>
+      </div>
+      {% else %}
+      <div class="section-title section-title-center">
+        <p class="wow fadeInUp">
+          {% if section == 'focus-areas' %}
+          Our Calgary clinic in Calgary offers specialized programs across physiotherapy, massage,
+          chiropractic, acupuncture, and kinesiology. Explore our focus areas below and book the care that fits your needs.
+          {% endif %}
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    {% for item in items %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="service-item hub-card h-100 wow fadeInUp">
+        {% if item.image_url %}
+        <div class="hub-card-image">
+          <a href="{% url detail_url_name item.slug %}">
+            {% optimized_img src=item.image_url alt=item.image_alt|default:item.title loading='lazy' %}
+          </a>
+        </div>
+        {% endif %}
+        <div class="service-content">
+          <h3><a href="{% url detail_url_name item.slug %}">{{ item.title }}</a></h3>
+          {% if section == 'treatments' %}
+          {% if item.typical_sessions or item.recovery_timeline %}
+          <div class="hub-card-meta">
+            {% if item.typical_sessions %}<span class="hub-card-tag">{{ item.typical_sessions }}</span>{% endif %}
+            {% if item.recovery_timeline %}<span class="hub-card-tag">{{ item.recovery_timeline }} recovery</span>{% endif %}
+          </div>
+          {% endif %}
+          {% endif %}
+          {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+          <a href="{% url detail_url_name item.slug %}" class="readmore-btn">{% if section == 'treatments' %}See how we treat this{% else %}Learn more{% endif %}</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

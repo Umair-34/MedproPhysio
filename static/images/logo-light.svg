@@ -1,0 +1,25 @@
+<svg width="420" height="72" viewBox="0 0 420 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Taradale Physiotherapy Massage and Wellness Centre">
+  <title>Taradale Physiotherapy Massage &amp; Wellness Centre</title>
+  <g transform="translate(36 36)">
+    <rect x="-1.6" y="-30" width="3.2" height="14" rx="1.2" fill="#8F3D35" transform="rotate(0)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="20" rx="1.2" fill="#6B2222" transform="rotate(22.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="12" rx="1.2" fill="#5A9DB3" transform="rotate(45)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="18" rx="1.2" fill="#8F3D35" transform="rotate(67.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="14" rx="1.2" fill="#6B2222" transform="rotate(90)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="20" rx="1.2" fill="#5A9DB3" transform="rotate(112.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="12" rx="1.2" fill="#8F3D35" transform="rotate(135)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="18" rx="1.2" fill="#6B2222" transform="rotate(157.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="14" rx="1.2" fill="#5A9DB3" transform="rotate(180)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="20" rx="1.2" fill="#8F3D35" transform="rotate(202.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="12" rx="1.2" fill="#6B2222" transform="rotate(225)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="18" rx="1.2" fill="#5A9DB3" transform="rotate(247.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="14" rx="1.2" fill="#8F3D35" transform="rotate(270)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="20" rx="1.2" fill="#6B2222" transform="rotate(292.5)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="12" rx="1.2" fill="#5A9DB3" transform="rotate(315)"/>
+    <rect x="-1.6" y="-30" width="3.2" height="18" rx="1.2" fill="#8F3D35" transform="rotate(337.5)"/>
+    <circle cx="0" cy="-7" r="4.8" fill="#FFFFFF"/>
+    <path d="M0 -2.5V9.5M-7.5 2.5L0 -1.5L7.5 2.5M-4.5 9.5L-7.5 18.5M4.5 9.5L7.5 18.5" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="82" y="33" fill="#6B2222" font-family="Marcellus, Georgia, serif" font-size="22" letter-spacing="0.5">TARADALE PHYSIOTHERAPY</text>
+  <text x="82" y="56" fill="#8F3D35" font-family="Marcellus, Georgia, serif" font-size="16" letter-spacing="0.7">MASSAGE &amp; WELLNESS CENTRE</text>
+</svg>
