@@ -36,7 +36,7 @@ The app is configured for production with:
 
 - `STATIC_ROOT` + WhiteNoise for static files
 - `gunicorn` as the WSGI server
-- PostgreSQL via `DATABASE_URL`
+- PostgreSQL for local development and production (`DATABASE_URL` on DigitalOcean, `POSTGRES_*` locally)
 - Environment-based `SECRET_KEY`, `DEBUG`, and `ALLOWED_HOSTS`
 
 ### Required environment variables

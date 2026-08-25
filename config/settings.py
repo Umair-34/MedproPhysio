@@ -134,8 +134,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
-# Priority: DATABASE_URL > POSTGRES_* / DB_* env vars > SQLite (local fallback).
-# Copy .env.example to .env and set your PostgreSQL credentials.
+# PostgreSQL is required for development and production.
+# Priority: DATABASE_URL (DigitalOcean) > POSTGRES_* / DB_* env vars.
+# Set USE_SQLITE=true only as an emergency local override.
 
 def _postgres_config_from_env():
     db_name = (
@@ -151,6 +152,20 @@ def _postgres_config_from_env():
     if not (db_name and db_user):
         return None
 
+    raw_port = (
+        os.environ.get('POSTGRES_PORT')
+        or os.environ.get('DB_PORT')
+        or '5432'
+    ).strip()
+    try:
+        port = int(raw_port)
+    except ValueError:
+        port = 0
+    if port < 1 or port > 65535:
+        raise ImproperlyConfigured(
+            f'PostgreSQL port must be between 1 and 65535 (got {raw_port!r}).'
+        )
+
     return {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': db_name,
@@ -165,11 +180,7 @@ def _postgres_config_from_env():
             or os.environ.get('DB_HOST')
             or 'localhost'
         ),
-        'PORT': (
-            os.environ.get('POSTGRES_PORT')
-            or os.environ.get('DB_PORT')
-            or '5432'
-        ),
+        'PORT': str(port),
         'CONN_MAX_AGE': 600,
         'CONN_HEALTH_CHECKS': True,
         'OPTIONS': {
@@ -179,7 +190,6 @@ def _postgres_config_from_env():
 
 
 _db_url = os.environ.get('DATABASE_URL', '').strip()
-_postgres = _postgres_config_from_env()
 _force_sqlite = _env_flag('USE_SQLITE')
 
 if _force_sqlite:
@@ -197,15 +207,14 @@ elif _db_url:
             conn_health_checks=True,
         )
     }
-elif _postgres:
-    DATABASES = {'default': _postgres}
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+    _postgres = _postgres_config_from_env()
+    if not _postgres:
+        raise ImproperlyConfigured(
+            'PostgreSQL is required. Set DATABASE_URL or POSTGRES_DB / POSTGRES_USER '
+            '(and host, port, password) in the environment.'
+        )
+    DATABASES = {'default': _postgres}
 
 CACHES = {
     'default': {
