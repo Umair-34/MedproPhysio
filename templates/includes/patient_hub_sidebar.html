@@ -17,7 +17,9 @@
             <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
           </a>
           {% else %}
-          <a href="{% url item.url_name %}" class="mp-patient-sidebar__link">
+          <a href="{% url item.url_name %}"
+            class="mp-patient-sidebar__link{% if patient_hub_active == item.url_name %} is-active{% endif %}"
+            {% if patient_hub_active == item.url_name %}aria-current="page"{% endif %}>
             <span>{{ item.title }}</span>
             <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
           </a>

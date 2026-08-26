@@ -204,9 +204,9 @@ def patient_stories(request):
   return render(request, 'website/patient_stories.html', {
     'page_title': 'Patient Stories',
     'breadcrumb': 'Patient Stories',
-    'page_header_class': 'patient-stories-page-header bg-radius-section',
     'patient_hub_nav': content.PATIENT_HUB,
     'patient_hub_active': 'website:patient-stories',
+    'page_hero_lead': 'Google reviews from patients at our northwest Calgary clinic.',
     'meta_description': (
       'Read real Google reviews from patients at Medpro Physiotherapy in northwest Calgary.'
     ),

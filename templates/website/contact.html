@@ -15,7 +15,7 @@
 <section class="mp-content-block">
   <div class="mp-container">
     <div class="mp-contact-layout">
-      <div>
+      <div class="mp-contact-layout__details">
         <span class="mp-eyebrow">Contact Us</span>
         <h2>Get in touch</h2>
         <p class="mp-lead">Reach out about appointments, services, or insurance. You can also book online anytime.</p>
@@ -54,7 +54,7 @@
         <a href="{% url 'website:book' %}" class="mp-btn mp-btn--primary" style="margin-top:1rem;">Book Appointment</a>
       </div>
 
-      <div class="mp-booking-shell">
+      <div class="mp-booking-shell mp-contact-layout__form">
         <h2 style="margin-bottom:1rem;">Send a message</h2>
         <form action="{% url 'website:contact-submit' %}" method="post" class="contact-form" style="position:relative;">
           {% csrf_token %}
