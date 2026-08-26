@@ -26,7 +26,7 @@ HOME_HERO = {
   'primary_cta': 'Book an Appointment',
   'secondary_cta': 'Explore Our Services',
   'badge': 'Same-week appointments',
-  'experience_value': '15+',
+  'experience_value': '6+',
   'experience_label': 'Years of combined clinical experience',
   'rating_value': '4.9',
   'rating_label': 'patient rating',
@@ -89,7 +89,7 @@ HOME_COUNTER_LABEL = 'Excellent Results'
 HOME_WHY_TITLE = 'Why Choose Medpro Physiotherapy And Wellness?'
 HOME_WHY_PARAGRAPHS = [
   (
-    'Over 15 years of combined expertise in outpatient orthopedic, neurological and sports medicine, '
+    'Over 6 years of combined expertise in outpatient orthopedic, neurological and sports medicine, '
     'we are an independently owned group of veteran physical therapists.'
   ),
   (
@@ -184,7 +184,7 @@ HOME_ABOUT_HIGHLIGHTS = [
 ]
 
 HOME_ABOUT_STATS = [
-  {'value': '15+', 'label': 'Years of experience'},
+  {'value': '6+', 'label': 'Years of experience'},
   {'value': '95%', 'label': 'Patient satisfaction'},
   {'value': '6+', 'label': 'Treatment disciplines'},
 ]
