@@ -1,0 +1,19 @@
+APPOINTMENT REQUEST NOT APPROVED
+{{ clinic_name }}
+
+Hi {{ customer_first_name }}, we were not able to confirm your appointment request.
+
+Service:    {{ service_name }}
+Date:       {{ appointment_date }}
+Time:       {{ appointment_time }} ({{ duration_minutes }} min)
+Location:   {{ clinic_address }}
+Reference:  {{ confirmation_token }}
+{% if cancellation_reason %}
+Message:    {{ cancellation_reason }}
+{% endif %}
+Book another time: {{ book_url }}
+Questions? Call {{ clinic_phone }}.
+
+{{ clinic_name }}
+{{ clinic_address }}
+{{ clinic_phone }} | {{ clinic_email }}

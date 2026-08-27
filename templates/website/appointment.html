@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_head %}
+{% if turnstile_site_key %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 {% include 'includes/page_hero.html' %}
 
@@ -9,35 +15,18 @@
     <div class="mp-section-head mp-section-head--center">
       <span class="mp-eyebrow">Online Booking</span>
       <h2>Book your appointment</h2>
-      <p class="mp-lead">Choose your service, pick a time, and get instant confirmation, no account required.</p>
+      <p class="mp-lead">Choose your service, pick a time, and we will confirm by email after the clinic reviews your request.</p>
     </div>
 
     <div class="mp-booking-layout">
       {% include 'includes/booking_sidebar.html' %}
 
       <div class="mp-booking-shell">
-        <div class="booking-stepper" aria-label="Booking progress">
-          <div class="booking-stepper-item is-active" data-step="1">
-            <span class="booking-stepper-number">1</span>
-            <span class="booking-stepper-label">Service</span>
-          </div>
-          <div class="booking-stepper-item" data-step="2">
-            <span class="booking-stepper-number">2</span>
-            <span class="booking-stepper-label">Date &amp; time</span>
-          </div>
-          <div class="booking-stepper-item" data-step="3">
-            <span class="booking-stepper-number">3</span>
-            <span class="booking-stepper-label">Your details</span>
-          </div>
-          <div class="booking-stepper-item" data-step="4">
-            <span class="booking-stepper-number">4</span>
-            <span class="booking-stepper-label">Confirm</span>
-          </div>
-        </div>
-
         <form id="bookingForm" novalidate style="position:relative;">
           {% csrf_token %}
-          {% include 'includes/form_guard.html' with hp_id='booking_company_website' turnstile_action='booking' turnstile_explicit=True turnstile_widget_id='cf-turnstile-booking' %}
+          {% include 'includes/form_guard.html' with hp_id='booking_company_website' skip_turnstile=True %}
+          <input type="hidden" name="service_id" id="service_id" value="" required>
+          <input type="hidden" name="duration_minutes" id="duration_minutes" value="">
           <div id="bookingAlert" class="alert d-none" role="alert"></div>
 
           <section class="booking-form-section" data-booking-step="1">
@@ -48,12 +37,21 @@
                 <p>Select the service you need for your appointment.</p>
               </div>
             </header>
-            <div class="form-group">
-              <label for="service_id">Service</label>
-              <select name="service_id" class="form-control form-select" id="service_id" required>
-                <option value="" disabled selected>Select a service</option>
-              </select>
-              <p class="booking-field-hint">Physiotherapy, massage, chiropractic, and more.</p>
+            <div class="booking-service-grid" id="bookingServiceGrid" role="list">
+              {% for service in booking_services %}
+                {% for minutes in service.allowed_durations %}
+                <button
+                  type="button"
+                  class="booking-service-card"
+                  data-service-id="{{ service.id }}"
+                  data-duration="{{ minutes }}"
+                  aria-pressed="false"
+                >
+                  <span class="booking-service-card__name">{{ service.name }}</span>
+                  <span class="booking-service-card__time">{{ minutes }} Minutes</span>
+                </button>
+                {% endfor %}
+              {% endfor %}
             </div>
           </section>
 
@@ -85,7 +83,7 @@
               <span class="booking-form-section-number">03</span>
               <div>
                 <h2>Your contact details</h2>
-                <p>We will use this information to confirm your appointment.</p>
+                <p>We will use this information to review your request and email you once it is approved.</p>
               </div>
             </header>
             <div class="mp-form-grid">
@@ -112,15 +110,17 @@
             </div>
           </section>
 
+          {% include 'includes/form_guard.html' with skip_honeypot=True turnstile_action='booking' turnstile_explicit=True turnstile_widget_id='cf-turnstile-booking' %}
+
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
             <p style="margin:0;font-size:0.8125rem;color:var(--mp-muted);"><i class="fa-solid fa-shield-halved"></i> Your information is used only to manage your appointment.</p>
-            <button type="submit" class="mp-btn mp-btn--primary" id="bookingSubmit" disabled>Confirm Booking</button>
+            <button type="submit" class="mp-btn mp-btn--primary" id="bookingSubmit" disabled><span>Request Booking</span></button>
           </div>
         </form>
 
         <div id="bookingConfirmation" class="booking-confirmation d-none" role="status" aria-live="polite">
-          <div class="booking-confirmation-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <h2>Booking confirmed</h2>
+          <div class="booking-confirmation-icon"><i class="fa-regular fa-clock"></i></div>
+          <h2>Request received</h2>
           <p id="confirmationDetails"></p>
           <div class="booking-confirmation-actions">
             <a href="{% url 'website:visit-us' %}" class="mp-btn mp-btn--secondary">Visit Us</a>
@@ -148,12 +148,6 @@
     </div>
   </div>
 </section>
-{% endblock %}
-
-{% block extra_head %}
-{% if turnstile_site_key %}
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-{% endif %}
 {% endblock %}
 
 {% block extra_js %}

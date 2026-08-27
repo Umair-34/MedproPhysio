@@ -52,6 +52,7 @@ def service_list(request):
             'slug': service.slug,
             'description': service.description,
             'duration_minutes': service.duration_minutes,
+            'durations': service.allowed_durations(),
             'price': str(service.price) if service.price is not None else None,
         }
         for service in services
@@ -80,8 +81,17 @@ def available_slots(request):
 
     service = get_object_or_404(Service, pk=service_id, is_active=True)
     practitioner_pk = int(practitioner_id) if practitioner_id else None
-
-    slots = compute_slots(service, target_date, practitioner_pk)
+    duration_param = request.GET.get('duration_minutes')
+    try:
+        duration_minutes = int(duration_param) if duration_param else None
+        slots = compute_slots(
+            service,
+            target_date,
+            practitioner_pk,
+            duration_minutes=duration_minutes,
+        )
+    except (TypeError, ValueError):
+        return _json_error('duration_minutes must be a number.')
     data = [
         {
             'start_datetime': slot.start_datetime.isoformat(),
@@ -146,6 +156,7 @@ def create_booking(request):
                 'phone': payload['phone'],
             },
             customer_notes=payload.get('customer_notes', ''),
+            duration_minutes=payload.get('duration_minutes'),
         )
     except ServiceUnavailableError as exc:
         return _json_error(str(exc), status=404)
@@ -153,6 +164,8 @@ def create_booking(request):
         return _json_error(str(exc), status=400)
     except SlotUnavailableError as exc:
         return _json_error(str(exc), status=409)
+    except BookingError as exc:
+        return _json_error(str(exc), status=400)
     except (TypeError, ValueError):
         return _json_error('Invalid field values.')
 
@@ -163,6 +176,7 @@ def create_booking(request):
             'start_datetime': appointment.start_datetime.isoformat(),
             'end_datetime': appointment.end_datetime.isoformat(),
             'status': appointment.status,
+            'duration_minutes': appointment.duration_minutes,
             'confirmation_token': str(appointment.confirmation_token),
         }
     }

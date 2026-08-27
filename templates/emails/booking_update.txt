@@ -1,0 +1,27 @@
+APPOINTMENT UPDATED
+{{ clinic_name }}
+
+Hi {{ customer_first_name }}, there is an update to your booking at {{ clinic_name }}.
+Please review the new details below.
+{% if update_message %}
+Note from the clinic: {{ update_message }}
+{% endif %}{% if previous_appointment_date or previous_appointment_time or previous_service_name %}
+Previous booking:
+{{ previous_service_name|default:service_name }} · {{ previous_appointment_date|default:appointment_date }} · {{ previous_appointment_time|default:appointment_time }}
+
+Updated booking:
+{% endif %}
+Service:    {{ service_name }}
+Date:       {{ appointment_date }}
+Time:       {{ appointment_time }} ({{ duration_minutes }} min)
+{% if practitioner_name %}Therapist:  {{ practitioner_name }}
+{% endif %}Location:   {{ clinic_address }}
+Reference:  {{ confirmation_token }}
+
+Directions: {{ directions_url }}
+
+If this time no longer works, reply to this email or call {{ clinic_phone }}.
+
+{{ clinic_name }}
+{{ clinic_address }}
+{{ clinic_phone }} | {{ clinic_email }}

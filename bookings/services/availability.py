@@ -11,8 +11,10 @@ SLOT_INCREMENT_MINUTES = 15
 DEFAULT_SLOT_CAPACITY = 5
 
 
-def get_slot_capacity() -> int:
-    """How many patients may book the same time slot."""
+def get_slot_capacity(service: Service | None = None) -> int:
+    """How many patients may book the same time slot for this service."""
+    if service is not None:
+        return max(1, int(getattr(service, 'slot_capacity', 1) or 1))
     return int(getattr(settings, 'BOOKING_SLOT_CAPACITY', DEFAULT_SLOT_CAPACITY))
 
 
@@ -64,20 +66,42 @@ def _get_service_windows(service: Service, target_date: date) -> list[tuple[time
     return [(clinic_opens, clinic_closes)]
 
 
+SLOT_HOLDING_STATUSES = (
+    Appointment.Status.PENDING,
+    Appointment.Status.CONFIRMED,
+)
+
+
+def _overlapping_appointments(start: datetime, end: datetime, service: Service | None = None):
+    queryset = Appointment.objects.filter(
+        start_datetime__lt=end,
+        end_datetime__gt=start,
+    )
+    if service is not None:
+        queryset = queryset.filter(service=service)
+    return queryset
+
+
 def count_overlapping_appointments(
     start: datetime,
     end: datetime,
     service: Service | None = None,
 ) -> int:
     """Active appointments that overlap the given window."""
-    queryset = Appointment.objects.filter(
-        status__in=[Appointment.Status.PENDING, Appointment.Status.CONFIRMED],
-        start_datetime__lt=end,
-        end_datetime__gt=start,
-    )
-    if service is not None:
-        queryset = queryset.filter(service=service)
-    return queryset.count()
+    return _overlapping_appointments(start, end, service).filter(
+        status__in=SLOT_HOLDING_STATUSES,
+    ).count()
+
+
+def has_rejected_overlap(
+    start: datetime,
+    end: datetime,
+    service: Service | None = None,
+) -> bool:
+    """True when staff rejected a booking that still occupies this window."""
+    return _overlapping_appointments(start, end, service).filter(
+        status=Appointment.Status.REJECTED,
+    ).exists()
 
 
 def _iter_slot_starts(window_start: time, window_end: time, step_minutes: int):
@@ -93,13 +117,19 @@ def compute_slots(
     service: Service,
     target_date: date,
     practitioner_id: int | None = None,
+    duration_minutes: int | None = None,
 ) -> list[AvailableSlot]:
     windows = _get_service_windows(service, target_date)
     if not windows:
         return []
 
-    capacity = get_slot_capacity()
-    slot_duration = timedelta(minutes=service.duration_minutes)
+    try:
+        length = service.resolve_duration(duration_minutes)
+    except ValueError:
+        return []
+
+    capacity = get_slot_capacity(service)
+    slot_duration = timedelta(minutes=length)
     buffer_duration = timedelta(minutes=service.buffer_minutes)
     occupied_duration = slot_duration + buffer_duration
     now = timezone.now()
@@ -119,6 +149,8 @@ def compute_slots(
             if occupied_end > window_end_dt:
                 continue
             if start <= now:
+                continue
+            if has_rejected_overlap(start, occupied_end, service=service):
                 continue
 
             taken = count_overlapping_appointments(start, occupied_end, service=service)
@@ -142,9 +174,14 @@ def is_slot_available(
     service: Service,
     start_datetime: datetime,
     practitioner_id: int | None = None,
+    duration_minutes: int | None = None,
 ) -> AvailableSlot | None:
     target_date = timezone.localtime(start_datetime).date()
-    for slot in compute_slots(service, target_date):
+    for slot in compute_slots(
+        service,
+        target_date,
+        duration_minutes=duration_minutes,
+    ):
         if slot.start_datetime == start_datetime:
             return slot
     return None

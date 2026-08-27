@@ -92,10 +92,11 @@ class ContentPage(models.Model):
             item['summary'] = self.summary
         if self.is_primary:
             item['primary'] = True
-        if self.image:
-            item['image_url'] = self.image.url
-            item['image_webp_url'] = self.image_webp_url()
-            item['image_alt'] = self.image_alt or self.title
+        image_url, image_webp_url, image_alt = self._image_urls()
+        if image_url:
+            item['image_url'] = image_url
+            item['image_webp_url'] = image_webp_url
+            item['image_alt'] = image_alt
         if self.typical_sessions:
             item['typical_sessions'] = self.typical_sessions
         if self.recovery_timeline:
@@ -137,11 +138,22 @@ class ContentPage(models.Model):
             'faqs': faqs,
             'faq_intro': faq_intro,
         }
-        if self.image:
-            data['image_url'] = self.image.url
-            data['image_webp_url'] = self.image_webp_url()
-            data['image_alt'] = self.image_alt or self.title
+        image_url, image_webp_url, image_alt = self._image_urls()
+        if image_url:
+            data['image_url'] = image_url
+            data['image_webp_url'] = image_webp_url
+            data['image_alt'] = image_alt
         return data
+
+    def _image_urls(self):
+        from website.page_images import static_image_path_for
+
+        static_path = static_image_path_for(self.slug)
+        if static_path:
+            return static_path, None, self.image_alt or self.title
+        if self.image:
+            return self.image.url, self.image_webp_url(), self.image_alt or self.title
+        return None, None, ''
 
 
 class PageContentSection(models.Model):

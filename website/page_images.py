@@ -68,7 +68,17 @@ SLUG_IMAGE_MAP = {
     'postural-restoration': 'content-chiropractic-care.jpg',
     'electrical-stimulation': 'content-electrical-stimulation.jpg',
     'concussion-management': 'content-concussion-management.jpg',
+    'psychology-counselling': 'content-psychology-counselling.jpg',
 }
+
+# Relative static paths used on hub and detail cards when we want repo images, not media URLs.
+STATIC_SLUG_IMAGE_MAP = {
+    'psychology-counselling': 'images/services/psychology-counselling.jpg',
+}
+
+
+def static_image_path_for(slug):
+    return STATIC_SLUG_IMAGE_MAP.get(slug)
 
 # Fallback matching from slug or page title text.
 TITLE_KEYWORD_RULES = (
@@ -87,6 +97,7 @@ TITLE_KEYWORD_RULES = (
     (('post surg', 'pre surg', 'surgical'), 'content-post-surgery-rehab.jpg'),
     (('balance', 'vestibular', 'dizziness', 'vertigo', 'gait', 'fall prevention'), 'content-balance-vestibular.jpg'),
     (('chronic', 'fibromyalgia', 'arthritis', 'headache', 'migraine'), 'content-chronic-pain.jpg'),
+    (('counsel', 'counsell', 'psycholog'), 'content-psychology-counselling.jpg'),
     (('physio',), 'content-physiotherapy-clinic.jpg'),
 )
 

@@ -1,0 +1,31 @@
+{% extends 'emails/base_email.html' %}
+
+{% block subject %}Appointment request not approved | {{ clinic_name }}{% endblock %}
+
+{% block preheader %}Your {{ service_name }} request on {{ appointment_date }} at {{ appointment_time }} was not approved.{% endblock %}
+
+{% block content %}
+<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#8B2E2E; font-size:24px; font-weight:normal;">Your request was not approved</h1>
+<p style="margin:0 0 22px 0; font-size:15px; line-height:24px; color:#2D3439;">
+  Hi {{ customer_first_name }}, we were not able to confirm your appointment request with {{ clinic_name }}.
+</p>
+
+{% include 'emails/_appointment_details.html' %}
+
+{% if cancellation_reason %}
+<p style="margin:0 0 22px 0; font-size:14px; line-height:22px; color:#2D3439;">
+  <strong style="color:#8B2E2E;">Message from the clinic:</strong> {{ cancellation_reason }}
+</p>
+{% endif %}
+
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:4px 0 26px 0;">
+  <tr>
+    <td style="border-radius:8px; background-color:#8B2E2E;">
+      <a href="{{ book_url }}" style="display:inline-block; padding:13px 26px; font-size:15px; color:#ffffff; text-decoration:none; font-weight:600;">Book another time</a>
+    </td>
+  </tr>
+</table>
+<p style="margin:0; font-size:14px; line-height:22px; color:#2D3439;">
+  Questions? Call us at <a href="tel:{{ clinic_phone_link }}" style="color:#C44A3A; text-decoration:none;">{{ clinic_phone }}</a>.
+</p>
+{% endblock %}

@@ -82,6 +82,7 @@ def _base_context(appointment: Appointment) -> dict:
     customer = appointment.customer
     service = appointment.service
     start_local = timezone.localtime(appointment.start_datetime)
+    site_base = settings.SITE_BASE_URL.rstrip('/')
     return {
         'clinic_name': content.SITE_NAME,
         'clinic_address': content.SITE_ADDRESS,
@@ -89,12 +90,16 @@ def _base_context(appointment: Appointment) -> dict:
         'clinic_phone': content.SITE_PHONE,
         'clinic_phone_link': content.SITE_PHONE_LINK.replace('tel:', ''),
         'clinic_email': content.SITE_EMAIL,
+        'clinic_hours': content.WORKING_HOURS,
         'directions_url': content.SITE_GOOGLE_DIRECTIONS_URL,
-        'book_url': f'{settings.SITE_BASE_URL}/book/',
+        'book_url': f'{site_base}/book/',
+        'site_base_url': site_base,
         'service_name': service.name,
-        'duration_minutes': service.duration_minutes,
+        'duration_minutes': appointment.duration_minutes,
         'appointment_date': start_local.strftime(DATE_FORMAT),
         'appointment_time': start_local.strftime(TIME_FORMAT),
+        'practitioner_name': appointment.practitioner.full_name if appointment.practitioner else '',
+        'status_label': appointment.get_status_display(),
         'customer_name': customer.full_name,
         'customer_first_name': customer.first_name,
         'customer_email': customer.email,
@@ -139,14 +144,35 @@ def _send(
     message.send(fail_silently=False)
 
 
-def send_booking_confirmation(appointment: Appointment) -> None:
-    """Email the client and the clinic that a booking is confirmed."""
+def send_booking_request(appointment: Appointment) -> None:
+    """Email the clinic that a new online request needs approve or reject."""
+    try:
+        base = _base_context(appointment)
+        when = f"{base['appointment_date']} at {base['appointment_time']}"
+        _send(
+            subject=f"New booking request: {base['service_name']} - {base['customer_name']} ({when})",
+            to_email=_clinic_email(),
+            html_template='emails/booking_request.html',
+            text_template='emails/booking_request.txt',
+            context={**base, 'audience': 'clinic', 'show_patient': True},
+            ics_content=None,
+            ics_method='REQUEST',
+            reply_to=[appointment.customer.email],
+        )
+    except Exception:  # noqa: BLE001
+        logger.exception(
+            'Failed to send booking request email for appointment %s',
+            appointment.pk,
+        )
+
+
+def send_booking_confirmation(appointment: Appointment, *, notify_clinic: bool = False) -> None:
+    """Email the client that a booking is confirmed. Optionally copy the clinic."""
     try:
         ics_content = build_ics(appointment, method='REQUEST')
         base = _base_context(appointment)
         when = f"{base['appointment_date']} at {base['appointment_time']}"
 
-        # Client email
         _send(
             subject=f"Your appointment is confirmed - {base['appointment_date']}",
             to_email=appointment.customer.email,
@@ -158,20 +184,41 @@ def send_booking_confirmation(appointment: Appointment) -> None:
             reply_to=[_clinic_email()],
         )
 
-        # Clinic email
-        _send(
-            subject=f"New booking: {base['service_name']} - {base['customer_name']} ({when})",
-            to_email=_clinic_email(),
-            html_template='emails/booking_confirmation.html',
-            text_template='emails/booking_confirmation.txt',
-            context={**base, 'audience': 'clinic', 'show_patient': True},
-            ics_content=ics_content,
-            ics_method='REQUEST',
-            reply_to=[appointment.customer.email],
-        )
+        if notify_clinic:
+            _send(
+                subject=f"Confirmed booking: {base['service_name']} - {base['customer_name']} ({when})",
+                to_email=_clinic_email(),
+                html_template='emails/booking_confirmation.html',
+                text_template='emails/booking_confirmation.txt',
+                context={**base, 'audience': 'clinic', 'show_patient': True},
+                ics_content=ics_content,
+                ics_method='REQUEST',
+                reply_to=[appointment.customer.email],
+            )
     except Exception:  # noqa: BLE001 - notifications must never break booking
         logger.exception(
             'Failed to send booking confirmation emails for appointment %s',
+            appointment.pk,
+        )
+
+
+def send_booking_rejection(appointment: Appointment) -> None:
+    """Email the client that their request was not approved."""
+    try:
+        base = _base_context(appointment)
+        _send(
+            subject=f"Your appointment request on {base['appointment_date']} was not approved",
+            to_email=appointment.customer.email,
+            html_template='emails/booking_rejection.html',
+            text_template='emails/booking_rejection.txt',
+            context={**base, 'audience': 'client', 'show_patient': False},
+            ics_content=None,
+            ics_method='CANCEL',
+            reply_to=[_clinic_email()],
+        )
+    except Exception:  # noqa: BLE001
+        logger.exception(
+            'Failed to send booking rejection email for appointment %s',
             appointment.pk,
         )
 
@@ -206,5 +253,55 @@ def send_booking_cancellation(appointment: Appointment) -> None:
     except Exception:  # noqa: BLE001
         logger.exception(
             'Failed to send booking cancellation emails for appointment %s',
+            appointment.pk,
+        )
+
+
+def send_booking_update(
+    appointment: Appointment,
+    *,
+    previous: dict | None = None,
+    message: str = '',
+) -> None:
+    """Email the customer (and clinic) that an existing booking changed."""
+    try:
+        ics_content = build_ics(appointment, method='REQUEST')
+        base = _base_context(appointment)
+        previous = previous or {}
+        context = {
+            **base,
+            'audience': 'client',
+            'show_patient': False,
+            'update_message': message.strip(),
+            'previous_service_name': previous.get('service_name', ''),
+            'previous_appointment_date': previous.get('appointment_date', ''),
+            'previous_appointment_time': previous.get('appointment_time', ''),
+        }
+        when = f"{base['appointment_date']} at {base['appointment_time']}"
+
+        _send(
+            subject=f"Your appointment has been updated - {base['appointment_date']}",
+            to_email=appointment.customer.email,
+            html_template='emails/booking_update.html',
+            text_template='emails/booking_update.txt',
+            context=context,
+            ics_content=ics_content,
+            ics_method='REQUEST',
+            reply_to=[_clinic_email()],
+        )
+
+        _send(
+            subject=f"Updated booking: {base['service_name']} - {base['customer_name']} ({when})",
+            to_email=_clinic_email(),
+            html_template='emails/booking_update.html',
+            text_template='emails/booking_update.txt',
+            context={**context, 'audience': 'clinic', 'show_patient': True},
+            ics_content=ics_content,
+            ics_method='REQUEST',
+            reply_to=[appointment.customer.email],
+        )
+    except Exception:  # noqa: BLE001
+        logger.exception(
+            'Failed to send booking update emails for appointment %s',
             appointment.pk,
         )

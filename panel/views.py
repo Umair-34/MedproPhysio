@@ -1,4 +1,5 @@
-from datetime import datetime, time
+import json
+from datetime import datetime, time, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -11,6 +12,12 @@ from django.utils import timezone
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from bookings.models import Appointment, Service, ServiceSchedule
+from bookings.services.booking import (
+    BookingError,
+    DEFAULT_REJECT_MESSAGE,
+    approve_appointment,
+    reject_appointment,
+)
 from panel.decorators import staff_required
 from panel.forms import (
     BlogPostForm,
@@ -25,15 +32,29 @@ from website.visit import clinic_hours_bounds, clinic_hours_label
 User = get_user_model()
 
 STATUS_COLORS = {
-    'pending': '#f59e0b',
-    'confirmed': '#009989',
-    'cancelled': '#94a3b8',
+    'pending': '#FFD400',
+    'confirmed': '#4ADE80',
+    'cancelled': '#E03C32',
+    'rejected': '#E03C32',
     'completed': '#1B367E',
     'no_show': '#ef4444',
 }
 
 DEFAULT_START = time(8, 0)
 DEFAULT_END = time(17, 30)
+
+
+def _calendar_event_title(appointment):
+    start_local = timezone.localtime(appointment.start_datetime)
+    if start_local.minute:
+        time_label = start_local.strftime('%-I:%M %p')
+    else:
+        time_label = start_local.strftime('%-I %p')
+    first_name = (appointment.customer.first_name or '').strip() or appointment.customer.full_name
+    service_name = appointment.service.name
+    if len(appointment.service.allowed_durations()) > 1:
+        service_name = f'{service_name} {appointment.duration_minutes} Minutes'
+    return f'({time_label} {service_name}) {first_name}'
 
 
 def _parse_time_field(value):
@@ -126,16 +147,23 @@ class PanelLogoutView(LogoutView):
 @staff_required
 def dashboard(request):
     today = timezone.localdate()
+    tz = timezone.get_current_timezone()
+    day_start = timezone.make_aware(datetime.combine(today, time.min), tz)
+    day_end = day_start + timedelta(days=1)
     upcoming = Appointment.objects.filter(
-        start_datetime__date__gte=today,
+        start_datetime__gte=day_start,
+        start_datetime__lt=day_end,
         status__in=[Appointment.Status.PENDING, Appointment.Status.CONFIRMED],
-    ).select_related('customer', 'service').order_by('start_datetime')[:8]
+    ).select_related('customer', 'service').order_by('start_datetime')
+
+    pending_count = Appointment.objects.filter(status=Appointment.Status.PENDING).count()
 
     stats = {
         'today_count': Appointment.objects.filter(
             start_datetime__date=today,
             status__in=[Appointment.Status.PENDING, Appointment.Status.CONFIRMED],
         ).count(),
+        'pending_count': pending_count,
         'unread_contacts': ContactSubmission.objects.filter(is_read=False).count(),
         'published_posts': BlogPost.objects.filter(is_published=True).count(),
         'active_services': Service.objects.filter(is_active=True).count(),
@@ -144,7 +172,9 @@ def dashboard(request):
     return render(request, 'panel/dashboard.html', {
         'page_title': 'Dashboard',
         'upcoming': upcoming,
+        'today': today,
         'stats': stats,
+        'default_reject_message': DEFAULT_REJECT_MESSAGE,
     })
 
 
@@ -182,7 +212,7 @@ def appointments_api(request):
     for appointment in queryset.order_by('start_datetime'):
         events.append({
             'id': appointment.pk,
-            'title': f'{appointment.service.name} — {appointment.customer.full_name}',
+            'title': _calendar_event_title(appointment),
             'start': timezone.localtime(appointment.start_datetime).isoformat(),
             'end': timezone.localtime(appointment.end_datetime).isoformat(),
             'backgroundColor': STATUS_COLORS.get(appointment.status, '#009989'),
@@ -191,8 +221,12 @@ def appointments_api(request):
                 'status': appointment.status,
                 'phone': appointment.customer.phone,
                 'email': appointment.customer.email,
+                'patient_name': appointment.customer.full_name,
                 'service': appointment.service.name,
+                'duration_minutes': appointment.duration_minutes,
                 'notes': appointment.customer_notes,
+                'can_review': appointment.status == Appointment.Status.PENDING,
+                'default_reject_message': DEFAULT_REJECT_MESSAGE,
                 'updated_at': appointment.updated_at.isoformat(),
             },
         })
@@ -203,6 +237,49 @@ def appointments_api(request):
         'server_time': timezone.now().isoformat(),
         'latest_update': latest.isoformat() if latest else None,
     })
+
+
+def _appointment_payload(appointment):
+    return {
+        'id': appointment.pk,
+        'status': appointment.status,
+        'status_label': appointment.get_status_display(),
+    }
+
+
+@staff_required
+@require_POST
+def appointment_approve(request, pk):
+    appointment = get_object_or_404(
+        Appointment.objects.select_related('customer', 'service'),
+        pk=pk,
+    )
+    try:
+        appointment = approve_appointment(appointment)
+    except BookingError as exc:
+        return JsonResponse({'error': str(exc)}, status=400)
+    return JsonResponse({'appointment': _appointment_payload(appointment)})
+
+
+@staff_required
+@require_POST
+def appointment_reject(request, pk):
+    appointment = get_object_or_404(
+        Appointment.objects.select_related('customer', 'service'),
+        pk=pk,
+    )
+    try:
+        payload = json.loads(request.body.decode('utf-8') or '{}')
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({'error': 'Invalid JSON payload.'}, status=400)
+    try:
+        appointment = reject_appointment(
+            appointment,
+            reason=payload.get('reason', ''),
+        )
+    except BookingError as exc:
+        return JsonResponse({'error': str(exc)}, status=400)
+    return JsonResponse({'appointment': _appointment_payload(appointment)})
 
 
 @staff_required

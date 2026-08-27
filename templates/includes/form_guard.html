@@ -1,3 +1,4 @@
+{% if not skip_honeypot %}
 <div
   class="mp-hp"
   aria-hidden="true"
@@ -14,7 +15,8 @@
   >
 </div>
 <input type="hidden" name="form_token" value="{{ form_token }}">
-{% if turnstile_site_key %}
+{% endif %}
+{% if turnstile_site_key and not skip_turnstile %}
   {% if turnstile_explicit %}
   <div
     id="{{ turnstile_widget_id|default:'cf-turnstile-widget' }}"

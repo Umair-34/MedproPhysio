@@ -9,7 +9,16 @@ class Service(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     duration_minutes = models.PositiveIntegerField()
+    duration_options = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='Extra bookable lengths in minutes, e.g. [30, 60]. The default length is still duration_minutes.',
+    )
     buffer_minutes = models.PositiveIntegerField(default=10)
+    slot_capacity = models.PositiveIntegerField(
+        default=1,
+        help_text='How many patients can book the same start time. Use 1 for massage, chiropractic, and kinesiology; higher for physiotherapy.',
+    )
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     sort_order = models.PositiveIntegerField(default=0)
@@ -21,6 +30,34 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+    def allowed_durations(self) -> list[int]:
+        values = []
+        for raw in self.duration_options or []:
+            try:
+                minutes = int(raw)
+            except (TypeError, ValueError):
+                continue
+            if minutes > 0:
+                values.append(minutes)
+        if self.duration_minutes:
+            values.append(int(self.duration_minutes))
+        return sorted(set(values))
+
+    def resolve_duration(self, requested=None) -> int:
+        allowed = self.allowed_durations()
+        if not allowed:
+            raise ValueError('This service has no bookable length.')
+        if requested in (None, ''):
+            default = int(self.duration_minutes)
+            return default if default in allowed else allowed[0]
+        try:
+            minutes = int(requested)
+        except (TypeError, ValueError) as exc:
+            raise ValueError('Choose a valid appointment length.') from exc
+        if minutes not in allowed:
+            raise ValueError('Choose a valid appointment length.')
+        return minutes
 
 
 class ServiceSchedule(models.Model):
@@ -206,6 +243,7 @@ class Appointment(models.Model):
         PENDING = 'pending', 'Pending'
         CONFIRMED = 'confirmed', 'Confirmed'
         CANCELLED = 'cancelled', 'Cancelled'
+        REJECTED = 'rejected', 'Rejected'
         COMPLETED = 'completed', 'Completed'
         NO_SHOW = 'no_show', 'No show'
 
@@ -236,7 +274,7 @@ class Appointment(models.Model):
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
-        default=Status.CONFIRMED,
+        default=Status.PENDING,
     )
     customer_notes = models.TextField(blank=True)
     internal_notes = models.TextField(blank=True)
@@ -275,3 +313,8 @@ class Appointment(models.Model):
     @property
     def is_active(self):
         return self.status in {self.Status.PENDING, self.Status.CONFIRMED}
+
+    @property
+    def duration_minutes(self) -> int:
+        delta = self.end_datetime - self.start_datetime
+        return max(1, int(delta.total_seconds() // 60))

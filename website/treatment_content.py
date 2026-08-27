@@ -1234,6 +1234,65 @@ TREATMENT_PAGES = {
             ('Do I need imaging before starting rehab?', 'Most concussions are diagnosed clinically. We coordinate with your physician if red flags appear.'),
         ],
     ),
+    'psychology-counselling': _page(
+        slug='psychology-counselling',
+        title='Psychology Counselling',
+        summary='Confidential counselling for stress, anxiety, injury recovery, and everyday mental wellness in Calgary.',
+        intro=(
+            'Psychology counselling gives you a private space to talk through stress, anxiety, mood changes, '
+            'and the emotional side of pain or injury. We listen first, then help you build practical coping '
+            'skills that fit work, family, and recovery at our northwest Calgary clinic.'
+        ),
+        typical_sessions='6 to 10 visits',
+        first_improvement='2 to 4 sessions',
+        recovery_timeline='6 to 12 weeks',
+        meta_focus='Supportive counselling for stress, anxiety, and recovery related mental health.',
+        benefits=[
+            'A confidential place to talk and be heard',
+            'Skills for stress, sleep, and anxiety',
+            'Support during injury or chronic pain recovery',
+            'Care coordinated with your physio or massage team when helpful',
+        ],
+        assessment_steps=[
+            ('Welcome and goals', 'We learn what brought you in, what feels hardest right now, and what you want to change.'),
+            ('History and context', 'We discuss mood, sleep, work, relationships, and any injury or health concerns.'),
+            ('Safety and fit', 'We confirm counselling is the right next step and outline other supports if needed.'),
+            ('A clear plan', 'You leave with session frequency, focus areas, and simple skills to try between visits.'),
+        ],
+        treatment_methods=[
+            ('Talk therapy', 'Structured conversations that help you notice patterns and choose a different response.'),
+            ('Coping skills', 'Breathing, grounding, and thought tools you can use during busy or painful days.'),
+            ('Pain and recovery support', 'Help adjusting to injury, setbacks, or fear of movement alongside physical care.'),
+            ('Practical planning', 'Small weekly goals for sleep, work, and relationships so progress feels manageable.'),
+        ],
+        recovery_phases=[
+            ('Settle in', 'Sessions 1 to 2', 'Build trust, name the main concerns, and start one or two coping tools.'),
+            ('Build skills', 'Sessions 3 to 6', 'Practice new responses to stress, worry, or low mood in daily life.'),
+            ('Maintain gains', 'Session 6+', 'Space visits further apart and keep a plan for flare ups or busy seasons.'),
+        ],
+        case_studies=[
+            {
+                'patient_label': 'Warehouse worker, 38',
+                'issue': 'Anxiety and poor sleep after a workplace back injury',
+                'approach': (
+                    'We focused on sleep routines, worry about returning to work, and simple grounding tools '
+                    'he could use before shifts. Counselling was coordinated with his physiotherapy plan so '
+                    'movement goals and mental load stayed aligned.'
+                ),
+                'outcome': (
+                    'Sleep improved within three weeks and he returned to modified duties with less panic. '
+                    'He kept a short evening wind-down routine and used two coping skills during flare ups. '
+                    'He completed his WCB plan without dropping counselling early.'
+                ),
+                'timeline': '8 weeks',
+            },
+        ],
+        faqs=[
+            ('Is counselling confidential?', 'Yes. What you share stays private, except where we are legally required to act if someone is at immediate risk.'),
+            ('Do I need a referral?', 'No. You can book psychology counselling directly. Bring insurance details if you plan to claim benefits.'),
+            ('Can counselling help with injury recovery?', 'Yes. Stress, fear of movement, and low mood often slow physical recovery. Addressing them can make rehab easier to stick with.'),
+        ],
+    ),
 }
 
 

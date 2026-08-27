@@ -13,14 +13,9 @@
     <span>appointments</span>
   </div>
   <div class="panel-stat-card">
-    <span class="panel-stat-label">Unread</span>
-    <strong>{{ stats.unread_contacts }}</strong>
-    <span>contact messages</span>
-  </div>
-  <div class="panel-stat-card">
-    <span class="panel-stat-label">Published</span>
-    <strong>{{ stats.published_posts }}</strong>
-    <span>blog posts</span>
+    <span class="panel-stat-label">Needs review</span>
+    <strong>{{ stats.pending_count }}</strong>
+    <span>pending requests</span>
   </div>
   <div class="panel-stat-card">
     <span class="panel-stat-label">Active</span>
@@ -34,26 +29,59 @@
   <p class="panel-help">Calendar refreshes automatically when new appointments are booked online.</p>
 </div>
 
-<div class="panel-grid-2">
-  <div class="panel-card">
-    <h2>Upcoming appointments</h2>
-    {% if upcoming %}
-    <ul class="panel-list">
-      {% for appt in upcoming %}
-      <li>
-        <strong>{{ appt.start_datetime|date:"M j, g:i A" }}</strong>
-        <span>{{ appt.service.name }} — {{ appt.customer.full_name }}</span>
-        <em class="panel-status panel-status-{{ appt.status }}">{{ appt.get_status_display }}</em>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="panel-empty">No upcoming appointments.</p>
-    {% endif %}
+<div class="panel-card">
+  <h2>Today's appointments</h2>
+  <p class="panel-help">{{ today|date:"l, F j" }}{% if upcoming %} · {{ upcoming|length }} booking{{ upcoming|length|pluralize }}{% endif %}</p>
+  {% if upcoming %}
+  <ul class="panel-list panel-list--day">
+    {% for appt in upcoming %}
+    <li tabindex="0" role="button" data-appointment-id="{{ appt.pk }}">
+      <strong>{{ appt.start_datetime|date:"g:i A" }}</strong>
+      <span>{{ appt.service.name }} ({{ appt.duration_minutes }} min) — {{ appt.customer.full_name }}</span>
+      <em class="panel-status panel-status-{{ appt.status }}">{{ appt.get_status_display }}</em>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="panel-empty">No appointments today.</p>
+  {% endif %}
+</div>
+
+<div class="panel-modal panel-modal--detail" id="appointmentDetailModal" hidden>
+  <div class="panel-modal__backdrop" data-detail-dismiss></div>
+  <div
+    class="panel-modal__dialog panel-modal__dialog--detail"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="appointmentDetailTitle"
+  >
+    <div class="panel-modal__header">
+      <h2 id="appointmentDetailTitle">Appointment details</h2>
+      <button type="button" class="panel-modal__close" data-detail-dismiss aria-label="Close">&times;</button>
+    </div>
+    <div id="appointmentDetail">
+      <p class="panel-empty">Select an event on the calendar to view details.</p>
+    </div>
   </div>
-  <div class="panel-card" id="appointmentDetail">
-    <h2>Appointment details</h2>
-    <p class="panel-empty">Select an event on the calendar to view details.</p>
+</div>
+
+<div class="panel-modal panel-modal--confirm" id="rejectConfirmModal" hidden>
+  <div class="panel-modal__backdrop" data-modal-dismiss></div>
+  <div
+    class="panel-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="rejectConfirmTitle"
+    aria-describedby="rejectConfirmCopy"
+  >
+    <div class="panel-modal__icon" aria-hidden="true">!</div>
+    <h3 id="rejectConfirmTitle">Reject this appointment?</h3>
+    <p id="rejectConfirmCopy">This emails the client and marks the request as rejected. You cannot undo this from the panel.</p>
+    <p class="panel-modal__patient" id="rejectConfirmPatient"></p>
+    <div class="panel-modal__actions">
+      <button type="button" class="panel-btn panel-btn-secondary" data-modal-dismiss>Keep appointment</button>
+      <button type="button" class="panel-btn panel-btn-danger panel-btn-danger-solid" id="rejectConfirmBtn">Yes, reject</button>
+    </div>
   </div>
 </div>
 {% endblock %}
@@ -64,5 +92,9 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+  window.PANEL_CSRF = '{{ csrf_token }}';
+  window.PANEL_DEFAULT_REJECT = '{{ default_reject_message|escapejs }}';
+</script>
 <script src="{% static 'panel/panel-calendar.js' %}"></script>
 {% endblock %}

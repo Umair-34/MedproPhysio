@@ -6,24 +6,36 @@
     const confirmationBox = document.getElementById('bookingConfirmation');
     const confirmationDetails = document.getElementById('confirmationDetails');
     const serviceSelect = document.getElementById('service_id');
+    const durationSelect = document.getElementById('duration_minutes');
+    const serviceGrid = document.getElementById('bookingServiceGrid');
     const dateInput = document.getElementById('date');
     const slotSelect = document.getElementById('slot');
     const slotHint = document.getElementById('slotHint');
     const submitBtn = document.getElementById('bookingSubmit');
-    const stepperItems = document.querySelectorAll('.booking-stepper-item');
 
     if (!form) {
         return;
     }
 
     function showAlert(message, type) {
-        alertBox.textContent = message;
-        alertBox.className = 'alert alert-' + type;
-        alertBox.classList.remove('d-none');
+        const toastType = type === 'danger' || type === 'error' ? 'error' : (type || 'error');
+        if (window.mpToast) {
+            window.mpToast(message, toastType);
+            return;
+        }
+        if (alertBox) {
+            alertBox.textContent = message;
+            alertBox.className = 'alert alert-' + (type || 'danger');
+            alertBox.classList.remove('d-none');
+            return;
+        }
+        window.alert(message);
     }
 
     function hideAlert() {
-        alertBox.classList.add('d-none');
+        if (alertBox) {
+            alertBox.classList.add('d-none');
+        }
     }
 
     function getCsrfToken() {
@@ -73,16 +85,33 @@
 
     function getTurnstileToken() {
         if (window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.getResponse === 'function') {
-            return window.turnstile.getResponse(turnstileWidgetId) || '';
+            const token = window.turnstile.getResponse(turnstileWidgetId);
+            if (token) {
+                return token;
+            }
+        }
+        if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
+            const token = window.turnstile.getResponse();
+            if (token) {
+                return token;
+            }
         }
         const input = form.querySelector('[name="cf-turnstile-response"]');
         return input ? input.value : '';
     }
 
     function resetTurnstile() {
-        if (window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.reset === 'function') {
-            window.turnstile.reset(turnstileWidgetId);
+        if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            if (turnstileWidgetId !== null) {
+                window.turnstile.reset(turnstileWidgetId);
+            } else {
+                window.turnstile.reset();
+            }
         }
+    }
+
+    function turnstileIsRequired() {
+        return Boolean(form.querySelector('.cf-turnstile, .mp-turnstile'));
     }
 
     async function fetchJson(url) {
@@ -99,8 +128,8 @@
         dateInput.min = today.toISOString().split('T')[0];
     }
 
-    function updateStepper() {
-        const hasService = Boolean(serviceSelect.value);
+    function updateSubmitState() {
+        const hasService = Boolean(serviceSelect.value) && Boolean(durationSelect && durationSelect.value);
         const hasSchedule = hasService && Boolean(dateInput.value) && Boolean(slotSelect.value);
         const hasContact = Boolean(
             document.getElementById('first_name').value.trim()
@@ -108,27 +137,79 @@
             && document.getElementById('email').value.trim()
             && document.getElementById('phone').value.trim()
         );
-
-        const activeStep = hasSchedule && hasContact ? 4 : hasSchedule ? 3 : hasService ? 2 : 1;
-
-        stepperItems.forEach(function (item) {
-            const step = parseInt(item.dataset.step, 10);
-            item.classList.toggle('is-active', step === activeStep);
-            item.classList.toggle('is-complete', step < activeStep);
-        });
-
         submitBtn.disabled = !(hasSchedule && hasContact);
+    }
+
+    function selectServiceCard(card, shouldLoadSlots) {
+        if (!card || !serviceSelect || !durationSelect) {
+            return;
+        }
+        serviceGrid.querySelectorAll('.booking-service-card').forEach(function (el) {
+            el.classList.remove('is-selected');
+            el.setAttribute('aria-pressed', 'false');
+        });
+        card.classList.add('is-selected');
+        card.setAttribute('aria-pressed', 'true');
+        serviceSelect.value = card.dataset.serviceId || '';
+        durationSelect.value = card.dataset.duration || '';
+        updateSubmitState();
+        if (shouldLoadSlots !== false) {
+            loadSlots().catch(function (err) {
+                showAlert(err.message, 'danger');
+            });
+        }
+    }
+
+    function restoreSelectedCard() {
+        const serviceId = serviceSelect.value;
+        const duration = durationSelect.value;
+        if (!serviceGrid || !serviceId || !duration) {
+            return;
+        }
+        const card = serviceGrid.querySelector(
+            '.booking-service-card[data-service-id="' + serviceId + '"][data-duration="' + duration + '"]'
+        );
+        if (card) {
+            selectServiceCard(card, false);
+        }
+    }
+
+    function renderServiceCards(services) {
+        if (!serviceGrid) {
+            return;
+        }
+        serviceGrid.innerHTML = '';
+        services.forEach(function (service) {
+            const durations = (service.durations && service.durations.length)
+                ? service.durations
+                : [service.duration_minutes];
+            durations.forEach(function (minutes) {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'booking-service-card';
+                card.dataset.serviceId = String(service.id);
+                card.dataset.duration = String(minutes);
+                card.setAttribute('aria-pressed', 'false');
+
+                const name = document.createElement('span');
+                name.className = 'booking-service-card__name';
+                name.textContent = service.name;
+
+                const time = document.createElement('span');
+                time.className = 'booking-service-card__time';
+                time.textContent = minutes + ' Minutes';
+
+                card.appendChild(name);
+                card.appendChild(time);
+                serviceGrid.appendChild(card);
+            });
+        });
+        restoreSelectedCard();
     }
 
     async function loadServices() {
         const data = await fetchJson(API_BASE + '/services/');
-        serviceSelect.innerHTML = '<option value="" disabled selected>Select a service</option>';
-        data.services.forEach(function (service) {
-            const option = document.createElement('option');
-            option.value = service.id;
-            option.textContent = service.name + ' (' + service.duration_minutes + ' min)';
-            serviceSelect.appendChild(option);
-        });
+        renderServiceCards(data.services || []);
     }
 
     async function loadSlots() {
@@ -138,17 +219,20 @@
             slotHint.textContent = 'Checking availability...';
         }
 
-        if (!serviceSelect.value || !dateInput.value) {
+        if (!serviceSelect.value || !dateInput.value || (durationSelect && !durationSelect.value)) {
             slotSelect.innerHTML = '<option value="" disabled selected>Select a date first</option>';
             if (slotHint) {
-                slotHint.textContent = 'Times update after you choose a service and date.';
+                slotHint.textContent = 'Times update after you choose a service, length, and date.';
             }
-            updateStepper();
+            updateSubmitState();
             return;
         }
 
         const url = API_BASE + '/slots/?service_id=' + encodeURIComponent(serviceSelect.value)
-            + '&date=' + encodeURIComponent(dateInput.value);
+            + '&date=' + encodeURIComponent(dateInput.value)
+            + (durationSelect && durationSelect.value
+                ? '&duration_minutes=' + encodeURIComponent(durationSelect.value)
+                : '');
 
         const data = await fetchJson(url);
         slotSelect.innerHTML = '';
@@ -158,7 +242,7 @@
             if (slotHint) {
                 slotHint.textContent = 'Try another date, or call the clinic for help.';
             }
-            updateStepper();
+            updateSubmitState();
             return;
         }
 
@@ -176,37 +260,48 @@
         if (slotHint) {
             slotHint.textContent = data.slots.length + ' time' + (data.slots.length === 1 ? '' : 's') + ' available on this date.';
         }
-        updateStepper();
+        updateSubmitState();
     }
 
-    serviceSelect.addEventListener('change', function () {
-        loadSlots().catch(function (err) {
-            showAlert(err.message, 'danger');
+    if (serviceGrid) {
+        serviceGrid.addEventListener('click', function (event) {
+            const card = event.target.closest('.booking-service-card');
+            if (!card) {
+                return;
+            }
+            selectServiceCard(card);
         });
-        updateStepper();
-    });
+    }
 
     dateInput.addEventListener('change', function () {
         loadSlots().catch(function (err) {
             showAlert(err.message, 'danger');
         });
-        updateStepper();
+        updateSubmitState();
     });
 
-    slotSelect.addEventListener('change', updateStepper);
+    slotSelect.addEventListener('change', updateSubmitState);
 
     ['first_name', 'last_name', 'email', 'phone'].forEach(function (fieldId) {
-        document.getElementById(fieldId).addEventListener('input', updateStepper);
+        document.getElementById(fieldId).addEventListener('input', updateSubmitState);
     });
 
     form.addEventListener('submit', async function (event) {
         event.preventDefault();
         hideAlert();
+        if (turnstileIsRequired() && !getTurnstileToken()) {
+            showAlert('Please complete the verification checkbox, then try again.', 'danger');
+            return;
+        }
         submitBtn.disabled = true;
-        submitBtn.querySelector('span').textContent = 'Confirming...';
+        const submitLabel = submitBtn.querySelector('span');
+        if (submitLabel) {
+            submitLabel.textContent = 'Sending request...';
+        }
 
         const payload = {
             service_id: parseInt(serviceSelect.value, 10),
+            duration_minutes: durationSelect ? parseInt(durationSelect.value, 10) : undefined,
             start_datetime: slotSelect.value,
             first_name: document.getElementById('first_name').value.trim(),
             last_name: document.getElementById('last_name').value.trim(),
@@ -234,7 +329,6 @@
             }
 
             form.classList.add('d-none');
-            document.querySelector('.booking-stepper').classList.add('d-none');
             confirmationBox.classList.remove('d-none');
 
             const appt = data.appointment;
@@ -245,20 +339,24 @@
                 hour: 'numeric',
                 minute: '2-digit',
             });
+            const lengthLabel = appt.duration_minutes ? ' (' + appt.duration_minutes + ' Minutes)' : '';
             confirmationDetails.textContent =
-                appt.service + ' on ' + when
-                + '. Your reference is ' + appt.confirmation_token + '.';
+                appt.service + lengthLabel + ' on ' + when
+                + '. We will email you once the clinic approves or cannot take this time. Your reference is '
+                + appt.confirmation_token + '.';
         } catch (err) {
             showAlert(err.message, 'danger');
             submitBtn.disabled = false;
-            submitBtn.querySelector('span').textContent = 'Confirm Booking';
-            updateStepper();
+            if (submitLabel) {
+                submitLabel.textContent = 'Request Booking';
+            }
+            updateSubmitState();
             resetTurnstile();
         }
     });
 
     setMinDate();
-    updateStepper();
+    updateSubmitState();
     renderTurnstile();
     loadServices().catch(function (err) {
         showAlert(err.message, 'danger');

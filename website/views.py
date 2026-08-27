@@ -12,6 +12,7 @@ from website.services import content_pages
 from website.services import blog as blog_service
 from website.spam import FormGuardError, guard_public_form, issue_form_token, validate_contact_fields
 from website.visit import clinic_hours_with_today, clinic_open_status
+from bookings.models import Service
 
 FOCUS_AREA_REDIRECTS = {
   'sports-recovery': 'sports-performance',
@@ -183,6 +184,7 @@ def book_appointment(request):
     'breadcrumb': 'Book Appointment',
     'page_header_class': 'appointment-page-header bg-radius-section',
     'booking_steps': content.BOOKING_STEPS,
+    'booking_services': Service.objects.filter(is_active=True),
     'form_token': issue_form_token(),
   })
 
@@ -221,7 +223,7 @@ def blog(request):
     'page_header_class': 'blog-page-header bg-radius-section',
     'meta_title': blog_content.BLOG_META_TITLE,
     'meta_description': blog_content.BLOG_META_DESCRIPTION,
-    'page_hero_lead': 'Practical guides on physiotherapy, massage, workplace injuries, and getting ready for your visit.',
+    'page_hero_lead': 'Practical guides on vestibular care, sciatica, frozen shoulder, and counselling after injury at our northwest Calgary clinic.',
     'blog_posts': blog_service.get_blog_posts(),
   })
 

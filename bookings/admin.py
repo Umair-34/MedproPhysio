@@ -33,7 +33,9 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'duration_minutes',
+        'duration_options',
         'buffer_minutes',
+        'slot_capacity',
         'price',
         'is_active',
         'sort_order',

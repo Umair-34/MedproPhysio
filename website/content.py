@@ -76,6 +76,7 @@ HOME_SERVICE_PROMOS = [
   {'slug': 'chiropractic', 'title': 'Chiropractic', 'image': 'images/services/chiropractic.jpg'},
   {'slug': 'massage-therapy', 'title': 'Massage Therapy', 'image': 'images/services/massage-therapy.jpg'},
   {'slug': 'acupuncture', 'title': 'Acupuncture', 'image': 'images/services/acupuncture.jpg'},
+  {'slug': 'psychology-counselling', 'title': 'Psychology Counselling', 'image': 'images/services/psychology-counselling.jpg'},
   {'slug': 'physiotherapy', 'title': 'MVA Injury', 'image': 'images/services/mva-injury.jpg'},
   {'slug': 'concussion-management', 'title': 'Concussion Management', 'image': 'images/services/concussion-management.jpg'},
   {'slug': 'myofascial-release', 'title': 'Chronic Pain', 'image': 'images/services/chronic-pain.jpg'},
@@ -473,8 +474,8 @@ SERVICES_HUB_INTRO = (
 SERVICES_HUB_FAQS = [
   (
     'What services do you offer in Calgary?',
-    'We offer physiotherapy, massage therapy, chiropractic care, acupuncture, kinesiology, manual therapy, '
-    'dry needling, vestibular therapy, concussion management, and more at our northwest Calgary clinic.',
+    'We offer physiotherapy, massage therapy, chiropractic care, acupuncture, kinesiology, psychology counselling, '
+    'manual therapy, dry needling, vestibular therapy, concussion management, and more at our northwest Calgary clinic.',
   ),
   (
     'How do I choose the right service?',
@@ -587,8 +588,8 @@ BOOKING_STEPS = [
   {
     'number': '04',
     'icon': 'images/icon-booking-process-4.svg',
-    'title': 'Get instant confirmation',
-    'text': 'Receive your booking reference right away so you know your visit is reserved.',
+    'title': 'We confirm by email',
+    'text': 'Staff review your request, then you receive a confirmation or a note if that time is not available.',
   },
 ]
 
@@ -834,6 +835,7 @@ TREATMENTS_COL1 = [
   {'slug': 'balance-fall-prevention', 'title': 'Balance & Fall Prevention'},
   {'slug': 'joint-mobilisation', 'title': 'Joint Mobilisation'},
   {'slug': 'sports-performance', 'title': 'Sports Performance'},
+  {'slug': 'psychology-counselling', 'title': 'Psychology Counselling', 'primary': True},
 ]
 
 TREATMENTS_COL2 = [

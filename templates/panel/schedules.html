@@ -20,7 +20,7 @@
   {% if selected_service %}
   <div class="panel-card">
     <h2>{{ selected_service.name }} schedule</h2>
-    <p class="panel-help">Set hours for each weekday within clinic opening hours. Check <strong>Unavailable</strong> to block online booking for that day.</p>
+    <p class="panel-help">Set hours for each weekday within clinic opening hours. Check <strong>Unavailable</strong> to block online booking for that day.{% if selected_service.allowed_durations|length > 1 %} Clients pick the visit length when they book.{% endif %}</p>
 
     <form method="post" class="panel-form">
       {% csrf_token %}

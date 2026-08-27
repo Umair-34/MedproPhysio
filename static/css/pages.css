@@ -3139,6 +3139,55 @@ body.mp-page-home .mp-home-hero {
   box-shadow: var(--mp-shadow);
 }
 
+.booking-service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.booking-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  margin: 0;
+  padding: 1rem 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-sm);
+  color: var(--mp-navy);
+  transition: border-color var(--mp-transition), background var(--mp-transition), box-shadow var(--mp-transition);
+}
+
+.booking-service-card:hover,
+.booking-service-card:focus-visible {
+  border-color: var(--mp-teal);
+  box-shadow: 0 0 0 3px rgba(0, 153, 137, 0.12);
+  outline: none;
+}
+
+.booking-service-card.is-selected {
+  border-color: var(--mp-teal);
+  background: var(--mp-teal-soft);
+  box-shadow: 0 0 0 1px var(--mp-teal);
+}
+
+.booking-service-card__name {
+  font-family: var(--mp-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.booking-service-card__time {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mp-teal);
+}
+
 .booking-stepper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -4393,6 +4442,10 @@ body.mp-page-home .mp-home-hero {
     order: 1;
   }
 
+  .booking-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .mp-contact-layout__form {
     order: -1;
   }
@@ -4630,6 +4683,10 @@ body.mp-page-home .mp-home-hero {
 @media (max-width: 600px) {
   .booking-stepper {
     display: none;
+  }
+
+  .booking-service-grid {
+    grid-template-columns: 1fr;
   }
 
   .mp-home-hero__features {

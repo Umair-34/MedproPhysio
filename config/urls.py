@@ -36,5 +36,7 @@ urlpatterns = [
 
 handler404 = 'website.views.page_not_found'
 
-if settings.DEBUG and not getattr(settings, 'USE_R2', False):
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static('/static/', document_root=settings.BASE_DIR / 'static')
+    if not getattr(settings, 'USE_R2_MEDIA', False):
+        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

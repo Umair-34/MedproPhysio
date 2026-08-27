@@ -1,0 +1,21 @@
+NEW BOOKING REQUEST
+{{ clinic_name }}
+
+A patient booked online. Approve or reject this request in the staff panel.
+The patient will receive an email after you decide.
+
+Service:    {{ service_name }}
+Date:       {{ appointment_date }}
+Time:       {{ appointment_time }} ({{ duration_minutes }} min)
+Location:   {{ clinic_address }}
+Patient:    {{ customer_name }}
+Email:      {{ customer_email }}
+Phone:      {{ customer_phone }}
+{% if customer_notes %}Notes:      {{ customer_notes }}
+{% endif %}Reference:  {{ confirmation_token }}
+
+Staff panel: {{ site_base_url }}/panel/
+
+{{ clinic_name }}
+{{ clinic_address }}
+{{ clinic_phone }} | {{ clinic_email }}

@@ -305,8 +305,12 @@ if USE_R2:
         _public_base.replace('https://', '').replace('http://', ''),
     )
 
-    STORAGES['staticfiles'] = {'BACKEND': 'config.storages.StaticStorage'}
-    STATIC_URL = f'{_public_base}/static/'
+    # Keep local FileSystemStorage in DEBUG so {% static %} resolves to
+    # /static/... and new files work without an R2 upload. Production still
+    # serves from R2 after collectstatic/deploy.
+    if not DEBUG:
+        STORAGES['staticfiles'] = {'BACKEND': 'config.storages.StaticStorage'}
+        STATIC_URL = f'{_public_base}/static/'
 
     if USE_R2_MEDIA:
         STORAGES['default'] = {'BACKEND': 'config.storages.MediaStorage'}
@@ -345,7 +349,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Booking configuration
-# Each time slot can be booked by up to this many patients.
+# Concurrent bookings allowed for physiotherapy. Other services use Service.slot_capacity (usually 1).
 BOOKING_SLOT_CAPACITY = int(os.environ.get('BOOKING_SLOT_CAPACITY', '5'))
 
 # Public form spam protection (contact + online booking).
