@@ -12,11 +12,13 @@
 </head>
 <body class="panel-body">
   {% if user.is_authenticated and user.is_staff %}
+  <div class="panel-nav-overlay" id="panelNavOverlay"></div>
   <div class="panel-layout">
-    <aside class="panel-sidebar">
+    <aside class="panel-sidebar" id="panelSidebar">
       <div class="panel-brand">
         <img src="{% static 'images/medpro-logo-icon.png' %}" alt="" width="36" height="36">
         <span>Medpro Panel</span>
+        <button type="button" class="panel-sidebar-close" data-panel-nav-close aria-label="Close menu">&times;</button>
       </div>
       <nav class="panel-nav">
         <a href="{% url 'panel:dashboard' %}" class="panel-nav-link{% if request.resolver_match.url_name == 'dashboard' %} is-active{% endif %}">Calendar</a>
@@ -39,7 +41,19 @@
     </aside>
     <main class="panel-main">
       <header class="panel-header">
-        <h1>{% block page_heading %}{{ page_title }}{% endblock %}</h1>
+        <div class="panel-header-start">
+          <button
+            type="button"
+            class="panel-menu-toggle"
+            id="panelMenuToggle"
+            aria-controls="panelSidebar"
+            aria-expanded="false"
+            aria-label="Open menu"
+          >
+            <span class="panel-menu-toggle__bar" aria-hidden="true"></span>
+          </button>
+          <h1>{% block page_heading %}{{ page_title }}{% endblock %}</h1>
+        </div>
         <div class="panel-header-actions">{% block header_actions %}{% endblock %}</div>
       </header>
       <div class="panel-content">
@@ -58,6 +72,9 @@
   {% block auth_content %}{% endblock %}
   {% endif %}
   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  {% if user.is_authenticated and user.is_staff %}
+  <script src="{% static 'panel/panel.js' %}"></script>
+  {% endif %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>
