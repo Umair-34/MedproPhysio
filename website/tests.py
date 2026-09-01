@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.core import mail
@@ -115,3 +116,94 @@ class ContactTurnstileTests(TestCase):
         urlopen.return_value = _mock_siteverify(action='booking')
         self.client.post('/api/contact/', self._payload())
         self.assertEqual(ContactSubmission.objects.count(), 0)
+
+
+@override_settings(SITE_BASE_URL='https://medprophysiotherapy.ca')
+class RobotsAndSitemapTests(TestCase):
+    def test_robots_txt_allows_public_pages_and_blocks_private_paths(self):
+        response = self.client.get('/robots.txt')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response['Content-Type'].startswith('text/plain'))
+        body = response.content.decode()
+        self.assertIn('User-agent: *', body)
+        self.assertIn('Allow: /', body)
+        self.assertIn('Disallow: /admin/', body)
+        self.assertIn('Disallow: /panel/', body)
+        self.assertIn('Disallow: /api/', body)
+        self.assertIn('Disallow: /summernote/', body)
+        self.assertIn(f'Sitemap: {settings.SITE_BASE_URL}/sitemap.xml', body)
+
+    def test_sitemap_includes_public_pages_and_excludes_drafts(self):
+        from datetime import date
+
+        from website.models import BlogPost, ContentPage, SectionType
+
+        ContentPage.objects.create(
+            section=SectionType.TREATMENTS,
+            slug='sitemap-test-service',
+            title='Sitemap Test Service',
+            is_published=True,
+        )
+        ContentPage.objects.create(
+            section=SectionType.TREATMENTS,
+            slug='sitemap-test-draft',
+            title='Sitemap Test Draft',
+            is_published=False,
+        )
+        BlogPost.objects.create(
+            slug='sitemap-test-post',
+            title='Sitemap Test Post',
+            summary='A published article.',
+            published_date=date(2026, 1, 15),
+            is_published=True,
+        )
+        BlogPost.objects.create(
+            slug='sitemap-test-unpublished',
+            title='Unpublished Post',
+            summary='A draft article.',
+            published_date=date(2026, 1, 16),
+            is_published=False,
+        )
+
+        response = self.client.get('/sitemap.xml')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('xml', response['Content-Type'])
+        body = response.content.decode()
+        self.assertIn('http://testserver/', body)
+        self.assertIn('http://testserver/about/', body)
+        self.assertIn('http://testserver/services/', body)
+        self.assertIn('http://testserver/services/sitemap-test-service/', body)
+        self.assertIn('http://testserver/blog/sitemap-test-post/', body)
+        self.assertIn('http://testserver/patient/new-patient/', body)
+        self.assertIn('http://testserver/book/', body)
+        self.assertNotIn('sitemap-test-draft', body)
+        self.assertNotIn('sitemap-test-unpublished', body)
+        self.assertNotIn('/admin/', body)
+        self.assertNotIn('/panel/', body)
+
+
+@override_settings(
+    DEBUG=False,
+    ALLOWED_HOSTS=['testserver', 'localhost', '127.0.0.1'],
+    SECURE_SSL_REDIRECT=False,
+)
+class Production404Tests(TestCase):
+    def test_unknown_url_shows_branded_404(self):
+        response = self.client.get('/this-page-does-not-exist/')
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, 'Page Not Found', status_code=404)
+        self.assertContains(response, 'Let’s get you back on track', status_code=404)
+        self.assertContains(response, 'Back to home', status_code=404)
+        self.assertContains(response, 'Book appointment', status_code=404)
+        self.assertNotContains(response, 'DEBUG = True', status_code=404)
+        self.assertNotContains(response, 'You’re seeing this error because', status_code=404)
+
+    def test_unknown_blog_slug_shows_branded_404(self):
+        response = self.client.get('/blog/not-a-real-article/')
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, 'Page Not Found', status_code=404)
+
+    def test_unknown_service_slug_shows_branded_404(self):
+        response = self.client.get('/services/not-a-real-service/')
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, 'Page Not Found', status_code=404)

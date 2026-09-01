@@ -56,7 +56,9 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = _env_flag('DEBUG', 'true')
+# Local .env should set DEBUG=true. Production defaults to false so unknown
+# URLs show the branded 404 instead of Django's debug error page.
+DEBUG = _env_flag('DEBUG', 'false')
 
 _allowed_hosts = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').strip()
 ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts.split(',') if host.strip()]
@@ -82,6 +84,11 @@ for _origin in (_do_url, f'https://{_do_domain}' if _do_domain else ''):
 if 'https://*.ondigitalocean.app' not in CSRF_TRUSTED_ORIGINS:
     CSRF_TRUSTED_ORIGINS.append('https://*.ondigitalocean.app')
 
+# App Platform injects APP_DOMAIN / APP_URL. Never serve debug 404/500 pages
+# on the live clinic site, even if DEBUG=true was left in the dashboard.
+if (_do_domain or _do_url) and not _env_flag('ALLOW_DEBUG'):
+    DEBUG = False
+
 
 # Application definition
 
@@ -92,6 +99,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'django_summernote',
     'bookings',
     'website',

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
@@ -319,7 +319,7 @@ def patient_page(request, slug):
 
 
 def page_not_found(request, exception=None):
-  return render(request, 'website/404.html', {
+  return render(request, '404.html', {
     'page_title': 'Page Not Found',
     'breadcrumb': '404',
     'page_hero_lead': (
@@ -330,3 +330,20 @@ def page_not_found(request, exception=None):
       'to book physiotherapy, massage, and wellness care.'
     ),
   }, status=404)
+
+
+@require_GET
+def robots_txt(request):
+  sitemap_url = f'{settings.SITE_BASE_URL}/sitemap.xml'
+  body = '\n'.join([
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /admin/',
+    'Disallow: /panel/',
+    'Disallow: /api/',
+    'Disallow: /summernote/',
+    '',
+    f'Sitemap: {sitemap_url}',
+    '',
+  ])
+  return HttpResponse(body, content_type='text/plain')

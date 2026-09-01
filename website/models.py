@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 from website.image_optimization import webp_url_for_field
@@ -74,6 +75,11 @@ class ContentPage(models.Model):
 
     def __str__(self):
         return f'{self.get_section_display()}: {self.title}'
+
+    def get_absolute_url(self):
+        if self.section == SectionType.TREATMENTS:
+            return reverse('website:service-detail', kwargs={'slug': self.slug})
+        return reverse('website:services')
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -382,6 +388,9 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('website:blog-detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
