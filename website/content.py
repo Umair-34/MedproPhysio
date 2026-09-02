@@ -494,8 +494,8 @@ SERVICES_HUB_FAQS = [
   ),
 ]
 
-SITE_PHONE = '(403) 879-2627'
-SITE_PHONE_LINK = 'tel:+14038792627'
+SITE_PHONE = '(587) 317-6906'
+SITE_PHONE_LINK = 'tel:+15873176906'
 
 SITE_CTA = {
   'eyebrow': 'Ready when you are',
