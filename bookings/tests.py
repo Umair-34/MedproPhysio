@@ -7,8 +7,13 @@ from django.utils import timezone
 
 from unittest.mock import patch
 
-from bookings.models import Appointment, Customer, Service
-from bookings.services.availability import AvailableSlot
+from bookings.models import Appointment, Customer, Service, ServiceSchedule
+from bookings.services.availability import (
+    AvailableSlot,
+    get_available_weekdays,
+    get_bookable_services,
+    get_clinic_weekdays,
+)
 from bookings.services.booking import (
     DEFAULT_REJECT_MESSAGE,
     approve_appointment,
@@ -233,6 +238,86 @@ class BookableServiceTests(TestCase):
                 )
         self.assertEqual(appointment.service_id, service.pk)
         self.assertEqual(appointment.duration_minutes, 30)
+
+
+class ServiceWeekdayAvailabilityTests(TestCase):
+    def setUp(self):
+        self.service = Service.objects.create(
+            name='Acupuncture',
+            slug='acupuncture-weekdays',
+            duration_minutes=45,
+            is_active=True,
+        )
+
+    def test_unscheduled_service_uses_clinic_open_days(self):
+        self.assertEqual(get_available_weekdays(self.service), get_clinic_weekdays())
+
+    def test_limited_schedule_returns_only_offered_weekdays(self):
+        ServiceSchedule.objects.create(
+            service=self.service,
+            day_of_week=1,
+            start_time=time(9, 0),
+            end_time=time(15, 0),
+        )
+        ServiceSchedule.objects.create(
+            service=self.service,
+            day_of_week=3,
+            start_time=time(9, 0),
+            end_time=time(15, 0),
+        )
+        ServiceSchedule.objects.create(
+            service=self.service,
+            day_of_week=0,
+            is_unavailable=True,
+        )
+        self.assertEqual(get_available_weekdays(self.service), [1, 3])
+
+    def test_services_api_includes_available_weekdays(self):
+        ServiceSchedule.objects.create(
+            service=self.service,
+            day_of_week=2,
+            start_time=time(10, 0),
+            end_time=time(16, 0),
+        )
+        response = self.client.get('/api/bookings/services/')
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIn('clinic_weekdays', payload)
+        match = next(item for item in payload['services'] if item['id'] == self.service.pk)
+        self.assertEqual(match['available_weekdays'], [2])
+
+    def test_booking_page_includes_calendar(self):
+        response = self.client.get('/book/')
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode()
+        self.assertIn('id="bookingCalendar"', html)
+        self.assertIn('id="bookingSlots"', html)
+        self.assertIn('data-available-weekdays=', html)
+
+    def test_fully_unavailable_service_is_hidden_from_booking(self):
+        hidden = Service.objects.create(
+            name='Shockwave Therapy',
+            slug='shockwave-hidden',
+            duration_minutes=30,
+            is_active=True,
+        )
+        for day in range(7):
+            ServiceSchedule.objects.create(
+                service=hidden,
+                day_of_week=day,
+                is_unavailable=True,
+            )
+
+        self.assertEqual(get_available_weekdays(hidden), [])
+        self.assertNotIn(hidden, get_bookable_services())
+
+        payload = self.client.get('/api/bookings/services/').json()
+        ids = [item['id'] for item in payload['services']]
+        self.assertNotIn(hidden.pk, ids)
+
+        html = self.client.get('/book/').content.decode()
+        self.assertNotIn('Shockwave Therapy', html)
+        self.assertNotIn(f'data-service-id="{hidden.pk}"', html)
 
 
 class SlotCapacityTests(TestCase):

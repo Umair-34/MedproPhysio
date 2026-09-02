@@ -45,6 +45,7 @@
                   class="booking-service-card"
                   data-service-id="{{ service.id }}"
                   data-duration="{{ minutes }}"
+                  data-available-weekdays="{{ service.calendar_weekdays|join:',' }}"
                   aria-pressed="false"
                 >
                   <span class="booking-service-card__name">{{ service.name }}</span>
@@ -60,20 +61,23 @@
               <span class="booking-form-section-number">02</span>
               <div>
                 <h2>Select date and time</h2>
-                <p>Pick a day that works for you, then choose an open slot.</p>
+                <p>Available days for your service are highlighted on the calendar.</p>
               </div>
             </header>
-            <div class="mp-form-grid">
-              <div class="form-group">
+            <div class="mp-form-grid booking-datetime-grid">
+              <div class="form-group booking-date-group">
                 <label for="date">Preferred date</label>
                 <input type="date" name="date" class="form-control" id="date" required>
+                <div id="bookingCalendar" class="booking-calendar" hidden></div>
+                <p class="booking-field-hint" id="dateHint" aria-live="polite">Choose a service to see which days you can book.</p>
               </div>
-              <div class="form-group">
+              <div class="form-group booking-slot-group">
                 <label for="slot">Available time</label>
                 <select name="slot" class="form-control form-select" id="slot" required disabled>
                   <option value="" disabled selected>Select a date first</option>
                 </select>
-                <p class="booking-field-hint" id="slotHint">Times update after you choose a service and date.</p>
+                <div id="bookingSlots" class="booking-slots" hidden></div>
+                <p class="booking-field-hint" id="slotHint" aria-live="polite">Times update after you choose a service, length, and date.</p>
               </div>
             </div>
           </section>

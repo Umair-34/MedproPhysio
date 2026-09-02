@@ -10,7 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from bookings.models import Appointment, Service
 from website.spam import FormGuardError, guard_public_form, validate_booking_fields
-from bookings.services.availability import compute_slots
+from bookings.services.availability import (
+    compute_slots,
+    get_bookable_services,
+    get_clinic_weekdays,
+)
 from bookings.services.booking import (
     BookingError,
     PractitionerUnavailableError,
@@ -44,7 +48,6 @@ def _json_error(message: str, status: int = 400):
 
 @require_GET
 def service_list(request):
-    services = Service.objects.filter(is_active=True)
     data = [
         {
             'id': service.pk,
@@ -54,10 +57,14 @@ def service_list(request):
             'duration_minutes': service.duration_minutes,
             'durations': service.allowed_durations(),
             'price': str(service.price) if service.price is not None else None,
+            'available_weekdays': service.calendar_weekdays,
         }
-        for service in services
+        for service in get_bookable_services()
     ]
-    return JsonResponse({'services': data})
+    return JsonResponse({
+        'services': data,
+        'clinic_weekdays': get_clinic_weekdays(),
+    })
 
 
 @require_GET

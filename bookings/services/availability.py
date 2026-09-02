@@ -32,6 +32,45 @@ def _combine(target_date: date, clock_time: time) -> datetime:
     return timezone.make_aware(naive, timezone.get_current_timezone())
 
 
+def get_clinic_weekdays() -> list[int]:
+    """Python weekdays (Mon=0) the clinic is open."""
+    return [day for day in range(7) if clinic_hours_bounds(day)[0] is not None]
+
+
+def get_available_weekdays(service: Service) -> list[int]:
+    """Python weekdays (Mon=0) this service can be booked.
+
+    Matches the weekly rules used by slot generation: if any ServiceSchedule
+    rows exist, only days with a valid window are offered. Otherwise every
+    clinic-open day is available.
+    """
+    schedules = list(service.schedules.all())
+    schedule_by_day = {row.day_of_week: row for row in schedules}
+    has_schedule = bool(schedules)
+    available: list[int] = []
+    for day in get_clinic_weekdays():
+        if has_schedule:
+            row = schedule_by_day.get(day)
+            if row is None or row.is_unavailable:
+                continue
+            if not (row.start_time and row.end_time and row.start_time < row.end_time):
+                continue
+        available.append(day)
+    return available
+
+
+def get_bookable_services():
+    """Active services that have at least one weekday open for online booking."""
+    services = []
+    for service in Service.objects.filter(is_active=True).prefetch_related('schedules'):
+        weekdays = get_available_weekdays(service)
+        if not weekdays:
+            continue
+        service.calendar_weekdays = weekdays
+        services.append(service)
+    return services
+
+
 def _get_service_windows(service: Service, target_date: date) -> list[tuple[time, time]]:
     """Booking windows for a service on a date from ServiceSchedule (or clinic hours)."""
     clinic_closed = ScheduleException.objects.filter(
