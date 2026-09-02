@@ -518,15 +518,16 @@ SITE_REGION = 'Alberta'
 SITE_COUNTRY = 'CA'
 SITE_LATITUDE = 51.1702219
 SITE_LONGITUDE = -114.1662636
-SITE_GOOGLE_PLACE_ID = ''
-SITE_GOOGLE_BUSINESS_URL = 'https://share.google/Udr6iy1wMKjUm9YZK'
+SITE_GOOGLE_PLACE_ID = 'ChIJcUBVbQdpcVMR-u84x5J6QaU'
+SITE_GOOGLE_BUSINESS_URL = (
+  f'https://www.google.com/maps/place/?q=place_id:{SITE_GOOGLE_PLACE_ID}'
+)
 SITE_GOOGLE_DIRECTIONS_URL = (
-  'https://www.google.com/maps/dir/?api=1&destination=1130-367+Nolanridge+Cr+NW,+'
-  'Calgary,+AB+T3R+1W9&travelmode=driving'
+  f'https://www.google.com/maps/dir/?api=1&destination_place_id={SITE_GOOGLE_PLACE_ID}'
+  '&travelmode=driving'
 )
 SITE_MAP_EMBED_URL = (
-  'https://maps.google.com/maps?q=1130-367+Nolanridge+Cr+NW,+Calgary,+AB+'
-  'T3R+1W9&z=16&output=embed'
+  f'https://maps.google.com/maps?q=place_id:{SITE_GOOGLE_PLACE_ID}&z=16&output=embed'
 )
 SITE_MAP_URL = SITE_GOOGLE_DIRECTIONS_URL
 

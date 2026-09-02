@@ -41,6 +41,13 @@
   },
   "hasMap": "{{ site_google_business_url }}",
   "sameAs": ["{{ site_google_business_url }}"],
+  {% if site_google_place_id %}
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "place_id",
+    "value": "{{ site_google_place_id }}"
+  },
+  {% endif %}
   "openingHoursSpecification": [
     {% for block in opening_hours_schema %}
     {
