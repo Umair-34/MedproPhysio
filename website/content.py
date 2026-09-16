@@ -508,7 +508,7 @@ SITE_CTA = {
   'image': 'images/home/first-visit.jpg',
   'image_alt': 'Physiotherapist helping a patient with movement at Medpro Physio',
 }
-SITE_EMAIL = 'info@medprophysiotherapy.ca'
+SITE_EMAIL = 'Medprophysio@outlook.com'
 SITE_ADDRESS = '1130-367 Nolanridge Cr NW, Calgary, AB T3R 1W9, Canada'
 SITE_ADDRESS_SHORT = '367 Nolanridge Cr NW, Calgary'
 SITE_STREET_ADDRESS = '1130-367 Nolanridge Cr NW'
