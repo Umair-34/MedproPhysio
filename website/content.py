@@ -531,35 +531,41 @@ SITE_MAP_EMBED_URL = (
 )
 SITE_MAP_URL = SITE_GOOGLE_DIRECTIONS_URL
 
+CLINIC_HOURS_SUMMARY = (
+  'Monday to Thursday 9:00 AM to 7:00 PM. Friday 10:00 AM to 6:00 PM. '
+  'Saturday 9:00 AM to 2:00 PM. Closed Sunday.'
+)
+
 WORKING_HOURS = [
-  'Mon to Fri: 8:00 AM to 8:00 PM',
-  'Sat: 8:00 AM to 4:00 PM',
-  'Sun: 9:00 AM to 2:00 PM',
+  'Mon to Thu: 9:00 AM to 7:00 PM',
+  'Fri: 10:00 AM to 6:00 PM',
+  'Sat: 9:00 AM to 2:00 PM',
+  'Sun: Closed',
 ]
 
 CLINIC_HOURS = [
-  {'label': 'Monday', 'hours': '8:00 AM to 8:00 PM', 'weekday': 0, 'opens': (8, 0), 'closes': (20, 0)},
-  {'label': 'Tuesday', 'hours': '8:00 AM to 8:00 PM', 'weekday': 1, 'opens': (8, 0), 'closes': (20, 0)},
-  {'label': 'Wednesday', 'hours': '8:00 AM to 8:00 PM', 'weekday': 2, 'opens': (8, 0), 'closes': (20, 0)},
-  {'label': 'Thursday', 'hours': '8:00 AM to 8:00 PM', 'weekday': 3, 'opens': (8, 0), 'closes': (20, 0)},
-  {'label': 'Friday', 'hours': '8:00 AM to 8:00 PM', 'weekday': 4, 'opens': (8, 0), 'closes': (20, 0)},
-  {'label': 'Saturday', 'hours': '8:00 AM to 4:00 PM', 'weekday': 5, 'opens': (8, 0), 'closes': (16, 0)},
-  {'label': 'Sunday', 'hours': '9:00 AM to 2:00 PM', 'weekday': 6, 'opens': (9, 0), 'closes': (14, 0)},
+  {'label': 'Monday', 'hours': '9:00 AM to 7:00 PM', 'weekday': 0, 'opens': (9, 0), 'closes': (19, 0)},
+  {'label': 'Tuesday', 'hours': '9:00 AM to 7:00 PM', 'weekday': 1, 'opens': (9, 0), 'closes': (19, 0)},
+  {'label': 'Wednesday', 'hours': '9:00 AM to 7:00 PM', 'weekday': 2, 'opens': (9, 0), 'closes': (19, 0)},
+  {'label': 'Thursday', 'hours': '9:00 AM to 7:00 PM', 'weekday': 3, 'opens': (9, 0), 'closes': (19, 0)},
+  {'label': 'Friday', 'hours': '10:00 AM to 6:00 PM', 'weekday': 4, 'opens': (10, 0), 'closes': (18, 0)},
+  {'label': 'Saturday', 'hours': '9:00 AM to 2:00 PM', 'weekday': 5, 'opens': (9, 0), 'closes': (14, 0)},
+  {'label': 'Sunday', 'hours': 'Closed', 'weekday': 6, 'opens': None, 'closes': None},
 ]
 
 OPENING_HOURS_SCHEMA = [
   {
-    'days': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    'opens': '08:00',
-    'closes': '20:00',
+    'days': ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+    'opens': '09:00',
+    'closes': '19:00',
+  },
+  {
+    'days': ['Friday'],
+    'opens': '10:00',
+    'closes': '18:00',
   },
   {
     'days': ['Saturday'],
-    'opens': '08:00',
-    'closes': '16:00',
-  },
-  {
-    'days': ['Sunday'],
     'opens': '09:00',
     'closes': '14:00',
   },
@@ -622,7 +628,7 @@ VISIT_FAQS = [
   ),
   (
     'What are your clinic hours?',
-    'Monday to Friday 8:00 AM to 8:00 PM. Saturday 8:00 AM to 4:00 PM. Sunday 9:00 AM to 2:00 PM.',
+    CLINIC_HOURS_SUMMARY,
   ),
   (
     'How do I find the clinic on Google Maps?',
@@ -748,10 +754,7 @@ FAQS_PAGE_FAQS = [
   },
   {
     'question': 'What are your clinic hours?',
-    'answer': (
-      'Monday to Friday 8:00 AM to 8:00 PM. Saturday 8:00 AM to 4:00 PM. '
-      'Sunday 9:00 AM to 2:00 PM.'
-    ),
+    'answer': CLINIC_HOURS_SUMMARY,
     'icon': 'fa-regular fa-clock',
     'category': 'clinic',
   },

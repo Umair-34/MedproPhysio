@@ -9,14 +9,14 @@ from website import content
 CLINIC_TZ = ZoneInfo(settings.TIME_ZONE)
 
 CLOSE_LABELS = {
-  (20, 0): '8:00 PM',
-  (16, 0): '4:00 PM',
+  (19, 0): '7:00 PM',
+  (18, 0): '6:00 PM',
   (14, 0): '2:00 PM',
 }
 
 OPEN_LABELS = {
-  (8, 0): '8:00 AM',
   (9, 0): '9:00 AM',
+  (10, 0): '10:00 AM',
 }
 
 
@@ -35,7 +35,7 @@ def _next_open_day(from_weekday):
   for offset in range(1, 8):
     weekday = (from_weekday + offset) % 7
     row = _schedule_for_weekday(weekday)
-    if row:
+    if row and row.get('opens') is not None:
       return row
   return None
 
@@ -43,7 +43,7 @@ def _next_open_day(from_weekday):
 def clinic_hours_bounds(weekday):
   """Return (opens, closes) for a weekday, or None if the clinic is closed that day."""
   row = _schedule_for_weekday(weekday)
-  if not row:
+  if not row or row.get('opens') is None or row.get('closes') is None:
     return None, None
   return _time_from_tuple(row['opens']), _time_from_tuple(row['closes'])
 
@@ -72,7 +72,7 @@ def clinic_open_status(now=None):
     now = datetime.now(CLINIC_TZ)
 
   today = _schedule_for_weekday(now.weekday())
-  if not today:
+  if not today or today.get('opens') is None:
     return 'closed', 'Closed today'
 
   opens = _time_from_tuple(today['opens'])

@@ -407,15 +407,15 @@
     nowIndicator: true,
     displayEventTime: false,
     allDaySlot: false,
-    slotMinTime: '08:00:00',
-    slotMaxTime: '20:00:00',
-    scrollTime: '08:00:00',
+    slotMinTime: '09:00:00',
+    slotMaxTime: '19:00:00',
+    scrollTime: '09:00:00',
     slotDuration: '00:15:00',
     slotLabelInterval: '01:00:00',
     businessHours: [
-      { daysOfWeek: [1, 2, 3, 4, 5], startTime: '08:00', endTime: '20:00' },
-      { daysOfWeek: [6], startTime: '08:00', endTime: '16:00' },
-      { daysOfWeek: [0], startTime: '09:00', endTime: '14:00' },
+      { daysOfWeek: [1, 2, 3, 4], startTime: '09:00', endTime: '19:00' },
+      { daysOfWeek: [5], startTime: '10:00', endTime: '18:00' },
+      { daysOfWeek: [6], startTime: '09:00', endTime: '14:00' },
     ],
     views: {
       dayGridMonth: {

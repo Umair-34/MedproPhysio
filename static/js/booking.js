@@ -25,7 +25,7 @@
         return;
     }
 
-    let clinicWeekdays = [0, 1, 2, 3, 4, 5, 6];
+    let clinicWeekdays = [0, 1, 2, 3, 4, 5];
     let calendarCursor = startOfDay(new Date());
     calendarCursor.setDate(1);
 
