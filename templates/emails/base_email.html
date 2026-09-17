@@ -13,16 +13,17 @@
       <td align="center">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:100%; background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(45,52,57,0.08);">
           <tr>
-            <td style="background-color:#2F3438; padding:32px 40px; text-align:center;">
+            <td style="background-color:#ffffff; padding:28px 40px 20px 40px; text-align:center;">
               {% if logo_url %}
-              <img src="{{ logo_url }}" alt="{{ clinic_name }}" width="180" style="display:block;margin:0 auto 14px auto;border:0;max-width:180px;height:auto;">
+              <img src="{{ logo_url }}" alt="{{ clinic_name }}" width="200" style="display:block;margin:0 auto 10px auto;border:0;max-width:200px;height:auto;">
+              {% else %}
+              <div style="font-family:'Marcellus', Georgia, 'Times New Roman', serif; color:#2D3439; font-size:22px; letter-spacing:0.3px;">{{ clinic_name }}</div>
               {% endif %}
-              <div style="font-family:'Marcellus', Georgia, 'Times New Roman', serif; color:#ffffff; font-size:24px; letter-spacing:0.3px;">{{ clinic_name }}</div>
-              <div style="color:#D1D5DB; font-size:13px; margin-top:6px;">{{ clinic_address_short }}</div>
+              <div style="color:#5C6570; font-size:13px; margin-top:4px;">{{ clinic_address_short }}</div>
             </td>
           </tr>
           <tr>
-            <td style="height:6px; background-color:#8B2E2E;"></td>
+            <td style="height:6px; background-color:#009989;"></td>
           </tr>
           <tr>
             <td style="padding:36px 40px 8px 40px;">
@@ -36,9 +37,9 @@
                   <td style="padding-top:20px; font-size:13px; line-height:20px; color:#5C6570;">
                     <strong style="color:#2D3439;">{{ clinic_name }}</strong><br>
                     {{ clinic_address }}<br>
-                    <a href="tel:{{ clinic_phone_link }}" style="color:#8B2E2E; text-decoration:none;">{{ clinic_phone }}</a>
+                    <a href="tel:{{ clinic_phone_link }}" style="color:#009989; text-decoration:none;">{{ clinic_phone }}</a>
                     &nbsp;|&nbsp;
-                    <a href="mailto:{{ clinic_email }}" style="color:#8B2E2E; text-decoration:none;">{{ clinic_email }}</a>
+                    <a href="mailto:{{ clinic_email }}" style="color:#009989; text-decoration:none;">{{ clinic_email }}</a>
                   </td>
                 </tr>
               </table>

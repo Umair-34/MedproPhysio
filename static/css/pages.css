@@ -3137,6 +3137,7 @@ body.mp-page-home .mp-home-hero {
   border-radius: var(--mp-radius-lg);
   padding: 1.75rem;
   box-shadow: var(--mp-shadow);
+  scroll-margin-top: calc(var(--mp-header-h) + 1.25rem);
 }
 
 .booking-service-grid {
@@ -3505,6 +3506,7 @@ body.mp-page-home .mp-home-hero {
 .booking-confirmation {
   text-align: center;
   padding: 2rem 1rem;
+  scroll-margin-top: calc(var(--mp-header-h) + 1.25rem);
 }
 
 .booking-confirmation-icon {

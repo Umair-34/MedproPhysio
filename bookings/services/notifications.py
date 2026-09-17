@@ -22,8 +22,8 @@ TIME_FORMAT = '%-I:%M %p'
 ICS_TIMESTAMP_FORMAT = '%Y%m%dT%H%M%SZ'
 EMAIL_LOGO_CID = 'clinic-logo'
 EMAIL_LOGO_CANDIDATES = (
-    'images/medpro-logo-light.png',
     'images/medpro-logo.png',
+    'images/medpro-logo-light.png',
     'images/medpro-logo-icon.png',
 )
 

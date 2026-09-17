@@ -724,6 +724,10 @@
 
             form.classList.add('d-none');
             confirmationBox.classList.remove('d-none');
+            const scrollTarget = confirmationBox.closest('.mp-booking-shell') || confirmationBox;
+            window.requestAnimationFrame(function () {
+                scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
 
             const appt = data.appointment;
             const when = new Date(appt.start_datetime).toLocaleString(LOCALE, {

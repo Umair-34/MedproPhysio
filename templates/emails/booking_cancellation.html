@@ -6,12 +6,12 @@
 
 {% block content %}
 {% if audience == 'clinic' %}
-<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#8B2E2E; font-size:24px; font-weight:normal;">Appointment cancelled</h1>
+<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#1B367E; font-size:24px; font-weight:normal;">Appointment cancelled</h1>
 <p style="margin:0 0 22px 0; font-size:15px; line-height:24px; color:#2D3439;">
   The following appointment has been cancelled and the time slot is now open again.
 </p>
 {% else %}
-<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#8B2E2E; font-size:24px; font-weight:normal;">Your appointment is cancelled</h1>
+<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#1B367E; font-size:24px; font-weight:normal;">Your appointment is cancelled</h1>
 <p style="margin:0 0 22px 0; font-size:15px; line-height:24px; color:#2D3439;">
   Hi {{ customer_first_name }}, your appointment with {{ clinic_name }} has been cancelled. If this was a mistake, you can rebook any time.
 </p>
@@ -21,20 +21,20 @@
 
 {% if cancellation_reason %}
 <p style="margin:0 0 22px 0; font-size:14px; line-height:22px; color:#2D3439;">
-  <strong style="color:#8B2E2E;">Reason:</strong> {{ cancellation_reason }}
+  <strong style="color:#1B367E;">Reason:</strong> {{ cancellation_reason }}
 </p>
 {% endif %}
 
 {% if audience != 'clinic' %}
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:4px 0 24px 0;">
   <tr>
-    <td style="border-radius:8px; background-color:#8B2E2E;">
+    <td style="border-radius:8px; background-color:#009989;">
       <a href="{{ book_url }}" style="display:inline-block; padding:13px 26px; font-size:15px; color:#ffffff; text-decoration:none; font-weight:600;">Book again</a>
     </td>
   </tr>
 </table>
 <p style="margin:0; font-size:14px; line-height:22px; color:#2D3439;">
-  Questions? Call us at <a href="tel:{{ clinic_phone_link }}" style="color:#C44A3A; text-decoration:none;">{{ clinic_phone }}</a>.
+  Questions? Call us at <a href="tel:{{ clinic_phone_link }}" style="color:#009989; text-decoration:none;">{{ clinic_phone }}</a>.
 </p>
 {% endif %}
 {% endblock %}

@@ -5,7 +5,7 @@
 {% block preheader %}Your {{ service_name }} appointment is now {{ appointment_date }} at {{ appointment_time }}.{% endblock %}
 
 {% block content %}
-<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#8B2E2E; font-size:24px; font-weight:normal;">Your appointment has been updated</h1>
+<h1 style="margin:0 0 8px 0; font-family:'Marcellus', Georgia, serif; color:#1B367E; font-size:24px; font-weight:normal;">Your appointment has been updated</h1>
 <p style="margin:0 0 22px 0; font-size:15px; line-height:24px; color:#2D3439;">
   Hi {{ customer_first_name }}, there is an update to your booking at {{ clinic_name }}. Please review the new details below. An updated calendar invite is attached.
 </p>
@@ -13,7 +13,7 @@
 {% if update_message %}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px 0; background-color:#FAF6F2; border-radius:12px;">
   <tr>
-    <td style="padding:14px 18px; font-size:14px; line-height:22px; color:#8B2E2E;">
+    <td style="padding:14px 18px; font-size:14px; line-height:22px; color:#1B367E;">
       <strong>Note from the clinic:</strong> {{ update_message }}
     </td>
   </tr>
@@ -32,18 +32,18 @@
 
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:4px 0 26px 0;">
   <tr>
-    <td style="border-radius:8px; background-color:#8B2E2E;">
+    <td style="border-radius:8px; background-color:#009989;">
       <a href="{{ directions_url }}" style="display:inline-block; padding:13px 26px; font-size:15px; color:#ffffff; text-decoration:none; font-weight:600;">Get directions</a>
     </td>
     <td style="width:12px;"></td>
-    <td style="border-radius:8px; border:1px solid #8B2E2E;">
-      <a href="tel:{{ clinic_phone_link }}" style="display:inline-block; padding:12px 26px; font-size:15px; color:#8B2E2E; text-decoration:none; font-weight:600;">Call the clinic</a>
+    <td style="border-radius:8px; border:1px solid #009989;">
+      <a href="tel:{{ clinic_phone_link }}" style="display:inline-block; padding:12px 26px; font-size:15px; color:#009989; text-decoration:none; font-weight:600;">Call the clinic</a>
     </td>
   </tr>
 </table>
 
 <p style="margin:0; font-size:14px; line-height:22px; color:#2D3439;">
   If this time no longer works, reply to this email or call
-  <a href="tel:{{ clinic_phone_link }}" style="color:#C44A3A; text-decoration:none;">{{ clinic_phone }}</a>.
+  <a href="tel:{{ clinic_phone_link }}" style="color:#009989; text-decoration:none;">{{ clinic_phone }}</a>.
 </p>
 {% endblock %}
