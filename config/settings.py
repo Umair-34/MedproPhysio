@@ -402,11 +402,26 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 )
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-# Where new booking notifications are sent for the clinic team.
-CLINIC_NOTIFICATION_EMAIL = os.environ.get(
-    'CLINIC_NOTIFICATION_EMAIL',
-    'Umair94m@gmail.com',
-).strip()
+def _email_list(raw: str) -> list[str]:
+    emails = []
+    seen = set()
+    for part in (raw or '').replace(';', ',').split(','):
+        email = part.strip()
+        if not email:
+            continue
+        key = email.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        emails.append(email)
+    return emails
+
+
+# Comma-separated clinic inboxes for booking and contact alerts.
+CLINIC_NOTIFICATION_EMAILS = _email_list(
+    os.environ.get('CLINIC_NOTIFICATION_EMAIL', 'Umair94m@gmail.com')
+)
+CLINIC_NOTIFICATION_EMAIL = ','.join(CLINIC_NOTIFICATION_EMAILS)
 
 
 # Google Calendar integration

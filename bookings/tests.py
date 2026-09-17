@@ -527,3 +527,21 @@ class EmailLogoTests(SimpleTestCase):
 
         self.assertEqual(_logo_url_for_context(), f'cid:{EMAIL_LOGO_CID}')
         self.assertNotIn('/static/images/logo.png', _logo_url_for_context())
+
+
+class ClinicNotificationEmailTests(SimpleTestCase):
+    def test_comma_separated_clinic_emails_are_split(self):
+        from bookings.services.notifications import clinic_notification_emails, _recipient_list
+
+        with override_settings(
+            CLINIC_NOTIFICATION_EMAIL='one@example.com, two@example.com, two@example.com',
+            CLINIC_NOTIFICATION_EMAILS=['one@example.com', 'two@example.com'],
+        ):
+            self.assertEqual(
+                clinic_notification_emails(),
+                ['one@example.com', 'two@example.com'],
+            )
+            self.assertEqual(
+                _recipient_list('one@example.com, two@example.com; three@example.com'),
+                ['one@example.com', 'two@example.com', 'three@example.com'],
+            )

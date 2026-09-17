@@ -84,8 +84,42 @@ def build_ics(appointment: Appointment, *, method: str = 'REQUEST', cancelled: b
     return '\r\n'.join(lines)
 
 
+def _split_emails(value) -> list[str]:
+    if isinstance(value, (list, tuple)):
+        parts = value
+    else:
+        parts = str(value or '').replace(';', ',').split(',')
+    emails = []
+    seen = set()
+    for part in parts:
+        email = str(part).strip()
+        if not email:
+            continue
+        key = email.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        emails.append(email)
+    return emails
+
+
+def clinic_notification_emails() -> list[str]:
+    configured = getattr(settings, 'CLINIC_NOTIFICATION_EMAILS', None)
+    emails = _split_emails(configured) if configured else []
+    if emails:
+        return emails
+    raw = getattr(settings, 'CLINIC_NOTIFICATION_EMAIL', '') or content.SITE_EMAIL
+    return _split_emails(raw)
+
+
 def _clinic_email() -> str:
-    return (getattr(settings, 'CLINIC_NOTIFICATION_EMAIL', '') or content.SITE_EMAIL).strip()
+    emails = clinic_notification_emails()
+    return emails[0] if emails else content.SITE_EMAIL.strip()
+
+
+def _recipient_list(value) -> list[str]:
+    emails = _split_emails(value)
+    return emails or clinic_notification_emails()
 
 
 def _find_email_logo() -> Path | None:
@@ -161,7 +195,7 @@ def _base_context(appointment: Appointment) -> dict:
 def _send(
     *,
     subject: str,
-    to_email: str,
+    to_email: str | list[str],
     html_template: str,
     text_template: str,
     context: dict,
@@ -176,7 +210,7 @@ def _send(
         subject=subject,
         body=text_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[to_email],
+        to=_recipient_list(to_email),
         reply_to=reply_to,
     )
     message.attach_alternative(html_body, 'text/html')
@@ -200,7 +234,7 @@ def send_booking_request(appointment: Appointment) -> None:
         when = f"{base['appointment_date']} at {base['appointment_time']}"
         _send(
             subject=f"New booking request: {base['service_name']} - {base['customer_name']} ({when})",
-            to_email=_clinic_email(),
+            to_email=clinic_notification_emails(),
             html_template='emails/booking_request.html',
             text_template='emails/booking_request.txt',
             context={**base, 'audience': 'clinic', 'show_patient': True},
@@ -236,7 +270,7 @@ def send_booking_confirmation(appointment: Appointment, *, notify_clinic: bool =
         if notify_clinic:
             _send(
                 subject=f"Confirmed booking: {base['service_name']} - {base['customer_name']} ({when})",
-                to_email=_clinic_email(),
+                to_email=clinic_notification_emails(),
                 html_template='emails/booking_confirmation.html',
                 text_template='emails/booking_confirmation.txt',
                 context={**base, 'audience': 'clinic', 'show_patient': True},
@@ -291,7 +325,7 @@ def send_booking_cancellation(appointment: Appointment) -> None:
 
         _send(
             subject=f"Cancelled: {base['service_name']} - {base['customer_name']} ({base['appointment_date']})",
-            to_email=_clinic_email(),
+            to_email=clinic_notification_emails(),
             html_template='emails/booking_cancellation.html',
             text_template='emails/booking_cancellation.txt',
             context={**base, 'audience': 'clinic', 'show_patient': True},
@@ -341,7 +375,7 @@ def send_booking_update(
 
         _send(
             subject=f"Updated booking: {base['service_name']} - {base['customer_name']} ({when})",
-            to_email=_clinic_email(),
+            to_email=clinic_notification_emails(),
             html_template='emails/booking_update.html',
             text_template='emails/booking_update.txt',
             context={**context, 'audience': 'clinic', 'show_patient': True},

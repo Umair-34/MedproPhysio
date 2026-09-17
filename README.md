@@ -71,7 +71,7 @@ See `.do/app.yaml` for a full App Platform spec you can import.
 
 Set these in `.env` for local development, including:
 
-- `CLINIC_NOTIFICATION_EMAIL` - clinic inbox for booking alerts
+- `CLINIC_NOTIFICATION_EMAIL` - clinic inbox(es) for booking and contact alerts (comma-separated, up to several addresses)
 - Gmail SMTP settings for sending confirmation emails
 - Optional Google Calendar API integration
 - `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET`, and `TURNSTILE_HOSTNAMES`

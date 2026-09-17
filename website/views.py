@@ -150,8 +150,14 @@ def contact_submit(request):
     message=message,
   )
 
-  clinic_inbox = (getattr(settings, 'CLINIC_NOTIFICATION_EMAIL', '') or content.SITE_EMAIL).strip()
-  if clinic_inbox:
+  clinic_inboxes = getattr(settings, 'CLINIC_NOTIFICATION_EMAILS', None) or [
+    part.strip()
+    for part in (getattr(settings, 'CLINIC_NOTIFICATION_EMAIL', '') or content.SITE_EMAIL)
+    .replace(';', ',')
+    .split(',')
+    if part.strip()
+  ]
+  if clinic_inboxes:
     body = (
       f'New contact form submission from the website.\n\n'
       f'Name: {full_name}\n'
@@ -164,7 +170,7 @@ def contact_submit(request):
         subject=f'Website contact: {full_name}',
         message=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[clinic_inbox],
+        recipient_list=list(clinic_inboxes),
         fail_silently=False,
       )
     except Exception:
