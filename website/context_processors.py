@@ -41,6 +41,7 @@ def site(request):
     'all_services': content_pages.get_all_treatments(),
     'patient_hub': content.PATIENT_HUB,
     'site_testimonials': content.SITE_TESTIMONIALS,
+    'site_google_rating': content.HOME_HERO['rating_value'],
     'about_intro': content.ABOUT_INTRO,
     'about_mission': content.ABOUT_MISSION,
     'about_vision': content.ABOUT_VISION,

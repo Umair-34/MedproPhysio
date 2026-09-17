@@ -28,14 +28,14 @@ HOME_HERO = {
   'badge': 'Same-week appointments',
   'experience_value': '6+',
   'experience_label': 'Years of combined clinical experience',
-  'rating_value': '4.9',
+  'rating_value': '5.0',
   'rating_label': 'patient rating',
   'rating_detail': 'Based on Google reviews from Calgary patients',
   'avatars': [
-    {'initial': 'G', 'color': '#ef6c00'},
-    {'initial': 'V', 'color': '#8e6c88'},
-    {'initial': 'K', 'color': '#558b2f'},
-    {'initial': 'J', 'color': '#e91e63'},
+    {'initial': 'U', 'color': '#ef6c00'},
+    {'initial': 'J', 'color': '#8e6c88'},
+    {'initial': 'L', 'color': '#558b2f'},
+    {'initial': 'A', 'color': '#e91e63'},
   ],
   'features': [
     {
@@ -407,55 +407,40 @@ HOME_FAQS = [
 SITE_TESTIMONIALS = [
   {
     'quote': (
-      'Great customer service. I am very thankful that my back got so much better with even one '
-      'session. Jaspreet is a great therapist, she is an amazing person with good communication '
-      'skills and behaviour. Everyone working there are very friendly. Thank you so much again.'
+      'taking physio sessions, staff is professional and friendly, providing excellent services'
     ),
-    'name': 'Girpreet K.',
-    'role': 'Google review',
-    'initial': 'G',
-    'avatar_color': '#ef6c00',
-    'image_alt': 'Google review by Girpreet K. at Medpro Physio Calgary',
-  },
-  {
-    'quote': (
-      'This location, all people who work there are angels. To be in this location, you are in good '
-      'and safe hands. Very nice people. I have been going there for over 3 months. Whenever I go '
-      'there I feel home. They really know what they are doing. Thank you so much for all your hard '
-      'work to make me feel better and go back to work.'
-    ),
-    'name': 'Vena Bless Bella',
-    'role': 'Google review',
-    'initial': 'V',
-    'avatar_color': '#8e6c88',
-    'image_alt': 'Google review by Vena Bless Bella at Medpro Physio Calgary',
-  },
-  {
-    'quote': (
-      'I was very lucky to find this wonderful place. Jagmeet Singh is amazing, he is professional '
-      'and he really listens and cares about his patients. He is very compassionate and made me feel '
-      'very welcome. I know I am in good hands and I feel very confident about my recovery. The '
-      'reception girls are so polite and the aids are also very nice. Thank you so much Jagmeet and '
-      'your team.'
-    ),
-    'name': 'Kathey Beatom',
+    'name': 'Umar Qayyum',
     'role': 'Google Local Guide',
-    'initial': 'K',
-    'avatar_color': '#558b2f',
-    'image_alt': 'Google review by Kathey Beatom at Medpro Physio Calgary',
+    'initial': 'U',
+    'avatar_color': '#ef6c00',
+    'image_alt': 'Google review by Umar Qayyum at Medpro Physio Calgary',
   },
   {
     'quote': (
-      'About a year ago I got into a motorcycle accident and one of the clinics they recommended was '
-      'Medpro Physio. That is when I met Jaspreet and Jagmeet, '
-      'wonderful people, highly educated, professional, knowledgeable and very friendly. The place '
-      'is clean and all COVID protocols are properly followed.'
+      'I came in with pain that had been bothering me for a while, and they really helped me alot. '
+      'Feeling better now and would definitely recommend this clinic.'
     ),
-    'name': 'J Moises S.',
+    'name': 'Jeff Mark',
     'role': 'Google review',
     'initial': 'J',
+    'avatar_color': '#8e6c88',
+    'image_alt': 'Google review by Jeff Mark at Medpro Physio Calgary',
+  },
+  {
+    'quote': 'Professional and friendly staff with excellent service!',
+    'name': 'Lawrabe Naeem',
+    'role': 'Google review',
+    'initial': 'L',
+    'avatar_color': '#558b2f',
+    'image_alt': 'Google review by Lawrabe Naeem at Medpro Physio Calgary',
+  },
+  {
+    'quote': 'Nice folks',
+    'name': 'Aman Gupta',
+    'role': 'Google Local Guide',
+    'initial': 'A',
     'avatar_color': '#e91e63',
-    'image_alt': 'Google review by J Moises S. at Medpro Physio Calgary',
+    'image_alt': 'Google review by Aman Gupta at Medpro Physio Calgary',
   },
 ]
 
