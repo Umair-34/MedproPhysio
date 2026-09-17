@@ -2,7 +2,7 @@ from datetime import datetime, time, timedelta
 import json
 
 from django.core.cache import cache
-from django.test import Client, TestCase, override_settings
+from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.utils import timezone
 
 from unittest.mock import patch
@@ -293,6 +293,9 @@ class ServiceWeekdayAvailabilityTests(TestCase):
         self.assertIn('id="bookingCalendar"', html)
         self.assertIn('id="bookingSlots"', html)
         self.assertIn('data-available-weekdays=', html)
+        self.assertIn('booking-date-group is-enhanced', html)
+        self.assertIn('booking-slot-group is-enhanced', html)
+        self.assertIn('data-clinic-weekdays=', html)
 
     def test_fully_unavailable_service_is_hidden_from_booking(self):
         hidden = Service.objects.create(
@@ -397,6 +400,15 @@ class SlotCapacityTests(TestCase):
             for slot in compute_slots(self.massage, start.date(), duration_minutes=60)
         ]
         self.assertNotIn(start, remaining)
+
+    def test_compute_slots_does_not_query_once_per_time(self):
+        from bookings.services.availability import compute_slots
+
+        start = self._next_weekday_afternoon()
+        self._book(self.massage, start, 'One')
+        with self.assertNumQueries(3):
+            slots = compute_slots(self.massage, start.date(), duration_minutes=60)
+        self.assertGreater(len(slots), 0)
 
     def test_rejected_slot_stays_hidden_from_other_clients(self):
         from bookings.services.availability import compute_slots
@@ -507,3 +519,11 @@ class DashboardTodayTests(TestCase):
         self.assertContains(response, '10 bookings')
         self.assertContains(response, 'Pat9 Client')
         self.assertNotContains(response, 'Later Client')
+
+
+class EmailLogoTests(SimpleTestCase):
+    def test_booking_email_embeds_the_logo(self):
+        from bookings.services.notifications import EMAIL_LOGO_CID, _logo_url_for_context
+
+        self.assertEqual(_logo_url_for_context(), f'cid:{EMAIL_LOGO_CID}')
+        self.assertNotIn('/static/images/logo.png', _logo_url_for_context())

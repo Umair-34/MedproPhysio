@@ -92,9 +92,11 @@ def _turnstile_hostnames() -> set[str]:
 
 def _verify_turnstile(request, data, *, expected_action: str) -> None:
     secret = _turnstile_secret()
+    sitekey = (getattr(settings, 'TURNSTILE_SITE_KEY', '') or '').strip()
     if not secret:
-        if getattr(settings, 'TURNSTILE_SITE_KEY', ''):
+        if sitekey:
             logger.warning('Turnstile site key is set but TURNSTILE_SECRET is missing')
+            raise FormGuardError(GENERIC_ERROR)
         return
 
     token = _get(data, 'cf-turnstile-response') or _get(data, 'turnstile_token')

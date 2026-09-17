@@ -2,8 +2,12 @@
 
 import logging
 from datetime import timezone as dt_timezone
+from email.mime.image import MIMEImage
+from pathlib import Path
 
 from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -16,6 +20,12 @@ logger = logging.getLogger(__name__)
 DATE_FORMAT = '%A, %B %-d, %Y'
 TIME_FORMAT = '%-I:%M %p'
 ICS_TIMESTAMP_FORMAT = '%Y%m%dT%H%M%SZ'
+EMAIL_LOGO_CID = 'clinic-logo'
+EMAIL_LOGO_CANDIDATES = (
+    'images/medpro-logo-light.png',
+    'images/medpro-logo.png',
+    'images/medpro-logo-icon.png',
+)
 
 
 def _ics_datetime(value) -> str:
@@ -78,6 +88,43 @@ def _clinic_email() -> str:
     return (getattr(settings, 'CLINIC_NOTIFICATION_EMAIL', '') or content.SITE_EMAIL).strip()
 
 
+def _find_email_logo() -> Path | None:
+    for candidate in EMAIL_LOGO_CANDIDATES:
+        found = finders.find(candidate)
+        if found:
+            return Path(found)
+    return None
+
+
+def email_logo_url() -> str:
+    """Public URL for the clinic logo (CDN in production, site origin otherwise)."""
+    url = staticfiles_storage.url(EMAIL_LOGO_CANDIDATES[0])
+    if url.startswith(('http://', 'https://')):
+        return url
+    base = settings.SITE_BASE_URL.rstrip('/')
+    return f'{base}{url}' if url.startswith('/') else f'{base}/{url}'
+
+
+def attach_email_logo(message: EmailMultiAlternatives) -> bool:
+    """Attach the clinic logo inline so email clients do not fetch a remote URL."""
+    path = _find_email_logo()
+    if path is None or not path.is_file():
+        return False
+    subtype = 'png' if path.suffix.lower() == '.png' else path.suffix.lstrip('.').lower() or 'png'
+    image = MIMEImage(path.read_bytes(), _subtype=subtype)
+    image.add_header('Content-ID', f'<{EMAIL_LOGO_CID}>')
+    image.add_header('Content-Disposition', 'inline', filename=path.name)
+    message.mixed_subtype = 'related'
+    message.attach(image)
+    return True
+
+
+def _logo_url_for_context() -> str:
+    if _find_email_logo() is not None:
+        return f'cid:{EMAIL_LOGO_CID}'
+    return email_logo_url()
+
+
 def _base_context(appointment: Appointment) -> dict:
     customer = appointment.customer
     service = appointment.service
@@ -94,6 +141,7 @@ def _base_context(appointment: Appointment) -> dict:
         'directions_url': content.SITE_GOOGLE_DIRECTIONS_URL,
         'book_url': f'{site_base}/book/',
         'site_base_url': site_base,
+        'logo_url': _logo_url_for_context(),
         'service_name': service.name,
         'duration_minutes': appointment.duration_minutes,
         'appointment_date': start_local.strftime(DATE_FORMAT),
@@ -132,6 +180,7 @@ def _send(
         reply_to=reply_to,
     )
     message.attach_alternative(html_body, 'text/html')
+    attach_email_logo(message)
 
     if ics_content:
         # Attach as UTF-8 bytes so non-ASCII notes/addresses do not break SMTP.

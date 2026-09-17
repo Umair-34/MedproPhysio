@@ -65,18 +65,24 @@
               </div>
             </header>
             <div class="mp-form-grid booking-datetime-grid">
-              <div class="form-group booking-date-group">
+              <div class="form-group booking-date-group is-enhanced">
                 <label for="date">Preferred date</label>
                 <input type="date" name="date" class="form-control" id="date" required>
-                <div id="bookingCalendar" class="booking-calendar" hidden></div>
-                <p class="booking-field-hint" id="dateHint" aria-live="polite">Choose a service to see which days you can book.</p>
+                <div
+                  id="bookingCalendar"
+                  class="booking-calendar"
+                  data-clinic-weekdays="{{ clinic_weekdays|join:',' }}"
+                ></div>
+                <p class="booking-field-hint" id="dateHint" aria-live="polite">Pick a highlighted day, then choose an open time.</p>
               </div>
-              <div class="form-group booking-slot-group">
+              <div class="form-group booking-slot-group is-enhanced">
                 <label for="slot">Available time</label>
                 <select name="slot" class="form-control form-select" id="slot" required disabled>
                   <option value="" disabled selected>Select a date first</option>
                 </select>
-                <div id="bookingSlots" class="booking-slots" hidden></div>
+                <div id="bookingSlots" class="booking-slots">
+                  <p class="booking-slots__empty">Pick a highlighted date to see open times.</p>
+                </div>
                 <p class="booking-field-hint" id="slotHint" aria-live="polite">Times update after you choose a service, length, and date.</p>
               </div>
             </div>
@@ -155,5 +161,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/booking.js' %}" defer></script>
+<script src="{% static 'js/booking.js' %}?v=20260917a" defer></script>
 {% endblock %}

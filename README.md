@@ -75,3 +75,4 @@ Set these in `.env` for local development, including:
 - Gmail SMTP settings for sending confirmation emails
 - Optional Google Calendar API integration
 - `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET`, and `TURNSTILE_HOSTNAMES`
+  (production hostnames must be `medprophysiotherapy.ca,www.medprophysiotherapy.ca` only; do not include localhost)

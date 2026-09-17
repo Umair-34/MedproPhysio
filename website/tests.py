@@ -103,6 +103,11 @@ class ContactTurnstileTests(TestCase):
         self.client.post('/api/contact/', self._payload(**{'cf-turnstile-response': ''}))
         self.assertEqual(ContactSubmission.objects.count(), 0)
 
+    @override_settings(TURNSTILE_SECRET='', TURNSTILE_SECRET_KEY='')
+    def test_missing_secret_rejects_when_site_key_is_set(self):
+        self.client.post('/api/contact/', self._payload())
+        self.assertEqual(ContactSubmission.objects.count(), 0)
+
     @patch('website.spam.urllib.request.urlopen')
     def test_valid_token_is_accepted(self, urlopen):
         urlopen.return_value = _mock_siteverify()

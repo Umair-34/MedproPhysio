@@ -22,6 +22,9 @@ db.sqlite3-journal
 # Marketing assets
 /marketing/
 
+# Social media posts
+.tmp-footers/
+
 # Client handover / delivery files
 /delivery/
 

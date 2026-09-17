@@ -173,6 +173,30 @@ def compute_slots(
     occupied_duration = slot_duration + buffer_duration
     now = timezone.now()
 
+    day_start = _combine(target_date, time.min)
+    day_end = _combine(target_date + timedelta(days=1), time.min)
+    existing = list(
+        Appointment.objects.filter(
+            service=service,
+            start_datetime__lt=day_end,
+            end_datetime__gt=day_start,
+            status__in=[*SLOT_HOLDING_STATUSES, Appointment.Status.REJECTED],
+        ).values_list('start_datetime', 'end_datetime', 'status')
+    )
+    held = [
+        (start, end)
+        for start, end, status in existing
+        if status in SLOT_HOLDING_STATUSES
+    ]
+    rejected = [
+        (start, end)
+        for start, end, status in existing
+        if status == Appointment.Status.REJECTED
+    ]
+
+    def _overlaps(existing_start, existing_end, start, occupied_end) -> bool:
+        return existing_start < occupied_end and existing_end > start
+
     slots: list[AvailableSlot] = []
     for window_start, window_end in windows:
         window_end_dt = _combine(target_date, window_end)
@@ -189,10 +213,14 @@ def compute_slots(
                 continue
             if start <= now:
                 continue
-            if has_rejected_overlap(start, occupied_end, service=service):
+            if any(_overlaps(item_start, item_end, start, occupied_end) for item_start, item_end in rejected):
                 continue
 
-            taken = count_overlapping_appointments(start, occupied_end, service=service)
+            taken = sum(
+                1
+                for item_start, item_end in held
+                if _overlaps(item_start, item_end, start, occupied_end)
+            )
             available = capacity - taken
             if available <= 0:
                 continue

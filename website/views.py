@@ -13,7 +13,7 @@ from website.services import blog as blog_service
 from website.spam import FormGuardError, guard_public_form, issue_form_token, validate_contact_fields
 from website.visit import clinic_hours_with_today, clinic_open_status
 from bookings.models import Service
-from bookings.services.availability import get_bookable_services
+from bookings.services.availability import get_bookable_services, get_clinic_weekdays
 
 FOCUS_AREA_REDIRECTS = {
   'sports-recovery': 'sports-performance',
@@ -186,6 +186,7 @@ def book_appointment(request):
     'page_header_class': 'appointment-page-header bg-radius-section',
     'booking_steps': content.BOOKING_STEPS,
     'booking_services': get_bookable_services(),
+    'clinic_weekdays': get_clinic_weekdays(),
     'form_token': issue_form_token(),
   })
 

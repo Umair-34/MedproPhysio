@@ -25,7 +25,7 @@
         return;
     }
 
-    let clinicWeekdays = [0, 1, 2, 3, 4, 5];
+    let clinicWeekdays = [0, 1, 2, 3, 4, 5, 6];
     let calendarCursor = startOfDay(new Date());
     calendarCursor.setDate(1);
 
@@ -137,17 +137,25 @@
     let turnstileWidgetId = null;
 
     function whenTurnstileReady(callback) {
-        if (window.turnstile && typeof window.turnstile.ready === 'function') {
-            window.turnstile.ready(callback);
+        function invoke() {
+            if (window.turnstile && typeof window.turnstile.render === 'function') {
+                callback();
+                return true;
+            }
+            return false;
+        }
+        if (invoke()) {
             return;
+        }
+        if (window.turnstile && typeof window.turnstile.ready === 'function') {
+            window.turnstile.ready(function () {
+                invoke();
+            });
         }
         let attempts = 0;
         const timer = window.setInterval(function () {
             attempts += 1;
-            if (window.turnstile && typeof window.turnstile.ready === 'function') {
-                window.clearInterval(timer);
-                window.turnstile.ready(callback);
-            } else if (attempts > 50) {
+            if (invoke() || attempts > 150) {
                 window.clearInterval(timer);
             }
         }, 100);
@@ -160,6 +168,9 @@
         }
         whenTurnstileReady(function () {
             if (turnstileWidgetId !== null || typeof window.turnstile.render !== 'function') {
+                return;
+            }
+            if (mount.querySelector('iframe, input[name="cf-turnstile-response"]')) {
                 return;
             }
             turnstileWidgetId = window.turnstile.render(mount, {
@@ -211,6 +222,9 @@
     }
 
     function setMinDate() {
+        if (!dateInput) {
+            return;
+        }
         dateInput.min = toISODate(startOfDay(new Date()));
     }
 
@@ -219,7 +233,7 @@
             return;
         }
         if (!hasSelectedService()) {
-            dateHint.textContent = 'Choose a service to see which days you can book.';
+            dateHint.textContent = 'Highlighted days are open at the clinic. Choose a service to see its schedule.';
             return;
         }
         if (!weekdays.length) {
@@ -346,13 +360,20 @@
     }
 
     function updateSubmitState() {
+        if (!submitBtn) {
+            return;
+        }
         const hasService = Boolean(serviceSelect.value) && Boolean(durationSelect && durationSelect.value);
         const hasSchedule = hasService && Boolean(dateInput.value) && Boolean(slotSelect.value);
+        const firstName = document.getElementById('first_name');
+        const lastName = document.getElementById('last_name');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
         const hasContact = Boolean(
-            document.getElementById('first_name').value.trim()
-            && document.getElementById('last_name').value.trim()
-            && document.getElementById('email').value.trim()
-            && document.getElementById('phone').value.trim()
+            firstName && firstName.value.trim()
+            && lastName && lastName.value.trim()
+            && email && email.value.trim()
+            && phone && phone.value.trim()
         );
         submitBtn.disabled = !(hasSchedule && hasContact);
     }
@@ -403,7 +424,7 @@
         }
         ensureCalendar();
 
-        const weekdays = hasSelectedService() ? getSelectedWeekdays() : [];
+        const weekdays = getSelectedWeekdays();
         const today = startOfDay(new Date());
         const selected = parseISODate(dateInput.value);
         const year = calendarCursor.getFullYear();
@@ -571,7 +592,19 @@
             slotHint.textContent = 'Checking availability...';
         }
 
-        if (!serviceSelect.value || !dateInput.value || (durationSelect && !durationSelect.value)) {
+        if (!serviceSelect.value || (durationSelect && !durationSelect.value)) {
+            slotSelect.innerHTML = '<option value="" disabled selected>Select a service first</option>';
+            setSlotMessage(dateInput.value
+                ? 'Choose a service to see open times for this date.'
+                : 'Pick a highlighted date to see open times.');
+            if (slotHint) {
+                slotHint.textContent = 'Times update after you choose a service, length, and date.';
+            }
+            updateSubmitState();
+            return;
+        }
+
+        if (!dateInput.value) {
             slotSelect.innerHTML = '<option value="" disabled selected>Select a date first</option>';
             setSlotMessage('Pick a highlighted date to see open times.');
             if (slotHint) {
@@ -623,21 +656,28 @@
         });
     }
 
-    dateInput.addEventListener('change', function () {
-        loadSlots().catch(function (err) {
-            showAlert(err.message, 'danger');
+    if (dateInput) {
+        dateInput.addEventListener('change', function () {
+            loadSlots().catch(function (err) {
+                showAlert(err.message, 'danger');
+            });
+            updateSubmitState();
+            renderCalendar();
         });
-        updateSubmitState();
-        renderCalendar();
-    });
+    }
 
-    slotSelect.addEventListener('change', function () {
-        syncSlotSelection();
-        updateSubmitState();
-    });
+    if (slotSelect) {
+        slotSelect.addEventListener('change', function () {
+            syncSlotSelection();
+            updateSubmitState();
+        });
+    }
 
     ['first_name', 'last_name', 'email', 'phone'].forEach(function (fieldId) {
-        document.getElementById(fieldId).addEventListener('input', updateSubmitState);
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', updateSubmitState);
+        }
     });
 
     form.addEventListener('submit', async function (event) {
@@ -709,10 +749,15 @@
         }
     });
 
+    const fromMarkup = parseWeekdays(calendarEl && calendarEl.dataset.clinicWeekdays);
+    if (fromMarkup.length) {
+        clinicWeekdays = fromMarkup;
+    }
+    enhanceSlots();
+    renderCalendar();
     setMinDate();
     updateSubmitState();
     renderTurnstile();
-    renderCalendar();
     setSlotMessage('Pick a highlighted date to see open times.');
     loadServices().catch(function (err) {
         showAlert(err.message, 'danger');

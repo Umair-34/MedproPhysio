@@ -14,6 +14,9 @@
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:100%; background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(45,52,57,0.08);">
           <tr>
             <td style="background-color:#2F3438; padding:32px 40px; text-align:center;">
+              {% if logo_url %}
+              <img src="{{ logo_url }}" alt="{{ clinic_name }}" width="180" style="display:block;margin:0 auto 14px auto;border:0;max-width:180px;height:auto;">
+              {% endif %}
               <div style="font-family:'Marcellus', Georgia, 'Times New Roman', serif; color:#ffffff; font-size:24px; letter-spacing:0.3px;">{{ clinic_name }}</div>
               <div style="color:#D1D5DB; font-size:13px; margin-top:6px;">{{ clinic_address_short }}</div>
             </td>
